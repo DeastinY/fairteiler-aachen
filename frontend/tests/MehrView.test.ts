@@ -35,21 +35,26 @@ describe('MehrView', () => {
 })
 
 describe('legal pages', () => {
-  it('Impressum renders with visibly marked placeholders', () => {
+  it('Impressum renders operator details and credits', () => {
     const wrapper = mount(ImpressumView, globalStubs)
     expect(wrapper.find('h1').text()).toBe('Impressum')
     expect(wrapper.text()).toContain('Angaben gemäß § 5 DDG')
     expect(wrapper.text()).toContain('§ 18 Abs. 2 MStV')
     expect(wrapper.text()).toContain('Haftung für Inhalte')
-
-    const placeholders = wrapper.findAll('mark.ph').map((m) => m.text())
-    expect(placeholders).toContain('[VOR- UND NACHNAME]')
-    expect(placeholders).toContain('[STRASSE UND HAUSNUMMER]')
-    expect(placeholders).toContain('[PLZ]')
-    expect(placeholders).toContain('[KONTAKT-E-MAIL]')
+    expect(wrapper.text()).toContain('Richard Polzin')
+    expect(wrapper.text()).toContain('Dammstraße 43')
+    expect(wrapper.text()).toContain('52066 Aachen')
+    expect(wrapper.text()).toContain('richard.polzin@posteo.de')
+    // no unfilled placeholders remain
+    expect(wrapper.findAll('mark.ph')).toHaveLength(0)
+    // credits
+    expect(wrapper.text()).toContain('Dank & beteiligte Projekte')
+    expect(wrapper.text()).toContain('Uberspace')
+    expect(wrapper.text()).toContain('foodsharing.de')
+    expect(wrapper.text()).toContain('AGPL-3.0')
   })
 
-  it('Datenschutz renders all sections and placeholders', () => {
+  it('Datenschutz renders all sections with real operator data', () => {
     const wrapper = mount(DatenschutzView, globalStubs)
     expect(wrapper.find('h1').text()).toBe('Datenschutzerklärung')
     for (const heading of [
@@ -66,8 +71,9 @@ describe('legal pages', () => {
     ]) {
       expect(wrapper.text()).toContain(heading)
     }
-    const placeholders = wrapper.findAll('mark.ph').map((m) => m.text())
-    expect(placeholders).toContain('[DATUM DER VERÖFFENTLICHUNG]')
+    expect(wrapper.text()).toContain('Stand: 3. September 2026')
+    expect(wrapper.text()).toContain('Richard Polzin')
+    expect(wrapper.findAll('mark.ph')).toHaveLength(0)
     expect(wrapper.text()).toContain('Meldungen werden nach 90 Tagen gelöscht')
     expect(wrapper.text()).toContain('Art. 11 DSGVO')
   })

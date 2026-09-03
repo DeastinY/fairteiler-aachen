@@ -9,16 +9,16 @@ import LegalPage from '../components/LegalPage.vue'
     <p>Angaben gemäß § 5 DDG:</p>
 
     <address>
-      <strong><mark class="ph">[VOR- UND NACHNAME]</mark></strong><br />
-      <mark class="ph">[STRASSE UND HAUSNUMMER]</mark><br />
-      <mark class="ph">[PLZ]</mark> Aachen
+      <strong>Richard Polzin</strong><br />
+      Dammstraße 43<br />
+      52066 Aachen
     </address>
 
-    <p>E-Mail: <mark class="ph">[KONTAKT-E-MAIL]</mark></p>
+    <p>E-Mail: richard.polzin@posteo.de</p>
 
     <p>
       Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:<br />
-      <mark class="ph">[VOR- UND NACHNAME]</mark>, Anschrift wie oben.
+      Richard Polzin, Anschrift wie oben.
     </p>
 
     <h2>Hinweis</h2>
@@ -36,6 +36,32 @@ import LegalPage from '../components/LegalPage.vue'
       Nutzerinnen und Nutzern gemeldet und ungeprüft angezeigt. Sie sind eine
       Momentaufnahme ohne Gewähr. Offensichtlich missbräuchliche Meldungen werden
       nach Kenntnis entfernt.
+    </p>
+
+    <h2>Dank &amp; beteiligte Projekte</h2>
+    <p>Diese App steht auf den Schultern anderer Projekte:</p>
+    <ul>
+      <li>
+        <a href="https://foodsharing.de" target="_blank" rel="noopener noreferrer">foodsharing.de</a>
+        – die Plattform und Community, die die Fairteiler überhaupt erst
+        möglich macht; von dort stammen die Stammdaten der Standorte.
+      </li>
+      <li>
+        <a href="https://uberspace.de" target="_blank" rel="noopener noreferrer">Uberspace</a>
+        – „Hosting on Asteroids": faires Pay-what-you-want-Hosting aus
+        Deutschland, auf dem diese App läuft.
+      </li>
+      <li>
+        Freie Software: <a href="https://vuejs.org" target="_blank" rel="noopener noreferrer">Vue.js</a>,
+        <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">Vite</a>,
+        <a href="https://fastapi.tiangolo.com" target="_blank" rel="noopener noreferrer">FastAPI</a>,
+        <a href="https://www.sqlalchemy.org" target="_blank" rel="noopener noreferrer">SQLAlchemy</a>
+        und <a href="https://developer.chrome.com/docs/workbox" target="_blank" rel="noopener noreferrer">Workbox</a>;
+        die Schriften Bricolage Grotesque und Instrument Sans (SIL Open Font License).
+      </li>
+    </ul>
+    <p>
+      Der Quellcode dieser App ist frei verfügbar (AGPL-3.0).
     </p>
   </LegalPage>
 </template>

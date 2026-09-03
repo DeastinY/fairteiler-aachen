@@ -6,13 +6,13 @@ import LegalPage from '../components/LegalPage.vue'
 
 <template>
   <LegalPage title="Datenschutzerklärung">
-    <p>Stand: <mark class="ph">[DATUM DER VERÖFFENTLICHUNG]</mark></p>
+    <p>Stand: 3. September 2026</p>
 
     <h2>1. Verantwortlicher</h2>
     <address>
-      <mark class="ph">[VOR- UND NACHNAME]</mark><br />
-      <mark class="ph">[STRASSE UND HAUSNUMMER]</mark>, <mark class="ph">[PLZ]</mark> Aachen<br />
-      E-Mail: <mark class="ph">[KONTAKT-E-MAIL]</mark>
+      Richard Polzin<br />
+      Dammstraße 43, 52066 Aachen<br />
+      E-Mail: richard.polzin@posteo.de
     </address>
 
     <h2>2. Grundsatz</h2>
