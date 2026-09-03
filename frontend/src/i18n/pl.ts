@@ -234,6 +234,16 @@ const pl: Messages = {
   'mehr.support': 'Wesprzyj projekt',
   'mehr.supportNote': 'Dobrowolnie przez PayPal · pomaga pokryć koszty serwera · bez możliwości potwierdzenia darowizny',
   'aktivitaet.noServiceWorker': 'Push jest teraz niedostępny (brak aktywnego service workera) – załaduj aplikację ponownie.',
+  'liste.sortActivity': 'Aktywność',
+  'liste.sortDistance': 'Odległość',
+  'liste.sortLastReported': 'Ostatnie zgłoszenie',
+  'liste.sortAria': 'Sortowanie',
+  'liste.empty': 'Nie ma jeszcze żadnych Fairteiler.',
+  'detail.bestTimeMorning': 'Jedzenie zwykle przynoszone jest rano.',
+  'detail.bestTimeAfternoon': 'Jedzenie zwykle przynoszone jest po południu.',
+  'detail.bestTimeEvening': 'Jedzenie zwykle przynoszone jest wieczorem.',
+  'detail.share': 'Udostępnij',
+  'detail.linkCopied': 'Skopiowano link.',
   'api.genericError': 'Coś poszło nie tak. Spróbuj później jeszcze raz.',
 }
 

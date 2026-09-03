@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import BarSeries from '../components/BarSeries.vue'
+import SkeletonBlock from '../components/SkeletonBlock.vue'
 import { fetchStats } from '../composables/api'
 import { t } from '../i18n'
 import type { Stats } from '../types'
@@ -79,7 +80,18 @@ const reports = computed(() => usage.value.map((entry) => entry.reports))
       <p class="footer">{{ t('statistik.footer') }}</p>
     </template>
 
-    <p v-else class="hint">{{ t('common.loading') }}</p>
+    <template v-else>
+      <div class="tiles" data-test="skeletons">
+        <div v-for="n in 3" :key="n" class="card tile">
+          <SkeletonBlock width="42px" height="20px" :announce="n === 1" />
+          <SkeletonBlock width="80%" height="11px" />
+        </div>
+      </div>
+      <div v-for="n in 2" :key="`c${n}`" class="card block sk-chart">
+        <SkeletonBlock width="45%" height="16px" />
+        <SkeletonBlock width="100%" height="90px" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -129,6 +141,12 @@ const reports = computed(() => usage.value.map((entry) => entry.reports))
 .chartwrap {
   margin-top: 12px;
   overflow-x: auto;
+}
+
+.sk-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .footer {

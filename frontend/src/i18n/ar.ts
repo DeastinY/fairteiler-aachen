@@ -231,6 +231,16 @@ const ar: Messages = {
   'mehr.support': 'ادعم المشروع',
   'mehr.supportNote': 'تبرع طوعي عبر PayPal · يساعد في تغطية تكاليف الخادم · لا يمكن إصدار إيصال تبرع',
   'aktivitaet.noServiceWorker': 'الإشعارات غير متاحة حاليًا (لا يوجد service worker نشط) – أعد تحميل التطبيق من فضلك.',
+  'liste.sortActivity': 'النشاط',
+  'liste.sortDistance': 'المسافة',
+  'liste.sortLastReported': 'آخر بلاغ',
+  'liste.sortAria': 'الترتيب',
+  'liste.empty': 'لا يوجد Fairteiler مسجّل بعد.',
+  'detail.bestTimeMorning': 'عادةً ما يوضع الطعام صباحًا.',
+  'detail.bestTimeAfternoon': 'عادةً ما يوضع الطعام بعد الظهر.',
+  'detail.bestTimeEvening': 'عادةً ما يوضع الطعام مساءً.',
+  'detail.share': 'مشاركة',
+  'detail.linkCopied': 'تم نسخ الرابط.',
   'api.genericError': 'حدث خطأ ما. حاول مجددًا لاحقًا.',
 }
 

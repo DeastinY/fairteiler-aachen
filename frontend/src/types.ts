@@ -67,10 +67,14 @@ export interface Report {
 /** POST /api/fairteiler/{id}/reports response shape. */
 export type CreatedReport = Report
 
+export type BestTime = 'morning' | 'afternoon' | 'evening'
+
 export interface FairteilerDetail extends FairteilerListItem {
   description: string
   regionName: string
   picture: string | null
   hours: OpeningHours | null
+  /** Time of day food usually arrives – null when the data is too thin. */
+  bestTime: BestTime | null
   reports: Report[]
 }

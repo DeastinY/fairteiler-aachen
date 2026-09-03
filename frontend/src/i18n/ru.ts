@@ -234,6 +234,16 @@ const ru: Messages = {
   'mehr.support': 'Поддержать проект',
   'mehr.supportNote': 'Добровольно через PayPal · помогает покрыть расходы на сервер · квитанция о пожертвовании невозможна',
   'aktivitaet.noServiceWorker': 'Push сейчас недоступен (нет активного service worker) – перезагрузи приложение.',
+  'liste.sortActivity': 'Активность',
+  'liste.sortDistance': 'Расстояние',
+  'liste.sortLastReported': 'Последнее сообщение',
+  'liste.sortAria': 'Сортировка',
+  'liste.empty': 'Пока нет ни одного Fairteiler.',
+  'detail.bestTimeMorning': 'Обычно еду приносят утром.',
+  'detail.bestTimeAfternoon': 'Обычно еду приносят днём.',
+  'detail.bestTimeEvening': 'Обычно еду приносят вечером.',
+  'detail.share': 'Поделиться',
+  'detail.linkCopied': 'Ссылка скопирована.',
   'api.genericError': 'Что-то пошло не так. Попробуй позже ещё раз.',
 }
 

@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import {
   clearLocalData,
   loadAutoLocate,
+  loadListSort,
   saveAutoLocate,
+  saveListSort,
 } from '../src/composables/settings'
 
 afterEach(() => localStorage.clear())
@@ -17,6 +19,16 @@ describe('settings persistence', () => {
     expect(loadAutoLocate()).toBe(true)
     saveAutoLocate(false)
     expect(loadAutoLocate()).toBe(false)
+  })
+
+  it('persists the list sort mode and rejects junk values', () => {
+    expect(loadListSort()).toBe('activity')
+    saveListSort('distance')
+    expect(loadListSort()).toBe('distance')
+    saveListSort('lastReported')
+    expect(loadListSort()).toBe('lastReported')
+    localStorage.setItem('fairteiler-list-sort', 'nonsense')
+    expect(loadListSort()).toBe('activity')
   })
 
   it('clearLocalData wipes device id, prefs and mirrors', () => {

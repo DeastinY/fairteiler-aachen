@@ -9,7 +9,7 @@ import ActivityBars from './ActivityBars.vue'
 import CareBadges from './CareBadges.vue'
 import StatusBadge from './StatusBadge.vue'
 
-const props = defineProps<{ fairteiler: FairteilerListItem }>()
+const props = defineProps<{ fairteiler: FairteilerListItem; distanceText?: string | null }>()
 
 const timeline = computed(() => {
   const { status } = props.fairteiler
@@ -31,6 +31,7 @@ const timeline = computed(() => {
     </span>
     <span class="street">
       {{ fairteiler.street }} · {{ fairteiler.city }}
+      <span v-if="distanceText" class="distance" data-test="distance">· {{ distanceText }}</span>
       <span v-if="openHint(fairteiler)" class="openhint">· {{ openHint(fairteiler) }}</span>
     </span>
     <span class="bottomrow">
@@ -84,6 +85,11 @@ const timeline = computed(() => {
 .openhint {
   color: var(--gray-ink);
   font-weight: 500;
+}
+
+.distance {
+  font-weight: 600;
+  color: var(--gray-ink);
 }
 
 .bottomrow {

@@ -233,6 +233,16 @@ const en: Messages = {
   'mehr.support': 'Support the project',
   'mehr.supportNote': 'Voluntary via PayPal · helps cover the server costs · no donation receipt possible',
   'aktivitaet.noServiceWorker': 'Push is unavailable right now (no active service worker) – please reload the app.',
+  'liste.sortActivity': 'Activity',
+  'liste.sortDistance': 'Distance',
+  'liste.sortLastReported': 'Last reported',
+  'liste.sortAria': 'Sorting',
+  'liste.empty': 'No Fairteiler listed yet.',
+  'detail.bestTimeMorning': 'Food is usually dropped off in the morning.',
+  'detail.bestTimeAfternoon': 'Food is usually dropped off in the afternoon.',
+  'detail.bestTimeEvening': 'Food is usually dropped off in the evening.',
+  'detail.share': 'Share',
+  'detail.linkCopied': 'Link copied.',
   'api.genericError': 'Something went wrong. Please try again later.',
 }
 

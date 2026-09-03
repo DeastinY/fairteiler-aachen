@@ -237,6 +237,16 @@ const fr: Messages = {
   'mehr.support': 'Soutenir le projet',
   'mehr.supportNote': 'Volontaire via PayPal · aide à couvrir les frais de serveur · pas de reçu fiscal possible',
   'aktivitaet.noServiceWorker': 'Le push est indisponible pour l\'instant (pas de service worker actif) – recharge l\'app.',
+  'liste.sortActivity': 'Activité',
+  'liste.sortDistance': 'Distance',
+  'liste.sortLastReported': 'Dernier signalement',
+  'liste.sortAria': 'Tri',
+  'liste.empty': 'Aucun Fairteiler enregistré pour le moment.',
+  'detail.bestTimeMorning': 'La nourriture est généralement déposée le matin.',
+  'detail.bestTimeAfternoon': 'La nourriture est généralement déposée l\'après-midi.',
+  'detail.bestTimeEvening': 'La nourriture est généralement déposée le soir.',
+  'detail.share': 'Partager',
+  'detail.linkCopied': 'Lien copié.',
   'api.genericError': "Quelque chose s'est mal passé. Réessaie plus tard.",
 }
 

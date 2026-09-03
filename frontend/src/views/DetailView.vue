@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CareBadges from '../components/CareBadges.vue'
+import SkeletonBlock from '../components/SkeletonBlock.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import { ApiError, deleteReport, fetchFairteilerDetail } from '../composables/api'
@@ -127,6 +128,52 @@ async function undoReport(report: Report) {
   }
 }
 
+const bestTimeText = computed(() => {
+  switch (detail.value?.bestTime) {
+    case 'morning':
+      return t('detail.bestTimeMorning')
+    case 'afternoon':
+      return t('detail.bestTimeAfternoon')
+    case 'evening':
+      return t('detail.bestTimeEvening')
+    default:
+      return null
+  }
+})
+
+function hasShareApi(): boolean {
+  return typeof navigator !== 'undefined' && typeof navigator.share === 'function'
+}
+
+function hasClipboard(): boolean {
+  return (
+    typeof navigator !== 'undefined' &&
+    !!navigator.clipboard &&
+    typeof navigator.clipboard.writeText === 'function'
+  )
+}
+
+const canShare = hasShareApi() || hasClipboard()
+
+async function share() {
+  if (!detail.value) return
+  const url = window.location.href
+  if (hasShareApi()) {
+    try {
+      await navigator.share({ title: detail.value.name, url })
+    } catch {
+      // user dismissed the share sheet
+    }
+    return
+  }
+  try {
+    await navigator.clipboard.writeText(url)
+    showToast(t('detail.linkCopied'))
+  } catch {
+    // clipboard refused – nothing sensible to do
+  }
+}
+
 /** Hours table rows – omitted for 24/7 places (their chip says it all). */
 const hoursRows = computed(() => {
   if (!detail.value?.hours || detail.value.aroundTheClock) return null
@@ -169,11 +216,40 @@ function goBack() {
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
       </button>
+      <button
+        v-if="canShare"
+        type="button"
+        class="roundbtn sharebtn"
+        :aria-label="t('detail.share')"
+        data-test="share"
+        @click="share"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="6" cy="12" r="2.5"></circle>
+          <circle cx="17" cy="5.5" r="2.5"></circle>
+          <circle cx="17" cy="18.5" r="2.5"></circle>
+          <path d="M8.2 10.8l6.6-4 M8.2 13.2l6.6 4"></path>
+        </svg>
+      </button>
     </div>
 
     <OfflineBanner v-if="showOffline" />
 
-    <p v-if="!detail && !error" class="hint">{{ t('common.loading') }}</p>
+    <div v-if="!detail && !error" class="sk-detail" data-test="skeletons">
+      <div class="sk-title">
+        <SkeletonBlock width="55%" height="24px" announce />
+        <SkeletonBlock width="80px" height="24px" rounded />
+      </div>
+      <SkeletonBlock width="70%" height="14px" />
+      <div class="card sk-status">
+        <SkeletonBlock width="60%" height="16px" />
+        <SkeletonBlock width="40%" height="14px" />
+      </div>
+      <div class="card sk-status">
+        <SkeletonBlock width="35%" height="16px" />
+        <SkeletonBlock width="100%" height="72px" />
+      </div>
+    </div>
 
     <div v-else-if="error" class="hint error">
       <p>{{ error }}</p>
@@ -220,6 +296,7 @@ function goBack() {
             {{ tagLabel(tag) }}
           </span>
         </div>
+        <p v-if="bestTimeText" class="besttime" data-test="best-time">{{ bestTimeText }}</p>
       </section>
 
       <!-- activity -->
@@ -388,6 +465,43 @@ function goBack() {
   inset-inline-start: 16px;
   top: 16px;
   background: rgba(253, 252, 248, 0.92);
+}
+
+.sharebtn {
+  position: absolute;
+  inset-inline-end: 16px;
+  top: 16px;
+  background: rgba(253, 252, 248, 0.92);
+}
+
+.besttime {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 12px 0 0 0;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 10px;
+}
+
+.sk-detail {
+  padding: 18px 20px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sk-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sk-status {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .titleblock {

@@ -234,6 +234,16 @@ const nl: Messages = {
   'mehr.support': 'Steun het project',
   'mehr.supportNote': 'Vrijwillig via PayPal · helpt de serverkosten te dekken · geen donatiebewijs mogelijk',
   'aktivitaet.noServiceWorker': 'Push is nu niet beschikbaar (geen actieve service worker) – herlaad de app.',
+  'liste.sortActivity': 'Activiteit',
+  'liste.sortDistance': 'Afstand',
+  'liste.sortLastReported': 'Laatst gemeld',
+  'liste.sortAria': 'Sortering',
+  'liste.empty': 'Nog geen Fairteiler ingevoerd.',
+  'detail.bestTimeMorning': 'Meestal wordt er \'s ochtends eten gebracht.',
+  'detail.bestTimeAfternoon': 'Meestal wordt er \'s middags eten gebracht.',
+  'detail.bestTimeEvening': 'Meestal wordt er \'s avonds eten gebracht.',
+  'detail.share': 'Delen',
+  'detail.linkCopied': 'Link gekopieerd.',
   'api.genericError': 'Er is iets misgegaan. Probeer het later opnieuw.',
 }
 

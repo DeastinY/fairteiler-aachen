@@ -5,6 +5,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { t } from '../i18n'
 import FilterChips from '../components/FilterChips.vue'
+import SkeletonBlock from '../components/SkeletonBlock.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
 import { fetchFairteilerList } from '../composables/api'
 import { loadAutoLocate } from '../composables/settings'
@@ -225,7 +226,19 @@ function useLocation() {
 
       <OfflineBanner v-if="showOffline" class="sheet-offline" />
 
-      <p v-if="!items && !error" class="hint">{{ t('common.loading') }}</p>
+      <div v-if="!items && !error" data-test="skeletons">
+        <div class="sk-head">
+          <SkeletonBlock width="38%" height="19px" announce />
+          <SkeletonBlock width="90px" height="13px" />
+        </div>
+        <div v-for="n in 3" :key="n" class="sk-row">
+          <SkeletonBlock width="10px" height="10px" rounded />
+          <div class="sk-rowbody">
+            <SkeletonBlock width="45%" height="15px" />
+            <SkeletonBlock width="70%" height="13px" />
+          </div>
+        </div>
+      </div>
 
       <div v-else-if="error" class="hint error">
         <p>{{ error }}</p>
@@ -361,6 +374,33 @@ function useLocation() {
 
 .sheet-offline {
   margin: 0 0 10px 0;
+}
+
+.sk-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sk-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  min-height: 44px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.sk-row:last-of-type {
+  border-bottom: none;
+}
+
+.sk-rowbody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .grip {

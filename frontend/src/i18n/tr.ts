@@ -234,6 +234,16 @@ const tr: Messages = {
   'mehr.support': 'Projeyi destekle',
   'mehr.supportNote': 'PayPal ile gönüllü · sunucu maliyetlerine yardımcı olur · bağış makbuzu verilemez',
   'aktivitaet.noServiceWorker': 'Push şu anda kullanılamıyor (etkin service worker yok) – lütfen uygulamayı yeniden yükle.',
+  'liste.sortActivity': 'Etkinlik',
+  'liste.sortDistance': 'Mesafe',
+  'liste.sortLastReported': 'Son bildirim',
+  'liste.sortAria': 'Sıralama',
+  'liste.empty': 'Henüz kayıtlı Fairteiler yok.',
+  'detail.bestTimeMorning': 'Genellikle sabahları yiyecek bırakılır.',
+  'detail.bestTimeAfternoon': 'Genellikle öğleden sonra yiyecek bırakılır.',
+  'detail.bestTimeEvening': 'Genellikle akşamları yiyecek bırakılır.',
+  'detail.share': 'Paylaş',
+  'detail.linkCopied': 'Bağlantı kopyalandı.',
   'api.genericError': 'Bir şeyler ters gitti. Lütfen daha sonra tekrar dene.',
 }
 

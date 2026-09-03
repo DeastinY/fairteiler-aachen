@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { sortFairteiler } from '../src/lib/sort'
+import { sortByDistance, sortByLastReported, sortFairteiler } from '../src/lib/sort'
 import { makeFairteiler } from './fixtures'
 
 describe('sortFairteiler', () => {
@@ -27,6 +27,32 @@ describe('sortFairteiler', () => {
     const sorted = sortFairteiler([noReport, busyEmpty, quietWithFood, busyWithFood])
 
     expect(sorted.map((f) => f.id)).toEqual([3, 1, 2, 4])
+  })
+
+  it('sortByDistance orders nearest first', () => {
+    const here = { lat: 50.76, lon: 6.1 }
+    const items = [
+      makeFairteiler({ id: 1, name: 'Fern', lat: 50.9, lon: 6.3 }),
+      makeFairteiler({ id: 2, name: 'Nah', lat: 50.761, lon: 6.099 }),
+      makeFairteiler({ id: 3, name: 'Mittel', lat: 50.78, lon: 6.08 }),
+    ]
+    expect(sortByDistance(items, here).map((f) => f.id)).toEqual([2, 3, 1])
+    expect(items.map((f) => f.id)).toEqual([1, 2, 3]) // no mutation
+  })
+
+  it('sortByLastReported orders newest first, nulls last', () => {
+    const at = (minAgo: number) => new Date(Date.now() - minAgo * 60_000).toISOString()
+    const items = [
+      makeFairteiler({ id: 1, status: { state: 'keine_meldung', lastReportAt: null, tags: [] } }),
+      makeFairteiler({ id: 2, status: { state: 'etwas_da', lastReportAt: at(120), tags: [] } }),
+      makeFairteiler({ id: 3, status: { state: 'leer', lastReportAt: at(5), tags: [] } }),
+      makeFairteiler({ id: 4, status: { state: 'keine_meldung', lastReportAt: null, tags: [] } }),
+      makeFairteiler({ id: 5, status: { state: 'etwas_da', lastReportAt: at(30), tags: [] } }),
+    ]
+    const sorted = sortByLastReported(items).map((f) => f.id)
+    expect(sorted.slice(0, 3)).toEqual([3, 5, 2])
+    expect(sorted.slice(3).sort()).toEqual([1, 4]) // both null-report items last
+    expect(items.map((f) => f.id)).toEqual([1, 2, 3, 4, 5]) // no mutation
   })
 
   it('does not mutate the input array', () => {

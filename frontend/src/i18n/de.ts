@@ -260,6 +260,16 @@ const de = {
   'mehr.support': 'Projekt unterstützen',
   'mehr.supportNote': 'Freiwillig via PayPal · hilft, die Serverkosten zu decken · keine Spendenbescheinigung möglich',
   'aktivitaet.noServiceWorker': 'Push ist gerade nicht verfügbar (kein aktiver Service Worker) – bitte lade die App neu.',
+  'liste.sortActivity': 'Aktivität',
+  'liste.sortDistance': 'Entfernung',
+  'liste.sortLastReported': 'Zuletzt gemeldet',
+  'liste.sortAria': 'Sortierung',
+  'liste.empty': 'Noch keine Fairteiler eingetragen.',
+  'detail.bestTimeMorning': 'Meist wird vormittags etwas gebracht.',
+  'detail.bestTimeAfternoon': 'Meist wird nachmittags etwas gebracht.',
+  'detail.bestTimeEvening': 'Meist wird abends etwas gebracht.',
+  'detail.share': 'Teilen',
+  'detail.linkCopied': 'Link kopiert.',
   'api.genericError': 'Da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.',
 }
 

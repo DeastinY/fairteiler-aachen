@@ -202,6 +202,80 @@ describe('DetailView', () => {
     expect(link.attributes('rel')).toBe('noopener noreferrer')
   })
 
+  it('shows the best-time hint for all three times and nothing for null', async () => {
+    const cases = [
+      ['morning', 'Meist wird vormittags etwas gebracht.'],
+      ['afternoon', 'Meist wird nachmittags etwas gebracht.'],
+      ['evening', 'Meist wird abends etwas gebracht.'],
+    ] as const
+    for (const [bestTime, text] of cases) {
+      fetchMock.mockImplementation(() =>
+        Promise.resolve(jsonResponse(makeDetail({ id: 810, bestTime }))),
+      )
+      const wrapper = mountDetail()
+      await flushPromises()
+      expect(wrapper.find('[data-test="best-time"]').text()).toBe(text)
+      wrapper.unmount()
+    }
+
+    fetchMock.mockImplementation(() =>
+      Promise.resolve(jsonResponse(makeDetail({ id: 810, bestTime: null }))),
+    )
+    const wrapper = mountDetail()
+    await flushPromises()
+    expect(wrapper.find('[data-test="best-time"]').exists()).toBe(false)
+  })
+
+  it('shares via navigator.share with title and url', async () => {
+    const share = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { onLine: true, share })
+
+    const wrapper = mountDetail()
+    await flushPromises()
+
+    await wrapper.find('[data-test="share"]').trigger('click')
+    expect(share).toHaveBeenCalledWith({
+      title: 'Fairteiler "BreitSeite"',
+      url: window.location.href,
+    })
+  })
+
+  it('falls back to the clipboard with a toast when share is unavailable', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { onLine: true, clipboard: { writeText } })
+
+    const wrapper = mountDetail()
+    await flushPromises()
+
+    await wrapper.find('[data-test="share"]').trigger('click')
+    await flushPromises()
+    expect(writeText).toHaveBeenCalledWith(window.location.href)
+    expect(useToast().message).toBe('Link kopiert.')
+  })
+
+  it('hides the share button when neither API exists', async () => {
+    vi.stubGlobal('navigator', { onLine: true })
+
+    const wrapper = mountDetail()
+    await flushPromises()
+
+    expect(wrapper.find('[data-test="share"]').exists()).toBe(false)
+  })
+
+  it('shows a skeleton while loading, replaced by the content', async () => {
+    let resolve!: (value: Response) => void
+    fetchMock.mockReturnValue(new Promise<Response>((r) => (resolve = r)))
+    const wrapper = mountDetail()
+
+    expect(wrapper.find('[data-test="skeletons"]').exists()).toBe(true)
+
+    resolve(jsonResponse(DETAIL))
+    await flushPromises()
+
+    expect(wrapper.find('[data-test="skeletons"]').exists()).toBe(false)
+    expect(wrapper.text()).toContain('Fairteiler "BreitSeite"')
+  })
+
   it('links the Route button to the platform navigation app', async () => {
     const wrapper = mountDetail()
     await flushPromises()

@@ -24,10 +24,104 @@ function mountListe() {
 }
 
 describe('ListeView', () => {
-  it('shows a German loading state first', () => {
-    fetchMock.mockReturnValue(new Promise(() => {}))
+  it('shows skeleton cards while pending and replaces them after resolve', async () => {
+    let resolve!: (value: Response) => void
+    fetchMock.mockReturnValue(new Promise<Response>((r) => (resolve = r)))
     const wrapper = mountListe()
-    expect(wrapper.text()).toContain('Lade Fairteiler')
+
+    expect(wrapper.findAll('[data-test="skeleton-card"]')).toHaveLength(3)
+    // loading is announced for screen readers, not shown as bare text
+    expect(wrapper.find('[role="status"]').text()).toBe('Lade Fairteiler …')
+
+    resolve(jsonResponse([makeFairteiler({ id: 1, name: 'Pfannenzauber' })]))
+    await flushPromises()
+
+    expect(wrapper.findAll('[data-test="skeleton-card"]')).toHaveLength(0)
+    expect(wrapper.findAll('.listecard')).toHaveLength(1)
+  })
+
+  it('shows an empty state when the API returns no fairteiler', async () => {
+    fetchMock.mockResolvedValue(jsonResponse([]))
+    const wrapper = mountListe()
+    await flushPromises()
+    expect(wrapper.find('[data-test="empty"]').text()).toBe(
+      'Noch keine Fairteiler eingetragen.',
+    )
+  })
+
+  it('sorts by last reported (nulls last) when that chip is selected', async () => {
+    const at = (minAgo: number) => new Date(Date.now() - minAgo * 60_000).toISOString()
+    fetchMock.mockResolvedValue(
+      jsonResponse([
+        makeFairteiler({ id: 1, name: 'Ohne Meldung' }),
+        makeFairteiler({
+          id: 2,
+          name: 'Alt',
+          status: { state: 'etwas_da', lastReportAt: at(300), tags: [] },
+        }),
+        makeFairteiler({
+          id: 3,
+          name: 'Frisch',
+          status: { state: 'leer', lastReportAt: at(10), tags: [] },
+        }),
+      ]),
+    )
+
+    const wrapper = mountListe()
+    await flushPromises()
+
+    await wrapper.find('[data-test="sort-lastReported"]').trigger('click')
+    const names = wrapper.findAll('.listecard .name').map((n) => n.text())
+    expect(names).toEqual(['Frisch', 'Alt', 'Ohne Meldung'])
+    expect(localStorage.getItem('fairteiler-list-sort')).toBe('lastReported')
+  })
+
+  it('distance sort asks for geolocation, orders by distance and shows distances', async () => {
+    const getCurrentPosition = vi.fn((success: PositionCallback) => {
+      success({ coords: { latitude: 50.7766, longitude: 6.0834 } } as GeolocationPosition)
+    })
+    vi.stubGlobal('navigator', { geolocation: { getCurrentPosition }, onLine: true })
+
+    fetchMock.mockResolvedValue(
+      jsonResponse([
+        makeFairteiler({ id: 1, name: 'Fern', lat: 50.9, lon: 6.3 }),
+        makeFairteiler({ id: 2, name: 'Nah', lat: 50.777, lon: 6.084 }),
+      ]),
+    )
+
+    const wrapper = mountListe()
+    await flushPromises()
+
+    await wrapper.find('[data-test="sort-distance"]').trigger('click')
+    await flushPromises()
+
+    expect(getCurrentPosition).toHaveBeenCalled()
+    const names = wrapper.findAll('.listecard .name').map((n) => n.text())
+    expect(names).toEqual(['Nah', 'Fern'])
+    const distances = wrapper.findAll('[data-test="distance"]')
+    expect(distances).toHaveLength(2)
+    expect(distances[0]!.text()).toMatch(/\d+ m|\d+,\d km/)
+  })
+
+  it('falls back to activity with a hint when geolocation is denied', async () => {
+    const getCurrentPosition = vi.fn(
+      (_success: PositionCallback, geoError?: PositionErrorCallback) => {
+        geoError?.({ code: 1, message: 'denied' } as GeolocationPositionError)
+      },
+    )
+    vi.stubGlobal('navigator', { geolocation: { getCurrentPosition }, onLine: true })
+
+    fetchMock.mockResolvedValue(jsonResponse([makeFairteiler({ id: 1 })]))
+
+    const wrapper = mountListe()
+    await flushPromises()
+
+    await wrapper.find('[data-test="sort-distance"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.find('[data-test="geo-hint"]').text()).toContain('Standort nicht verfügbar')
+    expect(wrapper.find('[data-test="sort-activity"]').attributes('aria-pressed')).toBe('true')
+    expect(localStorage.getItem('fairteiler-list-sort')).toBe('activity')
   })
 
   it('renders cards with names and German status labels, sorted', async () => {

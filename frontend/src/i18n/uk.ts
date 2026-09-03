@@ -234,6 +234,16 @@ const uk: Messages = {
   'mehr.support': 'Підтримати проєкт',
   'mehr.supportNote': 'Добровільно через PayPal · допомагає покрити витрати на сервер · квитанція про пожертву неможлива',
   'aktivitaet.noServiceWorker': 'Push зараз недоступний (немає активного service worker) – перезавантаж застосунок.',
+  'liste.sortActivity': 'Активність',
+  'liste.sortDistance': 'Відстань',
+  'liste.sortLastReported': 'Останнє повідомлення',
+  'liste.sortAria': 'Сортування',
+  'liste.empty': 'Поки немає жодного Fairteiler.',
+  'detail.bestTimeMorning': 'Зазвичай їжу приносять зранку.',
+  'detail.bestTimeAfternoon': 'Зазвичай їжу приносять удень.',
+  'detail.bestTimeEvening': 'Зазвичай їжу приносять увечері.',
+  'detail.share': 'Поділитися',
+  'detail.linkCopied': 'Посилання скопійовано.',
   'api.genericError': 'Щось пішло не так. Спробуй пізніше ще раз.',
 }
 
