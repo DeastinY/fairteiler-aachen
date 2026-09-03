@@ -7,7 +7,7 @@ from pydantic import BaseModel, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import crud, hours as hours_mod, maintenance, push, seed, status
+from app import crud, hours as hours_mod, maintenance, push, seed, status, usage
 from app.models import FOOD_TAGS, Fairteiler, PushSubscription
 from app.push import PushSettings
 
@@ -162,6 +162,7 @@ def create_app(
 
     @app.get("/api/fairteiler")
     def list_fairteiler(session: Session = Depends(get_session)):
+        usage.count(session, "list_views")
         now = dt.datetime.now(dt.timezone.utc)
         return [
             serialize(row, crud.recent_reports(session, row.id), now)
@@ -171,6 +172,7 @@ def create_app(
     @app.get("/api/fairteiler/{fairteiler_id}")
     def fairteiler_detail(fairteiler_id: int, session: Session = Depends(get_session)):
         row = get_fairteiler_or_404(session, fairteiler_id)
+        usage.count(session, "detail_views")
         now = dt.datetime.now(dt.timezone.utc)
         reports = crud.recent_reports(session, row.id)
         return serialize(row, reports, now, with_description=True)

@@ -46,6 +46,9 @@ def main() -> int:
     sub.add_parser("blocked")
     sub.add_parser("prune")
 
+    p_usage = sub.add_parser("usage")
+    p_usage.add_argument("--days", type=int, default=14)
+
     p_seed = sub.add_parser("seed")
     p_seed.add_argument("--path", default=str(BASE / "seed" / "fairteiler.json"))
 
@@ -86,6 +89,11 @@ def main() -> int:
         elif args.cmd == "prune":
             count = maintenance.prune_reports(session)
             print(f"pruned {count} reports older than {maintenance.RETENTION_DAYS} days")
+        elif args.cmd == "usage":
+            from app import usage as usage_mod
+
+            for day, metric, count in usage_mod.report(session, args.days):
+                print(f"{day}  {metric:<16} {count:>6}")
         elif args.cmd == "seed":
             from app.seed import load_seed
 

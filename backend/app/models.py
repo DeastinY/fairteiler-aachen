@@ -61,6 +61,18 @@ class PushSubscription(Base):
     )
 
 
+class UsageCounter(Base):
+    """Anonymous daily aggregates — deliberately NO identifiers of any kind
+    (no IP, no device hash, no user agent), so rows carry no personal data."""
+
+    __tablename__ = "usage_counters"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    day: Mapped[str] = mapped_column(String(10), index=True)  # YYYY-MM-DD (UTC)
+    metric: Mapped[str] = mapped_column(String(40), index=True)
+    count: Mapped[int] = mapped_column(Integer, default=0)
+
+
 class BlockedDevice(Base):
     __tablename__ = "blocked_devices"
 
