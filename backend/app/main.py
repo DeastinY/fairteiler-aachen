@@ -76,6 +76,8 @@ def create_app(
             "city": row.city,
             "lat": row.lat,
             "lon": row.lon,
+            "cooled": row.cooled,
+            "aroundTheClock": row.around_the_clock,
             "status": status.derive_status(reports, now),
             "activity7d": status.activity_by_day(reports, now),
         }

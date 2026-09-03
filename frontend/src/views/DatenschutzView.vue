@@ -18,8 +18,10 @@ import LegalPage from '../components/LegalPage.vue'
     <h2>2. Grundsatz</h2>
     <p>
       Diese App ist bewusst datensparsam: Sie funktioniert ohne Konto, ohne
-      Cookies, ohne Tracking und ohne Einbindung von Drittanbieter-Diensten.
-      Schriften und alle Inhalte werden von unserem eigenen Server geladen.
+      Cookies und ohne Tracking. Schriften und alle Inhalte werden von unserem
+      eigenen Server geladen; einzige Ausnahmen sind die Kartenkacheln des
+      staatlichen Dienstes basemap.de (Punkt 6a) und der Push-Dienst deines
+      Browsers (Punkt 7).
     </p>
 
     <h2>3. Server-Logdateien</h2>
@@ -57,6 +59,16 @@ import LegalPage from '../components/LegalPage.vue'
       aktiv über „Standort verwenden" freigibst (Art. 6 Abs. 1 lit. a DSGVO).
       Der Standort wird ausschließlich lokal in deinem Browser verwendet und
       niemals an unseren Server übertragen.
+    </p>
+
+    <h2>6a. Kartendarstellung (basemap.de)</h2>
+    <p>
+      Die Karte lädt Kartenkacheln vom offenen Kartendienst basemap.de des
+      Bundesamts für Kartographie und Geodäsie (BKG). Dabei erhält das BKG
+      technisch bedingt deine IP-Adresse und den abgerufenen Kartenausschnitt;
+      wir übermitteln keine weiteren Daten. Rechtsgrundlage: Art. 6 Abs. 1
+      lit. f DSGVO (verständliche Darstellung der Standorte). Bereits geladene
+      Kacheln werden lokal zwischengespeichert.
     </p>
 
     <h2>7. Push-Benachrichtigungen (optional)</h2>

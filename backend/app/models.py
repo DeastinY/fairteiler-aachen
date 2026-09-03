@@ -38,6 +38,8 @@ class Fairteiler(Base):
     lon: Mapped[float] = mapped_column(Float)
     region_name: Mapped[str | None] = mapped_column(String(100))
     picture: Mapped[str | None] = mapped_column(String(400))
+    cooled: Mapped[bool] = mapped_column(default=False)
+    around_the_clock: Mapped[bool] = mapped_column(default=False)
 
 
 class PushSubscription(Base):

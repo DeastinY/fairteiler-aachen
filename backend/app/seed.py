@@ -7,6 +7,24 @@ from sqlalchemy.orm import Session
 from app.models import VIRTUAL_IDS, Fairteiler
 
 
+AROUND_THE_CLOCK_HINTS = (
+    "rund um die uhr",
+    "jederzeit",
+    "immer zugänglich",
+    "ganztägig",
+    "24/7",
+)
+
+
+def derive_flags(description: str | None) -> dict:
+    """Heuristic attribute flags from the upstream free-text description."""
+    text = (description or "").lower()
+    return {
+        "cooled": "kühlschrank" in text,
+        "around_the_clock": any(hint in text for hint in AROUND_THE_CLOCK_HINTS),
+    }
+
+
 def load_seed(session: Session, seed_path: Path) -> int:
     """Upsert fairteiler master data from the stripped seed file."""
     data = json.loads(Path(seed_path).read_text())
@@ -24,6 +42,9 @@ def load_seed(session: Session, seed_path: Path) -> int:
         row.lon = float(entry["lon"])
         row.region_name = entry.get("regionName")
         row.picture = entry.get("picture")
+        flags = derive_flags(entry.get("description"))
+        row.cooled = flags["cooled"]
+        row.around_the_clock = flags["around_the_clock"]
         session.add(row)
         count += 1
     return count

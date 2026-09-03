@@ -25,6 +25,9 @@ def push_settings_from_env() -> PushSettings | None:
 
 
 engine = make_engine(DB_URL)
+from app.db import migrate  # noqa: E402
+
+migrate(engine)
 session_factory = make_session_factory(engine)
 with session_factory() as session:
     load_seed(session, BASE / "seed" / "fairteiler.json")

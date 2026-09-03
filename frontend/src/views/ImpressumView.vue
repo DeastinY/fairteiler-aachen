@@ -52,7 +52,13 @@ import LegalPage from '../components/LegalPage.vue'
         Deutschland, auf dem diese App läuft.
       </li>
       <li>
+        <a href="https://basemap.de" target="_blank" rel="noopener noreferrer">basemap.de</a>
+        / BKG – die amtliche Webkarte der deutschen Vermessungsverwaltungen
+        liefert die Kartendaten (Open Data, dl-de/by-2-0).
+      </li>
+      <li>
         Freie Software: <a href="https://vuejs.org" target="_blank" rel="noopener noreferrer">Vue.js</a>,
+        <a href="https://leafletjs.com" target="_blank" rel="noopener noreferrer">Leaflet</a>,
         <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">Vite</a>,
         <a href="https://fastapi.tiangolo.com" target="_blank" rel="noopener noreferrer">FastAPI</a>,
         <a href="https://www.sqlalchemy.org" target="_blank" rel="noopener noreferrer">SQLAlchemy</a>
