@@ -1,6 +1,11 @@
 import { apiUrl } from '../lib/apiBase'
 import type { PushConfig, PushSubscriptionPayload } from '../lib/push'
-import type { FairteilerDetail, FairteilerListItem, Report, ReportType } from '../types'
+import type {
+  CreatedReport,
+  FairteilerDetail,
+  FairteilerListItem,
+  ReportType,
+} from '../types'
 import { getDeviceId } from './device'
 
 /**
@@ -60,13 +65,21 @@ export function putPushSubscription(payload: PushSubscriptionPayload): Promise<v
 export function submitReport(
   fairteilerId: number,
   body: { type: ReportType; tags: string[] },
-): Promise<Report> {
-  return request<Report>(`/api/fairteiler/${fairteilerId}/reports`, {
+): Promise<CreatedReport> {
+  return request<CreatedReport>(`/api/fairteiler/${fairteilerId}/reports`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Device-Id': getDeviceId(),
     },
     body: JSON.stringify(body),
+  })
+}
+
+/** Undo an own report (only within the backend's 15-minute window). */
+export function deleteReport(reportId: number): Promise<void> {
+  return request<void>(`/api/reports/${reportId}`, {
+    method: 'DELETE',
+    headers: { 'X-Device-Id': getDeviceId() },
   })
 }

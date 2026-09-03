@@ -16,6 +16,12 @@ export const routes = [
   },
   { path: '/mehr', name: 'mehr', component: () => import('./views/MehrView.vue') },
   {
+    path: '/einstellungen',
+    name: 'einstellungen',
+    component: () => import('./views/EinstellungenView.vue'),
+  },
+  { path: '/regeln', name: 'regeln', component: () => import('./views/RegelnView.vue') },
+  {
     path: '/impressum',
     name: 'impressum',
     component: () => import('./views/ImpressumView.vue'),

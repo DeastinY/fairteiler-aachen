@@ -1,5 +1,6 @@
 import { flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { resetFilters } from '../src/composables/useFilters'
 import ListeView from '../src/views/ListeView.vue'
 import { jsonResponse, makeFairteiler } from './fixtures'
 
@@ -7,6 +8,8 @@ const fetchMock = vi.fn()
 
 beforeEach(() => {
   vi.stubGlobal('fetch', fetchMock)
+  localStorage.clear()
+  resetFilters()
 })
 
 afterEach(() => {
@@ -76,6 +79,65 @@ describe('ListeView', () => {
     // header summary
     expect(wrapper.text()).toContain('3 Standorte')
     expect(wrapper.text()).toContain('2 mit aktueller Meldung')
+  })
+
+  it('shows care badges from the care flags', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse([
+        makeFairteiler({
+          id: 1,
+          name: 'Mit Problemen',
+          care: { needsCleaning: true, needsMaintenance: true },
+        }),
+        makeFairteiler({ id: 2, name: 'Alles gut' }),
+      ]),
+    )
+
+    const wrapper = mountListe()
+    await flushPromises()
+
+    const cards = wrapper.findAll('.listecard')
+    const problem = cards.find((c) => c.text().includes('Mit Problemen'))!
+    expect(problem.text()).toContain('Reinigung nötig')
+    expect(problem.find('.badge-warn').text()).toBe('Defekt gemeldet')
+
+    const fine = cards.find((c) => c.text().includes('Alles gut'))!
+    expect(fine.text()).not.toContain('Reinigung nötig')
+    expect(fine.find('.badge-warn').exists()).toBe(false)
+  })
+
+  it('filter chips reduce the rendered cards', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse([
+        makeFairteiler({ id: 1, name: 'Pfannenzauber', cooled: true }),
+        makeFairteiler({
+          id: 2,
+          name: 'Hirschgrün',
+          status: {
+            state: 'etwas_da',
+            lastReportAt: new Date().toISOString(),
+            tags: [],
+          },
+        }),
+      ]),
+    )
+
+    const wrapper = mountListe()
+    await flushPromises()
+    expect(wrapper.findAll('.listecard')).toHaveLength(2)
+
+    const etwasDa = wrapper.findAll('.filterchip').find((c) => c.text() === 'Etwas da')!
+    await etwasDa.trigger('click')
+    expect(etwasDa.attributes('aria-pressed')).toBe('true')
+    const cards = wrapper.findAll('.listecard')
+    expect(cards).toHaveLength(1)
+    expect(cards[0]!.text()).toContain('Hirschgrün')
+
+    // AND with cooled -> nothing matches, German empty state
+    const cooled = wrapper.findAll('.filterchip').find((c) => c.text() === 'Gekühlt')!
+    await cooled.trigger('click')
+    expect(wrapper.findAll('.listecard')).toHaveLength(0)
+    expect(wrapper.text()).toContain('Keine Fairteiler entsprechen den gewählten Filtern.')
   })
 
   it('shows a German error with retry on failure', async () => {

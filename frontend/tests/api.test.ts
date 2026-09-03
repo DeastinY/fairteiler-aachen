@@ -81,6 +81,18 @@ describe('api composable', () => {
     expect(error.message).toBe(detail)
   })
 
+  it('deletes an own report with the X-Device-Id header', async () => {
+    const { deleteReport } = await import('../src/composables/api')
+    fetchMock.mockResolvedValue(new Response(null, { status: 204 }))
+
+    await expect(deleteReport(55)).resolves.toBeUndefined()
+
+    const [url, init] = fetchMock.mock.calls[0]!
+    expect(url).toBe('/api/reports/55')
+    expect(init.method).toBe('DELETE')
+    expect(init.headers['X-Device-Id']).toBe(getDeviceId())
+  })
+
   it('fetches the push config from /api/push/config', async () => {
     fetchMock.mockResolvedValue(jsonResponse({ enabled: true, vapidPublicKey: 'KEY' }))
 

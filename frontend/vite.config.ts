@@ -1,5 +1,5 @@
 /// <reference types="vitest/config" />
-import { copyFileSync } from 'node:fs'
+import { copyFileSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig, loadEnv, type PluginOption } from 'vite'
@@ -21,9 +21,15 @@ function spaFallback404(): PluginOption {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const base = env.VITE_BASE ?? '/'
+  const pkg = JSON.parse(
+    readFileSync(resolve(process.cwd(), 'package.json'), 'utf-8'),
+  ) as { version: string }
 
   return {
     base,
+    define: {
+      __APP_VERSION__: JSON.stringify(pkg.version),
+    },
     plugins: [
       vue(),
       VitePWA({

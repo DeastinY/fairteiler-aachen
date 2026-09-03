@@ -4,6 +4,7 @@ import { tagLabels } from '../lib/labels'
 import { formatRelativeTime } from '../lib/relativeTime'
 import type { FairteilerListItem } from '../types'
 import ActivityBars from './ActivityBars.vue'
+import CareBadges from './CareBadges.vue'
 import StatusBadge from './StatusBadge.vue'
 
 const props = defineProps<{ fairteiler: FairteilerListItem }>()
@@ -21,7 +22,10 @@ const timeline = computed(() => {
   <RouterLink :to="`/fairteiler/${fairteiler.id}`" class="card listecard">
     <span class="toprow">
       <span class="disp name">{{ fairteiler.name }}</span>
-      <StatusBadge :state="fairteiler.status.state" />
+      <span class="badges">
+        <CareBadges :care="fairteiler.care" />
+        <StatusBadge :state="fairteiler.status.state" />
+      </span>
     </span>
     <span class="street">{{ fairteiler.street }} · {{ fairteiler.city }}</span>
     <span class="bottomrow">
@@ -58,6 +62,13 @@ const timeline = computed(() => {
 .name {
   font-weight: 650;
   font-size: 17px;
+}
+
+.badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .street {

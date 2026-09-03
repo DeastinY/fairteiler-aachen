@@ -11,6 +11,8 @@ const active = computed<string>(() => {
   if (route.path.startsWith('/melden')) return 'melden'
   if (
     route.path.startsWith('/mehr') ||
+    route.path.startsWith('/einstellungen') ||
+    route.path.startsWith('/regeln') ||
     route.path.startsWith('/impressum') ||
     route.path.startsWith('/datenschutz')
   ) {

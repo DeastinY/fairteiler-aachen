@@ -35,6 +35,9 @@ export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
   brought: 'Etwas gebracht',
   taken: 'Etwas mitgenommen',
   empty: 'Leer gemeldet',
+  cleaned: 'Gereinigt / in Ordnung gebracht',
+  needs_cleaning: 'Reinigung nötig gemeldet',
+  needs_maintenance: 'Defekt gemeldet',
 }
 
 export function reportTypeLabel(type: ReportType | string): string {

@@ -15,7 +15,7 @@ import {
   precacheAndRoute,
 } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
-import { NetworkFirst } from 'workbox-strategies'
+import { CacheFirst, NetworkFirst } from 'workbox-strategies'
 import { isFairteilerApiUrl } from './lib/apiBase'
 import { parsePushPayload } from './lib/push'
 
@@ -47,6 +47,24 @@ registerRoute(
     plugins: [
       new CacheableResponsePlugin({ statuses: [200] }),
       new ExpirationPlugin({ maxEntries: 40, maxAgeSeconds: 6 * 60 * 60 }),
+    ],
+  }),
+)
+
+// basemap.de tiles: CacheFirst so revisits and offline show the last tiles.
+// A failing tile request never breaks the app – the map just stays gray.
+registerRoute(
+  ({ url, request }) =>
+    request.method === 'GET' && url.hostname === 'sgx.geodatenzentrum.de',
+  new CacheFirst({
+    cacheName: 'basemap-tiles',
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({
+        maxEntries: 300,
+        maxAgeSeconds: 7 * 24 * 60 * 60,
+        purgeOnQuotaError: true,
+      }),
     ],
   }),
 )

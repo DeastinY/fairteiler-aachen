@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ApiError, fetchFairteilerList, submitReport } from '../composables/api'
+import {
+  ApiError,
+  deleteReport,
+  fetchFairteilerList,
+  submitReport,
+} from '../composables/api'
+import { forgetOwnReport, rememberOwnReport } from '../composables/ownReports'
 import { showToast } from '../composables/useToast'
 import { FOOD_TAGS, tagLabel } from '../lib/labels'
 import type { FairteilerListItem, ReportType } from '../types'
@@ -27,6 +33,13 @@ const ACTIONS: { type: ReportType; title: string; note?: string }[] = [
   },
   { type: 'taken', title: 'Ich habe etwas mitgenommen' },
   { type: 'empty', title: 'Der Fairteiler ist leer' },
+]
+
+/** Condition reports – never change the food status, tracked separately. */
+const CONDITIONS: { type: ReportType; title: string }[] = [
+  { type: 'cleaned', title: 'Gereinigt / in Ordnung gebracht' },
+  { type: 'needs_cleaning', title: 'Reinigung nötig' },
+  { type: 'needs_maintenance', title: 'Etwas ist defekt' },
 ]
 
 const selected = computed(() =>
@@ -61,17 +74,41 @@ function toggleTag(tag: string) {
   }
 }
 
+async function undoReport(reportId: number) {
+  try {
+    await deleteReport(reportId)
+    forgetOwnReport(reportId)
+    showToast('Meldung zurückgenommen.')
+  } catch (e) {
+    showToast(
+      e instanceof ApiError
+        ? e.message
+        : 'Konnte nicht zurückgenommen werden – bitte versuch es später noch einmal.',
+    )
+  }
+}
+
 async function submit() {
   if (submitting.value || selectedId.value === null) return
   submitting.value = true
   submitError.value = null
   try {
-    await submitReport(selectedId.value, {
+    const fairteilerId = selectedId.value
+    const created = await submitReport(fairteilerId, {
       type: selectedType.value,
-      tags: selectedTags.value,
+      tags: selectedType.value === 'brought' ? selectedTags.value : [],
     })
-    showToast('Danke! Deine Meldung ist online.', { green: true })
-    router.push(`/fairteiler/${selectedId.value}`)
+    rememberOwnReport({
+      id: created.id,
+      fairteilerId,
+      createdAt: created.createdAt,
+    })
+    showToast('Danke! Deine Meldung ist online.', {
+      green: true,
+      duration: 6000,
+      action: { label: 'Rückgängig', handler: () => void undoReport(created.id) },
+    })
+    router.push(`/fairteiler/${fairteilerId}`)
   } catch (e) {
     if (e instanceof ApiError) {
       submitError.value = e.message
@@ -127,10 +164,10 @@ function close() {
     </div>
 
     <template v-if="fairteiler && !loadError">
-      <!-- action choice -->
-      <div class="section">
+      <!-- action choice (food actions + condition reports = one radio group) -->
+      <div class="section" role="radiogroup" aria-label="Was möchtest du melden?">
         <div class="disp sectiontitle">Was möchtest du melden?</div>
-        <div class="actionlist" role="radiogroup" aria-label="Was möchtest du melden?">
+        <div class="actionlist">
           <button
             v-for="action in ACTIONS"
             :key="action.type"
@@ -162,10 +199,42 @@ function close() {
             </svg>
           </button>
         </div>
+
+        <!-- condition reports -->
+        <div class="disp subsectiontitle">Zustand melden</div>
+        <div class="actionlist">
+          <button
+            v-for="condition in CONDITIONS"
+            :key="condition.type"
+            type="button"
+            class="actioncard conditioncard"
+            :class="{ sel: selectedType === condition.type }"
+            role="radio"
+            :aria-checked="selectedType === condition.type"
+            @click="chooseType(condition.type)"
+          >
+            <span class="conditionicon">
+              <svg v-if="condition.type === 'cleaned'" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#266645" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M8.5 12.5l2.5 2.5 5-5.5"></path>
+              </svg>
+              <svg v-else-if="condition.type === 'needs_cleaning'" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a6516" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3 C12 3 6 10.5 6 14.5 a6 6 0 0 0 12 0 C18 10.5 12 3 12 3 Z"></path>
+              </svg>
+              <svg v-else width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a4432f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14.5 6.5a4 4 0 0 1 5-5l-3 3 1 2 2 1 3-3a4 4 0 0 1-5 5L8 19.5a2 2 0 0 1-3-3z"></path>
+              </svg>
+            </span>
+            <span class="conditiontitle">{{ condition.title }}</span>
+            <svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 13l4 4 10-10"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <!-- tags -->
-      <div class="section">
+      <!-- tags (only meaningful when something was brought) -->
+      <div v-if="selectedType === 'brought'" class="section">
         <div class="tagshead">
           <span class="disp sectiontitle notitlegap">Was ist jetzt da?</span>
           <span class="tagsnote">Mehrfachauswahl · optional</span>
@@ -182,6 +251,12 @@ function close() {
             {{ tagLabel(tag) }}
           </button>
         </div>
+      </div>
+
+      <div class="section">
+        <RouterLink to="/regeln" class="regelnlink" data-test="regeln-link">
+          Was darf in den Fairteiler?
+        </RouterLink>
       </div>
 
       <!-- submit -->
@@ -357,6 +432,42 @@ function close() {
 .actionnote {
   font-size: 12px;
   color: #4a5a4e;
+}
+
+.subsectiontitle {
+  font-weight: 650;
+  font-size: 14px;
+  color: var(--muted);
+  margin: 16px 0 8px 0;
+}
+
+.conditioncard {
+  padding: 10px 14px;
+}
+
+.conditionicon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--green-mist);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.conditiontitle {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.regelnlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .tagshead {

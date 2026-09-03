@@ -12,11 +12,13 @@ vi.mock('vue-router', async (importOriginal) => {
 const globalStubs = { global: { stubs: { RouterLink: RouterLinkStub } } }
 
 describe('MehrView', () => {
-  it('links to Impressum and Datenschutz', () => {
+  it('links to Einstellungen, Impressum and Datenschutz', () => {
     const wrapper = mount(MehrView, globalStubs)
     const targets = wrapper
       .findAllComponents(RouterLinkStub)
       .map((link) => link.props('to'))
+    expect(targets).toContain('/einstellungen')
+    expect(targets).toContain('/regeln')
     expect(targets).toContain('/impressum')
     expect(targets).toContain('/datenschutz')
   })

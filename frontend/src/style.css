@@ -147,7 +147,8 @@ button {
 
 .badge-green,
 .badge-gray,
-.badge-amber {
+.badge-amber,
+.badge-warn {
   border-radius: 999px;
   padding: 4px 10px;
   font-size: 12px;
@@ -168,6 +169,12 @@ button {
 .badge-amber {
   background: var(--amber-soft);
   color: var(--amber-ink);
+}
+
+/* care warnings (defect) – separate from the green/amber status roles */
+.badge-warn {
+  background: #f4e0da;
+  color: #a4432f;
 }
 
 .roundbtn {

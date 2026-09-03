@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import CareBadges from '../components/CareBadges.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
-import { fetchFairteilerDetail } from '../composables/api'
+import { ApiError, deleteReport, fetchFairteilerDetail } from '../composables/api'
+import { findOwnReport, forgetOwnReport } from '../composables/ownReports'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
+import { showToast } from '../composables/useToast'
 import { reportTypeLabel, tagLabel, tagLabels } from '../lib/labels'
+import { navigationUrl } from '../lib/navigation'
 import { formatRelativeTime } from '../lib/relativeTime'
 import { statusMeta } from '../lib/status'
 import type { FairteilerDetail, Report } from '../types'
@@ -97,6 +101,39 @@ function reportTitle(report: Report): string {
   return tags ? `${label} · ${tags}` : label
 }
 
+const undoing = ref(false)
+
+function ownReportId(report: Report): number | null {
+  if (!detail.value) return null
+  return findOwnReport(detail.value.id, report.createdAt)?.id ?? null
+}
+
+async function undoReport(report: Report) {
+  const reportId = ownReportId(report)
+  if (reportId === null || undoing.value) return
+  undoing.value = true
+  try {
+    await deleteReport(reportId)
+    forgetOwnReport(reportId)
+    showToast('Meldung zurückgenommen.')
+    await load()
+  } catch (e) {
+    showToast(
+      e instanceof ApiError
+        ? e.message
+        : 'Konnte nicht zurückgenommen werden – bitte versuch es später noch einmal.',
+    )
+  } finally {
+    undoing.value = false
+  }
+}
+
+const routeHref = computed(() =>
+  detail.value
+    ? navigationUrl(detail.value.lat, detail.value.lon, detail.value.name, navigator.userAgent)
+    : null,
+)
+
 function goBack() {
   if (window.history.length > 1) router.back()
   else router.push('/liste')
@@ -141,10 +178,28 @@ function goBack() {
       <div class="titleblock">
         <div class="titlerow">
           <h1 class="disp page-title">{{ detail.name }}</h1>
-          <StatusBadge :state="detail.status.state" />
+          <span class="titlebadges">
+            <CareBadges :care="detail.care" />
+            <StatusBadge :state="detail.status.state" />
+          </span>
         </div>
         <p class="page-sub">{{ address }}</p>
         <p v-if="detail.regionName" class="region">{{ detail.regionName }}</p>
+        <div v-if="detail.aroundTheClock || detail.cooled" class="inforow">
+          <span v-if="detail.aroundTheClock" class="infochip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M12 7v5l3 3"></path>
+            </svg>
+            Rund um die Uhr
+          </span>
+          <span v-if="detail.cooled" class="infochip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M12 2v20 M4 6l16 12 M20 6L4 18"></path>
+            </svg>
+            Gekühlt
+          </span>
+        </div>
       </div>
 
       <!-- status card -->
@@ -204,6 +259,16 @@ function goBack() {
               <svg v-else-if="report.type === 'taken'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#566b5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M12 5v14 M5 12l7 7 7-7"></path>
               </svg>
+              <svg v-else-if="report.type === 'cleaned'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#266645" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M8.5 12.5l2.5 2.5 5-5.5"></path>
+              </svg>
+              <svg v-else-if="report.type === 'needs_cleaning'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a6516" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3 C12 3 6 10.5 6 14.5 a6 6 0 0 0 12 0 C18 10.5 12 3 12 3 Z"></path>
+              </svg>
+              <svg v-else-if="report.type === 'needs_maintenance'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a4432f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14.5 6.5a4 4 0 0 1 5-5l-3 3 1 2 2 1 3-3a4 4 0 0 1-5 5L8 19.5a2 2 0 0 1-3-3z"></path>
+              </svg>
               <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#565f59" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="9"></circle>
                 <path d="M8 12h8"></path>
@@ -213,12 +278,33 @@ function goBack() {
               <span class="reporttitle">{{ reportTitle(report) }}</span>
               <span class="reporttime">{{ formatRelativeTime(report.createdAt) }}</span>
             </span>
+            <button
+              v-if="ownReportId(report) !== null"
+              type="button"
+              class="undobtn"
+              :disabled="undoing"
+              @click="undoReport(report)"
+            >
+              Zurücknehmen
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- action -->
+      <!-- actions -->
       <div class="actions">
+        <a
+          v-if="routeHref"
+          :href="routeHref"
+          class="routebtn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 11l19-8-8 19-2.5-8.5z"></path>
+          </svg>
+          Route
+        </a>
         <RouterLink :to="`/melden?fairteiler=${detail.id}`" class="meldenbtn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fdfcf8" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
             <path d="M12 5v14 M5 12h14"></path>
@@ -435,6 +521,25 @@ function goBack() {
   background: var(--gray-soft);
 }
 
+.reporticon.cleaned {
+  background: var(--green-soft);
+}
+
+.reporticon.needs_cleaning {
+  background: var(--amber-soft);
+}
+
+.reporticon.needs_maintenance {
+  background: #f4e0da;
+}
+
+.titlebadges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .reportbody {
   flex: 1;
   display: flex;
@@ -452,12 +557,66 @@ function goBack() {
   color: var(--muted);
 }
 
+.undobtn {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  min-height: 44px;
+  padding: 8px 4px;
+}
+
+.undobtn:disabled {
+  opacity: 0.6;
+}
+
 .actions {
   padding: 16px;
   margin-top: 4px;
+  display: flex;
+  gap: 10px;
+}
+
+.inforow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.infochip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.routebtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1.5px solid #cfcaba;
+  border-radius: 999px;
+  padding: 14px 0;
+  font-size: 15px;
+  font-weight: 600;
+  min-height: 44px;
+  color: var(--ink);
+}
+
+.routebtn:hover {
+  color: var(--ink);
 }
 
 .meldenbtn {
+  flex: 1.4;
   display: flex;
   align-items: center;
   justify-content: center;
