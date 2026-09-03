@@ -48,4 +48,8 @@ AGPL-3.0-only — see LICENSE.
 
 ## Status
 
-Mockup / validation phase (M0). No app code yet.
+M1 + M2 complete and tested (117 tests): live status, reporting,
+activity, schematic map, installable PWA, self-hosted web push,
+moderation and retention tooling. Deployment to Uberspace prepared
+(`deploy/uberspace/`); waiting on account details and the Impressum/
+Datenschutz `[PLACEHOLDER]` values before going live.
