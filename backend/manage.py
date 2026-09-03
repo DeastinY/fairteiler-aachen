@@ -46,6 +46,9 @@ def main() -> int:
     sub.add_parser("blocked")
     sub.add_parser("prune")
 
+    p_seed = sub.add_parser("seed")
+    p_seed.add_argument("--path", default=str(BASE / "seed" / "fairteiler.json"))
+
     args = parser.parse_args()
     engine = make_engine(DB_URL)
     with make_session_factory(engine)() as session:
@@ -83,6 +86,11 @@ def main() -> int:
         elif args.cmd == "prune":
             count = maintenance.prune_reports(session)
             print(f"pruned {count} reports older than {maintenance.RETENTION_DAYS} days")
+        elif args.cmd == "seed":
+            from app.seed import load_seed
+
+            count = load_seed(session, pathlib.Path(args.path))
+            print(f"seeded/updated {count} fairteiler from {args.path}")
         session.commit()
     return 0
 

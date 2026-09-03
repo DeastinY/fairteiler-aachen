@@ -76,13 +76,24 @@ def main() -> int:
     parser.add_argument("--markers", help="path to an existing markers.json")
     parser.add_argument("--raw-dir", default="data/upstream")
     parser.add_argument("--out", default="backend/seed/fairteiler.json")
+    parser.add_argument(
+        "--refresh-markers",
+        action="store_true",
+        help="re-fetch the markers list (1 request) even if cached — for the "
+        "daily sync; details are still only fetched for NEW ids",
+    )
     args = parser.parse_args()
 
     raw_dir = Path(args.raw_dir)
     raw_dir.mkdir(parents=True, exist_ok=True)
 
     markers_path = raw_dir / "markers.json"
-    if args.markers:
+    if args.refresh_markers:
+        print("refreshing markers list (1 request)")
+        data = get(f"{BASE}/map/markers/food-share-points")
+        markers_path.write_bytes(data)
+        markers = json.loads(data)
+    elif args.markers:
         markers = json.loads(Path(args.markers).read_text())
     elif markers_path.exists():
         markers = json.loads(markers_path.read_text())
