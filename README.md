@@ -7,6 +7,12 @@ reported in 10 seconds without a login. Co-exists with
 core platform has left open (see `IMPLEMENTATION_PLAN.md` for the issue-tracker
 evidence), it does not replace it.
 
+## Screenshots
+
+| Karte | Liste | Detail | Statistik |
+|---|---|---|---|
+| ![Karte](docs/screenshots/karte.png) | ![Liste](docs/screenshots/liste.png) | ![Detail](docs/screenshots/detail.png) | ![Statistik](docs/screenshots/statistik.png) |
+
 ## What's here
 
 | Path | Content |

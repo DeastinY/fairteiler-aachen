@@ -129,5 +129,4 @@ const timeline = computed(() => {
   color: var(--faint);
 }
 
-.name { min-width: 0; overflow-wrap: anywhere; }
 </style>
