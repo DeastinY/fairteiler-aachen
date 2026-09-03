@@ -165,7 +165,7 @@ const de = {
   'mehr.datenschutz': 'Datenschutz',
   'mehr.aboutTitle': 'Über diese App',
   'mehr.aboutText':
-    'Fairteiler Aachen ist ein ehrenamtliches, nicht-kommerzielles Community-Projekt. Es ergänzt foodsharing.de um einen Live-Status der Aachener Fairteiler – anonym gemeldet von Menschen vor Ort. Der Quellcode ist offen und kann von der Community weiterentwickelt werden.',
+    'Fairteiler Aachen ist ein unabhängiges, privates und nichtkommerzielles Community-Projekt. Es besteht keine Verbindung zum foodsharing e.V. oder zur Plattform foodsharing.de – ‚Fairteiler’ wird hier rein beschreibend für öffentliche Lebensmittel-Verteilstationen verwendet. Die Stammdaten der Standorte stammen von der öffentlichen foodsharing-Plattform; offizielle Informationen: foodsharing.de. Der Quellcode ist offen (AGPL-3.0).',
   'mehr.fsRegion': 'foodsharing Aachen auf foodsharing.de',
 
   // install

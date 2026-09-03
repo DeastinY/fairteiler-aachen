@@ -147,7 +147,7 @@ const tr: Messages = {
   'mehr.datenschutz': 'Gizlilik (Almanca)',
   'mehr.aboutTitle': 'Bu uygulama hakkında',
   'mehr.aboutText':
-    "Fairteiler Aachen gönüllü, kâr amacı gütmeyen bir topluluk projesidir. foodsharing.de'yi Aachen'daki Fairteiler'lerin canlı durumuyla tamamlar – yerinde bulunan kişilerce anonim olarak bildirilir. Kaynak kodu açıktır ve topluluk tarafından geliştirilebilir.",
+    'Fairteiler Aachen bağımsız, özel ve ticari olmayan bir topluluk projesidir. foodsharing e.V. veya foodsharing.de platformuyla hiçbir bağlantısı yoktur – “Fairteiler” burada halka açık gıda paylaşım noktaları için yalnızca tanımlayıcı olarak kullanılır. Noktaların temel verileri halka açık foodsharing platformundan gelir; resmî bilgiler için: foodsharing.de. Kaynak kodu açıktır (AGPL-3.0).',
   'mehr.fsRegion': "foodsharing.de'de foodsharing Aachen",
 
   'install.title': 'Uygulama olarak yükle',

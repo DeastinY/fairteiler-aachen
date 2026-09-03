@@ -147,7 +147,7 @@ const uk: Messages = {
   'mehr.datenschutz': 'Конфіденційність (німецькою)',
   'mehr.aboutTitle': 'Про цей застосунок',
   'mehr.aboutText':
-    'Fairteiler Aachen – волонтерський некомерційний проєкт спільноти. Він доповнює foodsharing.de живим статусом аахенських Fairteiler – про нього анонімно повідомляють люди на місці. Вихідний код відкритий, і спільнота може розвивати його далі.',
+    'Fairteiler Aachen – незалежний, приватний і некомерційний проєкт спільноти. Він не пов’язаний із foodsharing e.V. чи платформою foodsharing.de – слово «Fairteiler» тут вживається суто описово для публічних пунктів роздачі їжі. Основні дані точок узяті з публічної платформи foodsharing; офіційна інформація: foodsharing.de. Вихідний код відкритий (AGPL-3.0).',
   'mehr.fsRegion': 'foodsharing Aachen на foodsharing.de',
 
   'install.title': 'Встановити як застосунок',

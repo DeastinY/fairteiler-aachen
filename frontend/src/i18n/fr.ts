@@ -150,7 +150,7 @@ const fr: Messages = {
   'mehr.datenschutz': 'Confidentialité (en allemand)',
   'mehr.aboutTitle': 'À propos de cette app',
   'mehr.aboutText':
-    'Fairteiler Aachen est un projet communautaire bénévole et non commercial. Il complète foodsharing.de avec un statut en direct des Fairteiler d\'Aix-la-Chapelle – signalé anonymement par les gens sur place. Le code source est ouvert et la communauté peut le faire évoluer.',
+    'Fairteiler Aachen est un projet communautaire indépendant, privé et non commercial. Il n\'existe aucun lien avec foodsharing e.V. ni avec la plateforme foodsharing.de – « Fairteiler » est utilisé ici de façon purement descriptive pour des points publics de partage alimentaire. Les données de base des lieux proviennent de la plateforme publique foodsharing ; informations officielles : foodsharing.de. Le code source est ouvert (AGPL-3.0).',
   'mehr.fsRegion': 'foodsharing Aachen sur foodsharing.de',
 
   'install.title': 'Installer comme application',

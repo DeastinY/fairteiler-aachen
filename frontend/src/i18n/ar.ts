@@ -147,7 +147,7 @@ const ar: Messages = {
   'mehr.datenschutz': 'الخصوصية (بالألمانية)',
   'mehr.aboutTitle': 'عن هذا التطبيق',
   'mehr.aboutText':
-    'Fairteiler Aachen مشروع مجتمعي تطوعي غير ربحي. يضيف إلى foodsharing.de حالة مباشرة لـ Fairteiler آخن – يبلّغ عنها الناس في الموقع دون ذكر أسمائهم. الشيفرة المصدرية مفتوحة ويمكن للمجتمع تطويرها.',
+    'Fairteiler Aachen مشروع مجتمعي مستقل وخاص وغير تجاري. لا توجد أي صلة بجمعية foodsharing e.V. أو بمنصة foodsharing.de – تُستخدم كلمة «Fairteiler» هنا وصفًا فقط لنقاط توزيع الطعام العامة. البيانات الأساسية للمواقع مأخوذة من منصة foodsharing العامة؛ للمعلومات الرسمية: foodsharing.de. الشيفرة المصدرية مفتوحة (AGPL-3.0).',
   'mehr.fsRegion': 'foodsharing آخن على foodsharing.de',
 
   'install.title': 'تثبيت كتطبيق',

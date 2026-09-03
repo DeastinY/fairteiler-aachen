@@ -147,7 +147,7 @@ const en: Messages = {
   'mehr.datenschutz': 'Privacy (in German)',
   'mehr.aboutTitle': 'About this app',
   'mehr.aboutText':
-    'Fairteiler Aachen is a volunteer-run, non-commercial community project. It adds a live status for the Fairteiler in Aachen to foodsharing.de – reported anonymously by people on site. The source code is open and can be developed further by the community.',
+    'Fairteiler Aachen is an independent, private and non-commercial community project. It has no affiliation with foodsharing e.V. or the foodsharing.de platform – \'Fairteiler\' is used here purely descriptively for public food-sharing points. The locations\' master data comes from the public foodsharing platform; for official information see foodsharing.de. The source code is open (AGPL-3.0).',
   'mehr.fsRegion': 'foodsharing Aachen on foodsharing.de',
 
   'install.title': 'Install as an app',

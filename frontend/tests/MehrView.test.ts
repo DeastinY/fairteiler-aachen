@@ -26,9 +26,10 @@ describe('MehrView', () => {
 
   it('describes the project and links foodsharing.de as a user-clicked link', () => {
     const wrapper = mount(MehrView, globalStubs)
-    expect(wrapper.text()).toContain('ehrenamtliches, nicht-kommerzielles')
-    expect(wrapper.text()).toContain('ergänzt foodsharing.de')
-    expect(wrapper.text()).toContain('Quellcode')
+    expect(wrapper.text()).toContain('unabhängiges, privates und nichtkommerzielles')
+    expect(wrapper.text()).toContain('keine Verbindung zum foodsharing e.V.')
+    expect(wrapper.text()).toContain('rein beschreibend')
+    expect(wrapper.text()).toContain('Quellcode ist offen (AGPL-3.0)')
 
     const external = wrapper.find('a.extlink')
     expect(external.attributes('href')).toBe('https://foodsharing.de/region/aachen')

@@ -147,7 +147,7 @@ const pl: Messages = {
   'mehr.datenschutz': 'Prywatność (po niemiecku)',
   'mehr.aboutTitle': 'O tej aplikacji',
   'mehr.aboutText':
-    'Fairteiler Aachen to wolontariacki, niekomercyjny projekt społecznościowy. Uzupełnia foodsharing.de o aktualny status akwizgrańskich Fairteiler – zgłaszany anonimowo przez osoby na miejscu. Kod źródłowy jest otwarty i społeczność może go rozwijać.',
+    'Fairteiler Aachen to niezależny, prywatny i niekomercyjny projekt społecznościowy. Nie ma żadnego powiązania z foodsharing e.V. ani platformą foodsharing.de – słowo „Fairteiler” jest tu używane czysto opisowo dla publicznych punktów dzielenia się żywnością. Podstawowe dane lokalizacji pochodzą z publicznej platformy foodsharing; oficjalne informacje: foodsharing.de. Kod źródłowy jest otwarty (AGPL-3.0).',
   'mehr.fsRegion': 'foodsharing Aachen na foodsharing.de',
 
   'install.title': 'Zainstaluj jako aplikację',
