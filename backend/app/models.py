@@ -55,6 +55,18 @@ class PushSubscription(Base):
     )
 
 
+class BlockedDevice(Base):
+    __tablename__ = "blocked_devices"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    device_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    reason: Mapped[str] = mapped_column(String(200), default="")
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: dt.datetime.now(dt.timezone.utc).replace(tzinfo=None),
+    )
+
+
 class Report(Base):
     __tablename__ = "reports"
 

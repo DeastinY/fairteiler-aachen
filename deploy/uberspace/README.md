@@ -45,8 +45,15 @@ Layout: same origin. Apache serves the built frontend from `~/html`;
    cp ~/fairteiler-repo/deploy/uberspace/htaccess ~/html/.htaccess
 
    # nightly DB backup at 03:15 (kept 14 days in ~/fairteiler/backups)
-   (crontab -l 2>/dev/null; echo "15 3 * * * ~/fairteiler-repo/deploy/uberspace/backup.sh") | crontab -
+   # + nightly retention cleanup at 03:45 (Datenschutz §9: Meldungen > 90 Tage)
+   (crontab -l 2>/dev/null; \
+    echo "15 3 * * * ~/fairteiler-repo/deploy/uberspace/backup.sh"; \
+    echo "45 3 * * * cd ~/fairteiler-repo/backend && set -a && . ~/fairteiler/env && ~/fairteiler/venv/bin/python manage.py prune") | crontab -
    ```
+
+   Moderation (as promised in the Impressum): `manage.py reports` lists
+   recent reports, `manage.py delete-report <id>` removes one,
+   `manage.py block <device_hash>` stops a spamming device.
 
 3. **First frontend upload** (from your machine, repo root):
 

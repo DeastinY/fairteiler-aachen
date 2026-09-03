@@ -84,7 +84,7 @@ import LegalPage from '../components/LegalPage.vue'
 
     <h2>9. Speicherdauer</h2>
     <p>
-      Meldungen werden nach <mark class="ph">[SPEICHERDAUER, z. B. 90 Tagen]</mark> gelöscht oder
+      Meldungen werden nach 90 Tagen gelöscht oder
       anonymisiert aggregiert. Push-Abonnements bestehen bis zum Widerruf.
     </p>
 

@@ -32,5 +32,6 @@
     "workbox-precaching": "^7.4.1",
     "workbox-routing": "^7.4.1",
     "workbox-strategies": "^7.4.1"
-  }
+  },
+  "license": "AGPL-3.0-only"
 }

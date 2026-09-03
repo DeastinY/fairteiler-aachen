@@ -42,6 +42,10 @@ python3 -m http.server 8080          # then open http://<your-ip>:8080/prototype
 
 or push this repo to GitLab/GitHub and enable Pages.
 
+## License
+
+AGPL-3.0-only — see LICENSE.
+
 ## Status
 
 Mockup / validation phase (M0). No app code yet.

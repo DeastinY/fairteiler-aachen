@@ -68,7 +68,7 @@ describe('legal pages', () => {
     }
     const placeholders = wrapper.findAll('mark.ph').map((m) => m.text())
     expect(placeholders).toContain('[DATUM DER VERÖFFENTLICHUNG]')
-    expect(placeholders).toContain('[SPEICHERDAUER, z. B. 90 Tagen]')
+    expect(wrapper.text()).toContain('Meldungen werden nach 90 Tagen gelöscht')
     expect(wrapper.text()).toContain('Art. 11 DSGVO')
   })
 })

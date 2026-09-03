@@ -7,7 +7,7 @@ from pydantic import BaseModel, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import crud, push, seed, status
+from app import crud, maintenance, push, seed, status
 from app.models import FOOD_TAGS, Fairteiler, PushSubscription
 from app.push import PushSettings
 
@@ -159,6 +159,11 @@ def create_app(
     ):
         get_fairteiler_or_404(session, fairteiler_id)
         device_hash = crud.hash_device(x_device_id)
+        if maintenance.is_blocked(session, device_hash):
+            raise HTTPException(
+                status_code=403,
+                detail="Dieses Gerät wurde wegen Missbrauchs gesperrt.",
+            )
         previous = crud.last_report_by_device(session, fairteiler_id, device_hash)
         now = dt.datetime.now(dt.timezone.utc)
         if previous is not None:
