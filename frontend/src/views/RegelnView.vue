@@ -39,8 +39,17 @@ import LegalPage from '../components/LegalPage.vue'
       <li>Nimm Verdorbenes gleich mit heraus und entsorge es.</li>
       <li>Kühlschranktüren gut schließen.</li>
       <li>
+        Mache keine Fotos von den Lebensmitteln und teile keine Bilder vom
+        Inhalt – das kann die Kooperationen mit den Betrieben gefährden, aus
+        denen die geretteten Lebensmittel stammen.
+      </li>
+      <li>
         Fotografiere keine anderen Menschen am Fairteiler – nicht alle möchten
         gesehen werden.
+      </li>
+      <li>
+        Nimm Rücksicht auf die Nachbarschaft – besonders abends leise ankommen,
+        Türen nicht knallen und keine größeren Gruppen bilden.
       </li>
       <li>
         Nimm, was du brauchst – und melde es kurz in der App, damit andere

@@ -30,6 +30,9 @@ describe('RegelnView', () => {
     expect(wrapper.text()).toContain('Vor Ort mitdenken')
     expect(wrapper.text()).toContain('Kühlschranktüren gut schließen.')
     expect(wrapper.text()).toContain('Fotografiere keine anderen Menschen')
+    expect(wrapper.text()).toContain('keine Fotos von den Lebensmitteln')
+    expect(wrapper.text()).toContain('Kooperationen mit den Betrieben')
+    expect(wrapper.text()).toContain('Rücksicht auf die Nachbarschaft')
 
     expect(wrapper.text()).toContain('ohne Gewähr')
     expect(wrapper.text()).toContain('Hygieneregeln von foodsharing.de')
