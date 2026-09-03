@@ -2,10 +2,37 @@
 
 import datetime as dt
 
-from app.models import BROUGHT, EMPTY, Report
+from app.models import BROUGHT, CLEANED, EMPTY, NEEDS_CLEANING, NEEDS_MAINTENANCE, Report
 
 FRESH_HOURS = 12
 ACTIVITY_DAYS = 7
+CARE_DAYS = 14
+
+
+def derive_care(reports: list[Report], now: dt.datetime) -> dict:
+    """Cleaning/maintenance flags: a problem stands until a newer 'cleaned'
+    report (whoever fixes it reports that) or until it expires."""
+    cutoff = now - dt.timedelta(days=CARE_DAYS)
+    latest = {}
+    for r in reports:
+        when = _aware(r.created_at)
+        if when < cutoff:
+            continue
+        if r.type in (CLEANED, NEEDS_CLEANING, NEEDS_MAINTENANCE):
+            if r.type not in latest or when > latest[r.type]:
+                latest[r.type] = when
+    cleaned_at = latest.get(CLEANED)
+
+    def standing(problem_type: str) -> bool:
+        when = latest.get(problem_type)
+        if when is None:
+            return False
+        return cleaned_at is None or when > cleaned_at
+
+    return {
+        "needsCleaning": standing(NEEDS_CLEANING),
+        "needsMaintenance": standing(NEEDS_MAINTENANCE),
+    }
 
 
 def derive_status(reports: list[Report], now: dt.datetime) -> dict:

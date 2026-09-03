@@ -9,7 +9,10 @@ from app.db import Base
 BROUGHT = "brought"
 TAKEN = "taken"
 EMPTY = "empty"
-REPORT_TYPES = (BROUGHT, TAKEN, EMPTY)
+CLEANED = "cleaned"
+NEEDS_CLEANING = "needs_cleaning"
+NEEDS_MAINTENANCE = "needs_maintenance"
+REPORT_TYPES = (BROUGHT, TAKEN, EMPTY, CLEANED, NEEDS_CLEANING, NEEDS_MAINTENANCE)
 
 FOOD_TAGS = (
     "brot_backwaren",

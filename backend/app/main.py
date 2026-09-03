@@ -13,7 +13,9 @@ from app.push import PushSettings
 
 
 class ReportIn(BaseModel):
-    type: Literal["brought", "taken", "empty"]
+    type: Literal[
+        "brought", "taken", "empty", "cleaned", "needs_cleaning", "needs_maintenance"
+    ]
     tags: list[str] = []
 
     @field_validator("tags")
@@ -79,6 +81,7 @@ def create_app(
             "cooled": row.cooled,
             "aroundTheClock": row.around_the_clock,
             "status": status.derive_status(reports, now),
+            "care": status.derive_care(reports, now),
             "activity7d": status.activity_by_day(reports, now),
         }
         if with_description:
