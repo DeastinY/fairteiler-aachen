@@ -16,6 +16,7 @@ import { reportTypeLabel, tagLabel, tagLabels } from '../lib/labels'
 import { navigationUrl } from '../lib/navigation'
 import { formatRelativeTime } from '../lib/relativeTime'
 import { statusMeta } from '../lib/status'
+import { softBreakSlashes } from '../lib/text'
 import type { FairteilerDetail, Report } from '../types'
 
 const { locale } = useI18n()
@@ -259,7 +260,7 @@ function goBack() {
       <!-- title block -->
       <div class="titleblock">
         <div class="titlerow">
-          <h1 class="disp page-title">{{ detail.name }}</h1>
+          <h1 class="disp page-title">{{ softBreakSlashes(detail.name) }}</h1>
           <span class="titlebadges">
             <CareBadges :care="detail.care" />
             <StatusBadge :state="detail.status.state" />
@@ -341,7 +342,7 @@ function goBack() {
               <template v-if="row.ranges.length === 0">{{ row.text }}</template>
               <template v-else>
                 <template v-for="(range, index) in row.ranges" :key="index">
-                  <template v-if="index > 0"> {{ t('hours.join') }} </template>
+                  <template v-if="index > 0">{{ ' ' + t('hours.join') + ' ' }}</template>
                   <bdi dir="ltr">{{ range }}</bdi>
                 </template>
               </template>

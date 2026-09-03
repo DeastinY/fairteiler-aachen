@@ -45,3 +45,14 @@ describe('renderMarkdown', () => {
     expect(renderMarkdown(null)).toBe('')
   })
 })
+
+import { softBreakSlashes } from '../src/lib/text'
+
+describe('softBreakSlashes', () => {
+  it('adds a zero-width break after slashes only', () => {
+    const out = softBreakSlashes('Bayernallee/Kalverbenden')
+    expect(out).toContain('/​')
+    expect(out.replace(/​/g, '')).toBe('Bayernallee/Kalverbenden')
+    expect(softBreakSlashes('Hirschgrün')).toBe('Hirschgrün')
+  })
+})

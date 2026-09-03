@@ -68,7 +68,9 @@ const timeline = computed(() => {
 .name {
   font-weight: 650;
   font-size: 17px;
-  min-width: 0;
+  /* floor keeps the name from collapsing to a one-letter column when two
+     badges compete for the row (hyphens:auto shrinks min-content a lot) */
+  min-width: min(55%, 16ch);
   flex: 1;
   hyphens: auto;
   overflow-wrap: break-word;
