@@ -1,7 +1,7 @@
 import datetime as dt
 from typing import Literal
 
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Path
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 from sqlalchemy import select
@@ -21,10 +21,12 @@ class ReportIn(BaseModel):
     @field_validator("tags")
     @classmethod
     def known_tags(cls, value: list[str]) -> list[str]:
+        if len(value) > len(FOOD_TAGS):
+            raise ValueError("zu viele Kategorien")
         unknown = [t for t in value if t not in FOOD_TAGS]
         if unknown:
             raise ValueError(f"unknown tags: {unknown}")
-        return value
+        return list(dict.fromkeys(value))  # dedupe, keep order
 
 
 class SubscriptionKeys(BaseModel):
@@ -180,7 +182,10 @@ def create_app(
         ]
 
     @app.get("/api/fairteiler/{fairteiler_id}")
-    def fairteiler_detail(fairteiler_id: int, session: Session = Depends(get_session)):
+    def fairteiler_detail(
+        fairteiler_id: int = Path(ge=1, le=2_000_000_000),
+        session: Session = Depends(get_session),
+    ):
         row = get_fairteiler_or_404(session, fairteiler_id)
         usage.count(session, "detail_views")
         now = dt.datetime.now(dt.timezone.utc)
@@ -189,8 +194,8 @@ def create_app(
 
     @app.post("/api/fairteiler/{fairteiler_id}/reports", status_code=201)
     def create_report(
-        fairteiler_id: int,
         body: ReportIn,
+        fairteiler_id: int = Path(ge=1, le=2_000_000_000),
         x_device_id: str = Header(min_length=4, max_length=128),
         session: Session = Depends(get_session),
     ):
@@ -232,7 +237,7 @@ def create_app(
 
     @app.delete("/api/reports/{report_id}", status_code=204)
     def delete_own_report(
-        report_id: int,
+        report_id: int = Path(ge=1, le=2_000_000_000),
         x_device_id: str = Header(min_length=4, max_length=128),
         session: Session = Depends(get_session),
     ):
