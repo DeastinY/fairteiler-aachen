@@ -1,0 +1,5 @@
+# ~/html/.htaccess — SPA fallback: real files win, everything else -> index.html
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
