@@ -38,3 +38,37 @@ def test_health_and_stats_are_not_counted(client, db):
     db.expire_all()
     metrics = {r.metric for r in db.query(UsageCounter).all()}
     assert metrics == set()
+
+
+def test_stats_exposes_public_usage_series(client, db):
+    client.get("/api/fairteiler")
+    client.get("/api/fairteiler/810")
+    client.post(
+        "/api/fairteiler/810/reports",
+        json={"type": "brought", "tags": []},
+        headers={"X-Device-Id": "usage-series-dev"},
+    )
+    stats = client.get("/api/stats").json()
+    series = stats["usage14d"]
+    assert len(series) == 14
+    today = series[-1]
+    assert today["listViews"] >= 1
+    assert today["detailViews"] >= 1
+    assert today["reports"] == 1
+    # oldest first, days ISO-formatted, zero-filled
+    assert series[0]["day"] < series[-1]["day"]
+    assert all(set(e) == {"day", "listViews", "detailViews", "reports"} for e in series)
+    assert stats["pushSubscriptions"] == 0
+
+
+def test_stats_counts_push_subscriptions(push_client):
+    push_client.put(
+        "/api/push/subscription",
+        json={
+            "subscription": {"endpoint": "https://push.example/t", "keys": {"p256dh": "p", "auth": "a"}},
+            "fairteilerIds": [810],
+            "quietHours": False,
+        },
+        headers={"X-Device-Id": "usage-sub-dev"},
+    )
+    assert push_client.get("/api/stats").json()["pushSubscriptions"] == 1

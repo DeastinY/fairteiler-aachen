@@ -158,15 +158,25 @@ def create_app(
         rows = seed.all_fairteiler(session)
         with_food = 0
         reports_7d = 0
+        report_counts: dict[str, int] = {}
         for row in rows:
-            reports = crud.recent_reports(session, row.id)
-            reports_7d += len(reports)
+            reports = crud.recent_reports(session, row.id, days=14)
+            for r in reports:
+                day = status._aware(r.created_at).date().isoformat()
+                report_counts[day] = report_counts.get(day, 0) + 1
+            week = [
+                r for r in reports
+                if status._aware(r.created_at) >= now - dt.timedelta(days=7)
+            ]
+            reports_7d += len(week)
             if status.derive_status(reports, now)["state"] == "etwas_da":
                 with_food += 1
         return {
             "fairteilerTotal": len(rows),
             "withFood": with_food,
             "reports7d": reports_7d,
+            "pushSubscriptions": session.query(PushSubscription).count(),
+            "usage14d": usage.public_series(session, report_counts),
         }
 
     @app.get("/api/fairteiler")
