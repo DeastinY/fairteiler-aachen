@@ -78,8 +78,9 @@ import LegalPage from '../components/LegalPage.vue'
     <h2>8. Empfänger und Drittländer</h2>
     <p>
       Es findet keine Weitergabe an Dritte statt, mit Ausnahme des unter Punkt 7
-      beschriebenen Push-Dienstes deines Browser-Anbieters. Unser Server steht in
-      Deutschland.
+      beschriebenen Push-Dienstes deines Browser-Anbieters. Gehostet wird die App
+      bei Uberspace (uberspace.de) in Deutschland; mit dem Anbieter besteht ein
+      Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.
     </p>
 
     <h2>9. Speicherdauer</h2>
