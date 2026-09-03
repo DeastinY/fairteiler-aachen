@@ -7,11 +7,13 @@ import { jsonResponse, makeDetail } from './fixtures'
 
 const fetchMock = vi.fn()
 
+const routeId = { value: '810' }
+
 vi.mock('vue-router', async (importOriginal) => {
   const actual = await importOriginal<typeof import('vue-router')>()
   return {
     ...actual,
-    useRoute: () => ({ params: { id: '810' } }),
+    useRoute: () => ({ params: { id: routeId.value } }),
     useRouter: () => ({ push: vi.fn(), back: vi.fn() }),
   }
 })
@@ -32,6 +34,7 @@ function mountDetail() {
 }
 
 beforeEach(() => {
+  routeId.value = '810'
   vi.stubGlobal('fetch', fetchMock)
   fetchMock.mockImplementation((url: string, init?: RequestInit) => {
     if (init?.method === 'DELETE') return Promise.resolve(new Response(null, { status: 204 }))
@@ -293,6 +296,32 @@ describe('DetailView', () => {
 
     expect(wrapper.find('[data-test="skeletons"]').exists()).toBe(false)
     expect(wrapper.text()).toContain('Fairteiler "BreitSeite"')
+  })
+
+  it('shows the backend message for a 404 and the German network error otherwise', async () => {
+    fetchMock.mockImplementation(() =>
+      Promise.resolve(jsonResponse({ detail: 'Fairteiler nicht gefunden' }, 404)),
+    )
+    let wrapper = mountDetail()
+    await flushPromises()
+    expect(wrapper.text()).toContain('Fairteiler nicht gefunden')
+    expect(wrapper.find('.retrybtn').exists()).toBe(true)
+    wrapper.unmount()
+
+    fetchMock.mockImplementation(() => Promise.reject(new TypeError('Failed to fetch')))
+    wrapper = mountDetail()
+    await flushPromises()
+    expect(wrapper.text()).toContain(
+      'Der Fairteiler konnte nicht geladen werden. Bist du online?',
+    )
+  })
+
+  it('rejects a malformed route id without fetching', async () => {
+    routeId.value = 'abc'
+    const wrapper = mountDetail()
+    await flushPromises()
+    expect(wrapper.text()).toContain('Dieser Fairteiler wurde nicht gefunden.')
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('links the Route button to the platform navigation app', async () => {

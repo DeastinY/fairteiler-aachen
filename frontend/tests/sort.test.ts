@@ -49,10 +49,14 @@ describe('sortFairteiler', () => {
       makeFairteiler({ id: 4, status: { state: 'keine_meldung', lastReportAt: null, tags: [] } }),
       makeFairteiler({ id: 5, status: { state: 'etwas_da', lastReportAt: at(30), tags: [] } }),
     ]
+    items.push(
+      makeFairteiler({ id: 6, status: { state: 'leer', lastReportAt: 'kaputt', tags: [] } }),
+    )
     const sorted = sortByLastReported(items).map((f) => f.id)
     expect(sorted.slice(0, 3)).toEqual([3, 5, 2])
-    expect(sorted.slice(3).sort()).toEqual([1, 4]) // both null-report items last
-    expect(items.map((f) => f.id)).toEqual([1, 2, 3, 4, 5]) // no mutation
+    // null and unparseable timestamps both go last
+    expect(sorted.slice(3).sort()).toEqual([1, 4, 6])
+    expect(items.map((f) => f.id)).toEqual([1, 2, 3, 4, 5, 6]) // no mutation
   })
 
   it('does not mutate the input array', () => {

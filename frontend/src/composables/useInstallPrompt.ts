@@ -77,10 +77,15 @@ export function useInstallPrompt(): InstallPrompt {
   async function prompt(): Promise<'accepted' | 'dismissed' | 'unavailable'> {
     const event = promptEvent.value
     if (!event) return 'unavailable'
-    await event.prompt()
-    const choice = await event.userChoice
-    if (choice.outcome === 'accepted') promptEvent.value = null
-    return choice.outcome
+    try {
+      await event.prompt()
+      const choice = await event.userChoice
+      if (choice.outcome === 'accepted') promptEvent.value = null
+      return choice.outcome
+    } catch {
+      // a failing prompt behaves like a dismissal – never throws into the UI
+      return 'dismissed'
+    }
   }
 
   return { mode, canPrompt, prompt }

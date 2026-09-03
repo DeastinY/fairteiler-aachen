@@ -44,3 +44,11 @@ describe('useOnline', () => {
     expect(wrapper.text()).toBe('true')
   })
 })
+
+describe('OfflineBanner', () => {
+  it('renders the i18n offline line as a status region', async () => {
+    const { default: OfflineBanner } = await import('../src/components/OfflineBanner.vue')
+    const wrapper = mount(OfflineBanner)
+    expect(wrapper.find('[role="status"]').text()).toBe('Offline – letzter bekannter Stand')
+  })
+})

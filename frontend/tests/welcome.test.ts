@@ -4,6 +4,10 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import App from '../src/App.vue'
 import WelcomeOverlay from '../src/components/WelcomeOverlay.vue'
 import {
+  _resetInstallPromptForTests,
+  captureInstallPrompt,
+} from '../src/composables/useInstallPrompt'
+import {
   isDeepLinkEntry,
   isWelcomeDone,
   markWelcomeDone,
@@ -105,6 +109,53 @@ describe('WelcomeOverlay', () => {
     expect(welcomeVisible.value).toBe(true)
     await wrapper.find('[data-test="welcome-start"]').trigger('click')
     expect(welcomeVisible.value).toBe(false)
+  })
+})
+
+describe('WelcomeOverlay install block', () => {
+  function firePrompt(promptImpl: () => Promise<void>) {
+    const event = new Event('beforeinstallprompt', { cancelable: true })
+    const bip = event as unknown as {
+      prompt: () => Promise<void>
+      userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+    }
+    bip.prompt = vi.fn(promptImpl)
+    Object.defineProperty(bip, 'userChoice', {
+      value: Promise.resolve({ outcome: 'dismissed' as const }),
+    })
+    window.dispatchEvent(event)
+    return bip
+  }
+
+  it('offers Install when promptable and forwards the tap', async () => {
+    vi.stubGlobal('matchMedia', () => ({ matches: false }))
+    _resetInstallPromptForTests()
+    captureInstallPrompt()
+    const event = firePrompt(() => Promise.resolve())
+
+    const wrapper = mount(WelcomeOverlay)
+    const button = wrapper.find('.installbtn')
+    expect(button.exists()).toBe(true)
+
+    await button.trigger('click')
+    await flushPromises()
+    expect(event.prompt).toHaveBeenCalledTimes(1)
+    expect(wrapper.find('.installbtn').attributes('disabled')).toBeUndefined()
+  })
+
+  it('recovers when the prompt fails instead of leaving the button stuck', async () => {
+    vi.stubGlobal('matchMedia', () => ({ matches: false }))
+    _resetInstallPromptForTests()
+    captureInstallPrompt()
+    firePrompt(() => Promise.reject(new Error('browser refused')))
+
+    const wrapper = mount(WelcomeOverlay)
+    await wrapper.find('.installbtn').trigger('click')
+    await flushPromises()
+
+    // failure behaves like a dismissal: button usable again, overlay intact
+    expect(wrapper.find('.installbtn').attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('.welcome').exists()).toBe(true)
   })
 })
 
