@@ -266,9 +266,14 @@ function useLocation() {
 .map-area {
   position: relative;
   background: #e9e5d8;
+  /* contain Leaflet's internal z-indexes (panes 400+, controls 800+) so
+     they can never rise above the welcome overlay, nav, or toasts */
+  isolation: isolate;
+  z-index: 0;
 }
 
 .map {
+  position: relative;
   width: 100%;
   height: 48vh;
   min-height: 300px;

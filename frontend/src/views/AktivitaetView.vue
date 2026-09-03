@@ -69,7 +69,17 @@ async function syncServer(): Promise<boolean> {
       'Benachrichtigungen sind im Browser blockiert – du kannst sie in den Browser-Einstellungen wieder erlauben.'
     return false
   }
-  const registration = await navigator.serviceWorker.ready
+  // never hang forever: serviceWorker.ready only resolves once a SW is
+  // active — if none installs, fail fast with a clear message instead
+  const registration = await Promise.race([
+    navigator.serviceWorker.ready,
+    new Promise<null>((resolve) => setTimeout(() => resolve(null), 8000)),
+  ])
+  if (!registration) {
+    hint.value =
+      'Push ist gerade nicht verfügbar (kein aktiver Service Worker) – bitte lade die App neu.'
+    return false
+  }
   let subscription = await registration.pushManager.getSubscription()
   if (!subscription) {
     subscription = await registration.pushManager.subscribe({

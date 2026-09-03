@@ -50,10 +50,10 @@ export default defineConfig(({ mode }) => {
           theme_color: '#f4f1e9',
           background_color: '#f4f1e9',
           icons: [
-            { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-            { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+            { src: 'app-icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: 'app-icons/icon-512.png', sizes: '512x512', type: 'image/png' },
             {
-              src: 'icons/maskable-512.png',
+              src: 'app-icons/maskable-512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',

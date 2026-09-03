@@ -76,7 +76,7 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification(payload.title, {
       body: payload.body,
       tag: payload.tag,
-      icon: `${BASE_URL}icons/icon-192.png`,
+      icon: `${BASE_URL}app-icons/icon-192.png`,
       data: { url: payload.url },
     }),
   )

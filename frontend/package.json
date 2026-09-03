@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "vue-tsc -b"
+    "typecheck": "vue-tsc -b",
+    "e2e": "playwright test",
+    "check:dist": "node scripts/check-precache.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -17,12 +19,14 @@
     "vue-router": "^5.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/leaflet": "^1.9.22",
     "@types/node": "^24.13.3",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.9.1",
     "happy-dom": "^20.13.2",
+    "playwright": "^1.62.1",
     "typescript": "~6.0.2",
     "vite": "^8.2.2",
     "vite-plugin-pwa": "^1.3.0",
