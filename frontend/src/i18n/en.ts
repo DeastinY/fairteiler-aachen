@@ -112,7 +112,7 @@ const en: Messages = {
   'melden.needsCleaning': 'Needs cleaning',
   'melden.defect': 'Something is broken',
   'melden.tagsTitle': "What's there right now?",
-  'melden.tagsNote': 'Multiple choice · optional',
+  'melden.tagsNote': 'Select several · optional',
   'melden.rulesLink': 'What can go into the Fairteiler?',
   'melden.submit': 'Send report',
   'melden.submitting': 'Sending …',
@@ -125,7 +125,7 @@ const en: Messages = {
   'aktivitaet.subtitle': 'Your Fairteiler and notifications',
   'aktivitaet.statsOne': 'This week: 1 report · right now {withFood} of {total} with food',
   'aktivitaet.statsMany': 'This week: {n} reports · right now {withFood} of {total} with food',
-  'aktivitaet.statsLink': 'More under Statistics',
+  'aktivitaet.statsLink': 'More in Statistics',
   'aktivitaet.serverDisabled': 'Notifications are not (yet) enabled on this server.',
   'aktivitaet.unsupported': "Your browser doesn't support push notifications.",
   'aktivitaet.followOn': 'Right away when food is dropped off',
@@ -177,10 +177,10 @@ const en: Messages = {
 
   'regeln.title': 'Good to know',
   'regeln.intro':
-    'Fairteiler work because everyone thinks along a little. The most important points:',
+    'Fairteiler work because everyone looks out for them a little. The key points:',
   'regeln.notTitle': "What doesn't belong inside",
   'regeln.not1': 'raw meat, raw fish and dishes containing raw egg',
-  'regeln.not2': 'food past its use-by date ("use by …")',
+  'regeln.not2': 'food past its use-by date („zu verbrauchen bis …" – the use-by date)',
   'regeln.not3': 'spoiled or moldy food',
   'regeln.not4': 'high-proof alcohol',
   'regeln.notice':
@@ -189,12 +189,12 @@ const en: Messages = {
   'regeln.ok1':
     'A passed best-before date (MHD) is usually fine – check with your eyes, nose and common sense.',
   'regeln.ok2': 'Home-cooked food only with a note: ingredients and date.',
-  'regeln.careTitle': 'Think along on site',
+  'regeln.careTitle': "While you're there",
   'regeln.care1': "Leave the Fairteiler the way you'd like to find it – clean and tidy.",
   'regeln.care2': 'Take spoiled food out right away and dispose of it.',
   'regeln.care3': 'Close fridge doors properly.',
   'regeln.care4':
-    'Don\'t photograph the food or share pictures of the contents – that can endanger the cooperations with the businesses the rescued food comes from.',
+    'Don\'t photograph the food or share pictures of the contents – that can put the partnerships with the businesses the rescued food comes from at risk.',
   'regeln.care5': "Don't photograph other people at the Fairteiler – not everyone wants to be seen.",
   'regeln.care6':
     'Be considerate of the neighborhood – arrive quietly in the evening, don\'t slam doors, and avoid gathering in larger groups.',
@@ -202,13 +202,13 @@ const en: Messages = {
   'regeln.footer':
     'These notes summarize community practice, without guarantee. The notices on site and the foodsharing.de hygiene rules are binding.',
 
-  'welcome.title': "Great that you're here!",
+  'welcome.title': "Glad you're here!",
   'welcome.lead':
     'This app lives through all of us: a quick report on what\'s happening at a Fairteiler helps everyone else – and saves food.',
   'welcome.point1': 'Report in 10 seconds – no account, anonymous.',
   'welcome.point2': "Clean & fair: leave the Fairteiler the way you'd like to find it.",
   'welcome.point3': 'Respect: no photos of food or people, be considerate of the neighborhood.',
-  'welcome.rulesPre': 'All the details under',
+  'welcome.rulesPre': 'All the details in',
   'welcome.rulesLink': 'Good to know',
   'welcome.iosTip': 'Tip: via the share icon → "Add to Home Screen" this becomes a real app.',
   'welcome.start': "Let's go",
@@ -219,7 +219,7 @@ const en: Messages = {
   'statistik.title': 'Statistics',
   'statistik.intro':
     'This app counts usage only as anonymous daily totals – no IP addresses, no identifiers.',
-  'statistik.privacyLink': 'Details under Privacy',
+  'statistik.privacyLink': 'Details in Privacy',
   'statistik.reports7d': 'Reports (7 days)',
   'statistik.pushSubs': 'Push subscriptions',
   'statistik.withFood': 'Fairteiler with food',

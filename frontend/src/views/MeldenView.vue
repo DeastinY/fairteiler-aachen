@@ -133,7 +133,7 @@ function close() {
             <path d="M6 6l12 12 M18 6L6 18"></path>
           </svg>
         </button>
-        <span class="disp headtitle">{{ t('melden.title') }}</span>
+        <h1 class="disp headtitle">{{ t('melden.title') }}</h1>
         <span class="headspacer" aria-hidden="true"></span>
       </div>
 
@@ -292,6 +292,7 @@ function close() {
 .headtitle {
   font-weight: 700;
   font-size: 18px;
+  margin: 0;
 }
 
 .headspacer {
@@ -465,6 +466,8 @@ function close() {
   min-height: 44px;
   font-size: 13px;
   font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .tagshead {

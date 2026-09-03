@@ -611,7 +611,7 @@ function goBack() {
 }
 
 .chartbar.hi {
-  background: var(--green);
+  background: var(--bar-hi);
 }
 
 .chartday {
@@ -864,7 +864,7 @@ function goBack() {
 .md :deep(li) { margin: 2px 0; }
 .md :deep(hr) { border: none; border-top: 1px solid #edeadf; margin: 12px 0; }
 .md :deep(strong) { font-weight: 650; }
-.md :deep(a) { color: #2f7d54; word-break: break-all; }
+.md :deep(a) { color: var(--green); word-break: break-all; }
 .md { overflow-wrap: anywhere; }
 
 .titlerow { flex-wrap: wrap; }

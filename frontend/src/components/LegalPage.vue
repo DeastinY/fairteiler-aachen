@@ -93,6 +93,11 @@ function goBack() {
   margin: 10px 0 0 0;
 }
 
+.legal :slotted(a) {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .legal :slotted(mark.ph) {
   background: var(--amber-soft);
   color: var(--amber-ink);

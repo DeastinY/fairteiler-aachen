@@ -14,7 +14,7 @@ const ru: Messages = {
   'nav.liste': 'Список',
   'nav.aktivitaet': 'Активность',
   'nav.mehr': 'Ещё',
-  'nav.melden': 'Создать сообщение',
+  'nav.melden': 'Сообщить',
 
   'status.etwas_da': 'Еда есть',
   'status.leer': 'Отмечен пустым',
@@ -92,7 +92,7 @@ const ru: Messages = {
   'detail.descriptionSource': 'Описание с foodsharing.de (на немецком)',
   'detail.fsLink': 'Открыть на foodsharing.de',
   'detail.reports': 'Последние сообщения',
-  'detail.noReports': 'Сообщений пока нет – будь первым!',
+  'detail.noReports': 'Сообщений пока нет – твоё сообщение может стать первым!',
   'detail.undo': 'Отменить',
   'detail.undone': 'Сообщение отменено.',
   'detail.undoFailed': 'Не удалось отменить – попробуй позже ещё раз.',
@@ -156,7 +156,7 @@ const ru: Messages = {
   'install.button': 'Установить',
   'install.ios1': 'Нажми на значок «Поделиться»',
   'install.ios1b': 'в Safari',
-  'install.ios2': 'Выбери «На экран „Домой"»',
+  'install.ios2': 'Выбери «На экран „Домой”»',
 
   'einstellungen.title': 'Настройки',
   'einstellungen.subtitle': 'Всё остаётся на твоём устройстве',
@@ -211,7 +211,7 @@ const ru: Messages = {
   'welcome.rulesPre': 'Все подсказки в разделе',
   'welcome.rulesLink': 'Полезно знать',
   'welcome.iosTip':
-    'Совет: через значок «Поделиться» → «На экран „Домой"» это станет настоящим приложением.',
+    'Совет: через значок «Поделиться» → «На экран „Домой”» это станет настоящим приложением.',
   'welcome.start': 'Поехали',
   'welcome.aria': 'Добро пожаловать',
 
@@ -219,7 +219,7 @@ const ru: Messages = {
 
   'statistik.title': 'Статистика',
   'statistik.intro':
-    'Это приложение считает использование только как анонимные суточные итоги – без IP-адресов и без идентификаторов.',
+    'Это приложение считает использование только как анонимные итоги за день – без IP-адресов и без идентификаторов.',
   'statistik.privacyLink': 'Подробности в разделе «Конфиденциальность»',
   'statistik.reports7d': 'Сообщения (7 дней)',
   'statistik.pushSubs': 'Push-подписки',
@@ -232,7 +232,7 @@ const ru: Messages = {
 
   'common.activityAria': 'Сообщения за последние 7 дней',
   'mehr.support': 'Поддержать проект',
-  'mehr.supportNote': 'Добровольно через PayPal · помогает покрыть расходы на сервер · квитанция о пожертвовании невозможна',
+  'mehr.supportNote': 'Добровольно через PayPal · помогает покрыть расходы на сервер · справку о пожертвовании выдать не можем',
   'aktivitaet.noServiceWorker': 'Push сейчас недоступен (нет активного service worker) – перезагрузи приложение.',
   'liste.sortActivity': 'Активность',
   'liste.sortDistance': 'Расстояние',

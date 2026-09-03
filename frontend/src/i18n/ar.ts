@@ -2,7 +2,7 @@ import type { Messages } from './index'
 
 const ar: Messages = {
   'common.appName': 'Fairteiler Aachen',
-  'common.loading': '… جارٍ تحميل الـ Fairteiler',
+  'common.loading': 'جارٍ تحميل الـ Fairteiler …',
   'common.loadError': 'تعذّر تحميل الـ Fairteiler. هل أنت متصل بالإنترنت؟',
   'common.retry': 'حاول مجددًا',
   'common.back': 'رجوع',
@@ -67,7 +67,7 @@ const ar: Messages = {
 
   'karte.mapAria': 'خريطة الـ Fairteiler في آخن',
   'karte.locate': 'استخدام موقعي',
-  'karte.locating': '… جارٍ التحديد',
+  'karte.locating': 'جارٍ التحديد …',
   'karte.nearby': 'بالقرب منك',
   'karte.showAll': 'عرض الكل ({n})',
   'karte.summary': '{reported} من {total} لديها بلاغ حديث',
@@ -104,7 +104,7 @@ const ar: Messages = {
   'melden.selectAria': 'اختر Fairteiler',
   'melden.what': 'ما الذي تريد الإبلاغ عنه؟',
   'melden.brought': 'أحضرتُ طعامًا',
-  'melden.broughtNote': 'يرى الآخرون فورًا أن الزيارة تستحق',
+  'melden.broughtNote': 'يرى الآخرون فورًا أن الزيارة تستحق العناء',
   'melden.taken': 'أخذتُ طعامًا',
   'melden.empty': 'الـ Fairteiler فارغ',
   'melden.condition': 'الإبلاغ عن الحالة',
@@ -115,7 +115,7 @@ const ar: Messages = {
   'melden.tagsNote': 'اختيار متعدد · اختياري',
   'melden.rulesLink': 'ما الذي يمكن وضعه في الـ Fairteiler؟',
   'melden.submit': 'إرسال البلاغ',
-  'melden.submitting': '… جارٍ الإرسال',
+  'melden.submitting': 'جارٍ الإرسال …',
   'melden.footer': 'بدون حساب · مرئي للجميع · خلال 10 ثوانٍ',
   'melden.success': 'شكرًا! بلاغك منشور الآن.',
   'melden.undoAction': 'تراجع',
@@ -141,7 +141,7 @@ const ar: Messages = {
   'mehr.title': 'المزيد',
   'mehr.subtitle': 'عن التطبيق والمعلومات القانونية',
   'mehr.settings': 'الإعدادات',
-  'mehr.rules': 'جدير بالمعرفة – قواعد ونظافة',
+  'mehr.rules': 'معلومات مفيدة – قواعد ونظافة',
   'mehr.statistik': 'الاستخدام والشفافية',
   'mehr.impressum': 'Impressum (بيان قانوني)',
   'mehr.datenschutz': 'الخصوصية (بالألمانية)',
@@ -175,8 +175,8 @@ const ar: Messages = {
   'einstellungen.cleared': 'حُذفت البيانات المحلية.',
   'einstellungen.version': 'Fairteiler Aachen v{version} · الشيفرة المصدرية: AGPL-3.0',
 
-  'regeln.title': 'جدير بالمعرفة',
-  'regeln.intro': 'تعمل الـ Fairteiler لأن الجميع يفكر قليلًا مع الآخرين. أهم النقاط:',
+  'regeln.title': 'معلومات مفيدة',
+  'regeln.intro': 'تعمل الـ Fairteiler لأن الجميع يراعي المكان والآخرين قليلًا. أهم النقاط:',
   'regeln.notTitle': 'هذا لا يوضع في الداخل',
   'regeln.not1': 'اللحم النيء والسمك النيء والأطباق التي تحتوي بيضًا نيئًا',
   'regeln.not2': 'أغذية تجاوزت تاريخ الاستهلاك («zu verbrauchen bis …»)',
@@ -185,7 +185,7 @@ const ar: Messages = {
   'regeln.notice': 'انتبه أيضًا إلى اللوحات عند الـ Fairteiler – لبعض المواقع قواعدها الخاصة.',
   'regeln.okTitle': 'هذا مقبول',
   'regeln.ok1':
-    'تجاوز تاريخ الصلاحية المفضّل (MHD) ليس مشكلة غالبًا – افحص بالعين والأنف والعقل.',
+    'تجاوز تاريخ «يُفضَّل استهلاكه قبل» (MHD) ليس مشكلة غالبًا – افحص بالعين والأنف والعقل.',
   'regeln.ok2': 'الطعام المطبوخ منزليًا فقط مع ورقة: المكونات والتاريخ.',
   'regeln.careTitle': 'فكّر وأنت في الموقع',
   'regeln.care1': 'اترك الـ Fairteiler كما تحب أن تجده – نظيفًا ومرتبًا.',
@@ -195,7 +195,7 @@ const ar: Messages = {
     'لا تصوّر الأطعمة ولا تشارك صور المحتوى – فقد يعرّض ذلك التعاون مع المتاجر التي تأتي منها الأغذية المنقذة للخطر.',
   'regeln.care5': 'لا تصوّر أشخاصًا آخرين عند الـ Fairteiler – ليس الجميع يرغب في الظهور.',
   'regeln.care6':
-    'راعِ الجيران – خاصة في المساء: قدوم هادئ، لا تصفق الأبواب، ولا تتجمعوا في مجموعات كبيرة.',
+    'راعِ الجيران – خاصة في المساء: قدوم هادئ، لا تصفق الأبواب، وتجنَّب التجمع في مجموعات كبيرة.',
   'regeln.care7': 'خذ ما تحتاجه – وبلّغ عنه بإيجاز في التطبيق ليعلم الآخرون.',
   'regeln.footer':
     'تلخّص هذه الإرشادات ممارسات المجتمع دون ضمان. الملزم هو اللوحات في الموقع وقواعد النظافة على foodsharing.de.',
@@ -207,7 +207,7 @@ const ar: Messages = {
   'welcome.point2': 'نظافة وإنصاف: اترك الـ Fairteiler كما تحب أن تجده.',
   'welcome.point3': 'احترام: لا صور للطعام أو الأشخاص، ومراعاة الجيران.',
   'welcome.rulesPre': 'كل الإرشادات تحت',
-  'welcome.rulesLink': 'جدير بالمعرفة',
+  'welcome.rulesLink': 'معلومات مفيدة',
   'welcome.iosTip': 'نصيحة: عبر أيقونة المشاركة ← «إضافة إلى الشاشة الرئيسية» يصبح تطبيقًا حقيقيًا.',
   'welcome.start': 'هيا بنا',
   'welcome.aria': 'مرحبًا',

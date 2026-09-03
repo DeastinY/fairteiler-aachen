@@ -93,9 +93,9 @@ const nl: Messages = {
   'detail.fsLink': 'Bekijken op foodsharing.de',
   'detail.reports': 'Laatste meldingen',
   'detail.noReports': 'Nog geen meldingen – wees de eerste!',
-  'detail.undo': 'Terugnemen',
-  'detail.undone': 'Melding teruggenomen.',
-  'detail.undoFailed': 'Terugnemen is niet gelukt – probeer het later opnieuw.',
+  'detail.undo': 'Intrekken',
+  'detail.undone': 'Melding ingetrokken.',
+  'detail.undoFailed': 'Intrekken is niet gelukt – probeer het later opnieuw.',
   'detail.route': 'Route',
   'detail.reportNow': 'Nu melden',
 
@@ -122,7 +122,7 @@ const nl: Messages = {
   'melden.networkError': 'Geen verbinding – probeer het zo nog eens.',
 
   'aktivitaet.title': 'Activiteit',
-  'aktivitaet.subtitle': 'Jouw Fairteiler en meldingen',
+  'aktivitaet.subtitle': 'Jouw Fairteiler en notificaties',
   'aktivitaet.statsOne': 'Deze week: 1 melding · nu eten bij {withFood} van {total}',
   'aktivitaet.statsMany': 'Deze week: {n} meldingen · nu eten bij {withFood} van {total}',
   'aktivitaet.statsLink': 'Meer onder Statistiek',
@@ -147,7 +147,7 @@ const nl: Messages = {
   'mehr.datenschutz': 'Privacy (in het Duits)',
   'mehr.aboutTitle': 'Over deze app',
   'mehr.aboutText':
-    'Fairteiler Aachen is een vrijwillig, niet-commercieel communityproject. Het vult foodsharing.de aan met een live status van de Akense Fairteiler – anoniem gemeld door mensen ter plaatse. De broncode is open en kan door de community verder worden ontwikkeld.',
+    'Fairteiler Aachen is een niet-commercieel communityproject van vrijwilligers. Het vult foodsharing.de aan met een live status van de Akense Fairteiler – anoniem gemeld door mensen ter plaatse. De broncode is open en kan door de community verder worden ontwikkeld.',
   'mehr.fsRegion': 'foodsharing Aachen op foodsharing.de',
 
   'install.title': 'Als app installeren',
@@ -180,7 +180,7 @@ const nl: Messages = {
     'Fairteiler werken omdat iedereen een beetje meedenkt. De belangrijkste punten:',
   'regeln.notTitle': 'Dit hoort er niet in',
   'regeln.not1': 'rauw vlees, rauwe vis en gerechten met rauw ei',
-  'regeln.not2': 'levensmiddelen over de uiterste houdbaarheidsdatum („zu verbrauchen bis …")',
+  'regeln.not2': 'levensmiddelen voorbij de uiterste houdbaarheidsdatum („zu verbrauchen bis …”)',
   'regeln.not3': 'bedorven of beschimmeld eten',
   'regeln.not4': 'sterke drank',
   'regeln.notice':

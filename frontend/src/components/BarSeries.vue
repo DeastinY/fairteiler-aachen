@@ -83,7 +83,7 @@ const labelIndices = computed(() => {
 }
 
 .bar.hi {
-  background: var(--green);
+  background: var(--bar-hi);
 }
 
 .label {

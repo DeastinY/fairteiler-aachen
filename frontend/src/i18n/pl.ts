@@ -17,7 +17,7 @@ const pl: Messages = {
   'nav.melden': 'Utwórz zgłoszenie',
 
   'status.etwas_da': 'Jest jedzenie',
-  'status.leer': 'Zgłoszono pusty',
+  'status.leer': 'Zgłoszony jako pusty',
   'status.keine_meldung': 'Brak aktualnych zgłoszeń',
 
   'tags.brot_backwaren': 'Chleb i pieczywo',
@@ -30,7 +30,7 @@ const pl: Messages = {
 
   'report.brought': 'Przyniesiono jedzenie',
   'report.taken': 'Zabrano jedzenie',
-  'report.empty': 'Zgłoszono pusty',
+  'report.empty': 'Zgłoszony jako pusty',
   'report.cleaned': 'Posprzątano / doprowadzono do porządku',
   'report.needs_cleaning': 'Potrzebne sprzątanie',
   'report.needs_maintenance': 'Zgłoszono usterkę',
@@ -156,7 +156,7 @@ const pl: Messages = {
   'install.button': 'Zainstaluj',
   'install.ios1': 'Stuknij ikonę udostępniania',
   'install.ios1b': 'w Safari',
-  'install.ios2': 'Wybierz „Do ekranu początkowego"',
+  'install.ios2': 'Wybierz „Do ekranu początkowego”',
 
   'einstellungen.title': 'Ustawienia',
   'einstellungen.subtitle': 'Wszystko zostaje na twoim urządzeniu',
@@ -165,7 +165,7 @@ const pl: Messages = {
   'einstellungen.distances': 'Pokazuj odległości',
   'einstellungen.distancesNote': 'Mapa automatycznie pyta o twoją lokalizację przy otwarciu',
   'einstellungen.notifications': 'Powiadomienia i godziny ciszy',
-  'einstellungen.notificationsNote': 'Ustawisz w zakładce „Aktywność"',
+  'einstellungen.notificationsNote': 'Ustawisz w zakładce „Aktywność”',
   'einstellungen.clear': 'Usuń dane lokalne',
   'einstellungen.clearConfirm': 'Na pewno usunąć wszystkie dane lokalne?',
   'einstellungen.clearYes': 'Tak, usuń',
@@ -178,9 +178,9 @@ const pl: Messages = {
   'regeln.title': 'Warto wiedzieć',
   'regeln.intro':
     'Fairteiler działają, bo każdy trochę myśli o innych. Najważniejsze punkty:',
-  'regeln.notTitle': 'To nie może się tu znaleźć',
+  'regeln.notTitle': 'To nie powinno tu trafić',
   'regeln.not1': 'surowe mięso, surowa ryba i potrawy z surowym jajkiem',
-  'regeln.not2': 'żywność po terminie przydatności do spożycia („zu verbrauchen bis …")',
+  'regeln.not2': 'żywność po terminie przydatności do spożycia („zu verbrauchen bis …”)',
   'regeln.not3': 'zepsute lub spleśniałe',
   'regeln.not4': 'wysokoprocentowy alkohol',
   'regeln.notice':
@@ -189,7 +189,7 @@ const pl: Messages = {
   'regeln.ok1':
     'Przekroczona data minimalnej trwałości (MHD) zwykle nie jest problemem – sprawdź oczami, nosem i rozsądkiem.',
   'regeln.ok2': 'Domowe potrawy tylko z karteczką: składniki i data.',
-  'regeln.careTitle': 'Myśl na miejscu',
+  'regeln.careTitle': 'Na miejscu myśl o innych',
   'regeln.care1': 'Zostaw Fairteiler takim, jakim chcesz go zastać – czystym i uporządkowanym.',
   'regeln.care2': 'Zepsute od razu wyjmij i wyrzuć.',
   'regeln.care3': 'Dobrze zamykaj drzwi lodówki.',
@@ -197,7 +197,7 @@ const pl: Messages = {
     'Nie fotografuj żywności i nie udostępniaj zdjęć zawartości – to może zagrozić współpracy ze sklepami, z których pochodzi uratowana żywność.',
   'regeln.care5': 'Nie fotografuj innych osób przy Fairteiler – nie każdy chce być widoczny.',
   'regeln.care6':
-    'Miej wzgląd na sąsiedztwo – zwłaszcza wieczorem przychodź cicho, nie trzaskaj drzwiami i nie twórzcie większych grup.',
+    'Miej wzgląd na sąsiedztwo – zwłaszcza wieczorem przychodź cicho, nie trzaskaj drzwiami i unikaj większych grup.',
   'regeln.care7': 'Bierz, ile potrzebujesz – i krótko zgłoś to w aplikacji, żeby inni wiedzieli.',
   'regeln.footer':
     'Te wskazówki podsumowują praktykę społeczności, bez gwarancji. Wiążące są ogłoszenia na miejscu i zasady higieny foodsharing.de.',
@@ -211,7 +211,7 @@ const pl: Messages = {
   'welcome.rulesPre': 'Wszystkie wskazówki w sekcji',
   'welcome.rulesLink': 'Warto wiedzieć',
   'welcome.iosTip':
-    'Wskazówka: przez ikonę udostępniania → „Do ekranu początkowego" zmieni się w prawdziwą aplikację.',
+    'Wskazówka: przez ikonę udostępniania → „Do ekranu początkowego” zmieni się w prawdziwą aplikację.',
   'welcome.start': 'Zaczynamy',
   'welcome.aria': 'Witaj',
 
@@ -232,7 +232,7 @@ const pl: Messages = {
 
   'common.activityAria': 'Zgłoszenia z ostatnich 7 dni',
   'mehr.support': 'Wesprzyj projekt',
-  'mehr.supportNote': 'Dobrowolnie przez PayPal · pomaga pokryć koszty serwera · bez możliwości potwierdzenia darowizny',
+  'mehr.supportNote': 'Dobrowolnie przez PayPal · pomaga pokryć koszty serwera · bez zaświadczenia o darowiźnie',
   'aktivitaet.noServiceWorker': 'Push jest teraz niedostępny (brak aktywnego service workera) – załaduj aplikację ponownie.',
   'liste.sortActivity': 'Aktywność',
   'liste.sortDistance': 'Odległość',

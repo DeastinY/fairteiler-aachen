@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { t, useI18n, type LocaleCode } from '../i18n'
 import { useInstallPrompt } from '../composables/useInstallPrompt'
@@ -7,6 +7,7 @@ import {
   isWelcomeDone,
   markWelcomeDone,
   shouldShowWelcome,
+  welcomeVisible,
 } from '../composables/welcome'
 
 const router = useRouter()
@@ -24,13 +25,32 @@ function entryPath(): string {
   return path.startsWith(base) ? `/${path.slice(base.length)}` : path
 }
 
-const visible = ref(shouldShowWelcome(entryPath(), isWelcomeDone()))
+const visible = welcomeVisible
+visible.value = shouldShowWelcome(entryPath(), isWelcomeDone())
 const installing = ref(false)
+const startBtn = ref<HTMLButtonElement | null>(null)
 
 function close() {
   markWelcomeDone()
   visible.value = false
 }
+
+/** Keyboard modality: Escape dismisses like "Los geht's". */
+function onKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && visible.value) close()
+}
+
+onMounted(async () => {
+  window.addEventListener('keydown', onKeydown)
+  if (visible.value) {
+    await nextTick()
+    startBtn.value?.focus()
+  }
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydown)
+})
 
 function openRegeln() {
   close()
@@ -106,7 +126,7 @@ async function onInstall() {
       </div>
       <p v-else-if="mode === 'ios'" class="iosline">{{ t('welcome.iosTip') }}</p>
 
-      <button type="button" class="startbtn" data-test="welcome-start" @click="close">
+      <button ref="startBtn" type="button" class="startbtn" data-test="welcome-start" @click="close">
         {{ t('welcome.start') }}
       </button>
     </div>

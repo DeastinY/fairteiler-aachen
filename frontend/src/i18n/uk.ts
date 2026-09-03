@@ -14,7 +14,7 @@ const uk: Messages = {
   'nav.liste': 'Список',
   'nav.aktivitaet': 'Активність',
   'nav.mehr': 'Більше',
-  'nav.melden': 'Створити повідомлення',
+  'nav.melden': 'Повідомити',
 
   'status.etwas_da': 'Є їжа',
   'status.leer': 'Позначено порожнім',
@@ -92,7 +92,7 @@ const uk: Messages = {
   'detail.descriptionSource': 'Опис із foodsharing.de (німецькою)',
   'detail.fsLink': 'Відкрити на foodsharing.de',
   'detail.reports': 'Останні повідомлення',
-  'detail.noReports': 'Повідомлень ще немає – будь першою людиною!',
+  'detail.noReports': 'Повідомлень ще немає – твоє повідомлення може стати першим!',
   'detail.undo': 'Скасувати',
   'detail.undone': 'Повідомлення скасовано.',
   'detail.undoFailed': 'Не вдалося скасувати – спробуй пізніше ще раз.',

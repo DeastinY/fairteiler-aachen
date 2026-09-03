@@ -32,18 +32,20 @@
   --border: #e7e4d6;
   --border-soft: #edeadf;
   --ink: #22301f;
-  --muted: #6b7570;
-  --faint: #a8a494;
-  --green: #2f7d54;
+  --muted: #5f6a64;
+  --faint: #6a665a;
+  --green: #2a7049;
   --green-dark: #266645;
   --green-soft: #e3efe6;
   --green-mist: #eef3ea;
   --gray-soft: #ecebe2;
   --gray-ink: #565f59;
   --amber-soft: #f3ead3;
-  --amber-ink: #8a6516;
+  --amber-ink: #7a5a12;
   --amber: #c08a1e;
   --bar: #b9d2c1;
+  /* chart fills are pure graphics – exempt from the text retint */
+  --bar-hi: #2f7d54;
 }
 
 * {
@@ -214,4 +216,13 @@ button {
   border-radius: 999px;
   font-size: 14px;
   font-weight: 600;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }

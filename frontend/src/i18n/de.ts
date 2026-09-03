@@ -175,7 +175,7 @@ const de = {
   'install.button': 'Installieren',
   'install.ios1': 'Tippe auf das Teilen-Symbol',
   'install.ios1b': 'in Safari',
-  'install.ios2': 'Wähle „Zum Home-Bildschirm"',
+  'install.ios2': 'Wähle „Zum Home-Bildschirm”',
 
   // Einstellungen
   'einstellungen.title': 'Einstellungen',
@@ -185,7 +185,7 @@ const de = {
   'einstellungen.distances': 'Entfernungen anzeigen',
   'einstellungen.distancesNote': 'Karte fragt beim Öffnen automatisch nach deinem Standort',
   'einstellungen.notifications': 'Benachrichtigungen & Ruhezeiten',
-  'einstellungen.notificationsNote': 'Im Tab „Aktivität" einstellen',
+  'einstellungen.notificationsNote': 'Im Tab „Aktivität” einstellen',
   'einstellungen.clear': 'Lokale Daten löschen',
   'einstellungen.clearConfirm': 'Wirklich alle lokalen Daten löschen?',
   'einstellungen.clearYes': 'Ja, löschen',
@@ -201,7 +201,7 @@ const de = {
     'Fairteiler funktionieren, weil alle ein bisschen mitdenken. Die wichtigsten Punkte:',
   'regeln.notTitle': 'Das gehört nicht hinein',
   'regeln.not1': 'rohes Fleisch, roher Fisch und Speisen mit rohem Ei',
-  'regeln.not2': 'Lebensmittel mit überschrittenem Verbrauchsdatum („zu verbrauchen bis …")',
+  'regeln.not2': 'Lebensmittel mit überschrittenem Verbrauchsdatum („zu verbrauchen bis …”)',
   'regeln.not3': 'Verdorbenes oder Angeschimmeltes',
   'regeln.not4': 'Hochprozentiger Alkohol',
   'regeln.notice':
@@ -234,7 +234,7 @@ const de = {
   'welcome.rulesPre': 'Alle Hinweise unter',
   'welcome.rulesLink': 'Gut zu wissen',
   'welcome.iosTip':
-    'Tipp: Über das Teilen-Symbol → „Zum Home-Bildschirm" wird daraus eine richtige App.',
+    'Tipp: Über das Teilen-Symbol → „Zum Home-Bildschirm” wird daraus eine richtige App.',
   'welcome.start': "Los geht's",
   'welcome.aria': 'Willkommen',
 

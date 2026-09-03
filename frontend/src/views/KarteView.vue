@@ -128,6 +128,13 @@ function renderMarkers() {
     })
     markerLayer.addLayer(visual)
     markerLayer.addLayer(hit)
+    // axe: interactive SVG paths need a name and a role
+    const el = hit.getElement?.()
+    if (el) {
+      el.setAttribute('role', 'button')
+      el.setAttribute('aria-label', item.name)
+      el.setAttribute('tabindex', '0')
+    }
   }
 }
 
@@ -195,8 +202,9 @@ function useLocation() {
 
 <template>
   <div class="page">
+    <h1 class="sr-only">{{ t('nav.karte') }}</h1>
     <div class="map-area">
-      <div ref="mapEl" class="map" :aria-label="t('karte.mapAria')"></div>
+      <div ref="mapEl" class="map" role="region" :aria-label="t('karte.mapAria')"></div>
 
       <!-- brand pill + locate -->
       <div class="map-topbar">

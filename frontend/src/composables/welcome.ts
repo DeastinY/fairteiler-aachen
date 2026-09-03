@@ -1,4 +1,8 @@
 /** First-open welcome screen: shown once, never in the way of deep links. */
+import { ref } from 'vue'
+
+/** Shared so the app shell can go inert while the overlay is up. */
+export const welcomeVisible = ref(false)
 
 const STORAGE_KEY = 'fairteiler-welcome-done'
 

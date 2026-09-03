@@ -117,7 +117,7 @@ import InstallCard from '../components/InstallCard.vue'
   margin: 0;
   padding: 0 0 0 30px;
   font-size: 12px;
-  color: #6b7570;
+  color: var(--muted);
 }
 
 .abouttitle {

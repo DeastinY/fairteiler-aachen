@@ -9,6 +9,7 @@ const leaflet = vi.hoisted(() => {
     latlng: [number, number]
     options: Record<string, unknown>
     handlers: Record<string, () => void>
+    element: HTMLElement
   }
   const markers: MarkerRecord[] = []
   const mapObj = { fitBounds: vi.fn(), remove: vi.fn() }
@@ -26,7 +27,8 @@ const leaflet = vi.hoisted(() => {
     latLngBounds: vi.fn((points: [number, number][]) => points),
     point: vi.fn((x: number, y: number) => ({ x, y })),
     circleMarker: vi.fn((latlng: [number, number], options: Record<string, unknown>) => {
-      const record: MarkerRecord = { latlng, options, handlers: {} }
+      const element = document.createElement('path')
+      const record: MarkerRecord = { latlng, options, handlers: {}, element }
       markers.push(record)
       const marker = {
         on(event: string, cb: () => void) {
@@ -36,6 +38,7 @@ const leaflet = vi.hoisted(() => {
         bindTooltip: () => marker,
         addTo: () => marker,
         remove: vi.fn(),
+        getElement: () => element,
       }
       return marker
     }),
@@ -145,6 +148,11 @@ describe('KarteView (Leaflet)', () => {
     for (const hit of hitMarkers()) {
       expect(hit.options['fillOpacity']).toBe(0)
     }
+
+    // axe: interactive marker paths carry a name and role
+    expect(hitMarkers()[0]!.element.getAttribute('role')).toBe('button')
+    expect(hitMarkers()[0]!.element.getAttribute('aria-label')).toBe('Hirschgrün')
+    expect(hitMarkers()[0]!.element.getAttribute('tabindex')).toBe('0')
   })
 
   it('opens the detail route when a marker is tapped', async () => {

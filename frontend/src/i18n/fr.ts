@@ -20,7 +20,7 @@ const fr: Messages = {
   'status.leer': 'Signalé vide',
   'status.keine_meldung': 'Aucun signalement récent',
 
-  'tags.brot_backwaren': 'Pain & viennoiseries',
+  'tags.brot_backwaren': 'Pain & pâtisseries',
   'tags.obst': 'Fruits',
   'tags.gemuese': 'Légumes',
   'tags.gekuehltes': 'Produits frais',
@@ -128,13 +128,13 @@ const fr: Messages = {
     'Cette semaine : 1 signalement · en ce moment {withFood} sur {total} avec de la nourriture',
   'aktivitaet.statsMany':
     'Cette semaine : {n} signalements · en ce moment {withFood} sur {total} avec de la nourriture',
-  'aktivitaet.statsLink': 'Plus sous Statistiques',
+  'aktivitaet.statsLink': 'Plus dans Statistiques',
   'aktivitaet.serverDisabled': 'Les notifications ne sont pas (encore) activées sur ce serveur.',
   'aktivitaet.unsupported': 'Ton navigateur ne prend pas en charge les notifications push.',
   'aktivitaet.followOn': 'Tout de suite quand on dépose de la nourriture',
   'aktivitaet.followOff': 'Silencieux',
   'aktivitaet.followAria': 'Notifications pour {name}',
-  'aktivitaet.quietTitle': 'Heures calmes',
+  'aktivitaet.quietTitle': 'Heures silencieuses',
   'aktivitaet.quietNote': 'Pas de notifications de 21 h à 8 h',
   'aktivitaet.permissionBlocked':
     'Les notifications sont bloquées dans le navigateur – tu peux les autoriser à nouveau dans ses réglages.',
@@ -187,8 +187,8 @@ const fr: Messages = {
   'regeln.not3': 'aliments avariés ou moisis',
   'regeln.not4': 'alcool fort',
   'regeln.notice':
-    'Regarde aussi les affichages de ton Fairteiler – certains lieux ont leurs propres règles.',
-  'regeln.okTitle': "Ce qui est d'accord",
+    'Regarde aussi les consignes affichées à ton Fairteiler – certains lieux ont leurs propres règles.',
+  'regeln.okTitle': 'Ce qui ne pose pas de problème',
   'regeln.ok1':
     "Une date de durabilité minimale (MHD) dépassée n'est généralement pas un problème – vérifie avec tes yeux, ton nez et ton bon sens.",
   'regeln.ok2': 'Plats maison uniquement avec une étiquette : ingrédients et date.',
@@ -200,18 +200,18 @@ const fr: Messages = {
     'Ne photographie pas les aliments et ne partage pas d\'images du contenu – cela peut mettre en danger les coopérations avec les commerces d\'où vient la nourriture sauvée.',
   'regeln.care5': 'Ne photographie pas les autres personnes au Fairteiler – tout le monde ne veut pas être vu.',
   'regeln.care6':
-    'Sois attentif au voisinage – surtout le soir : arrive discrètement, ne claque pas les portes et évitez les grands groupes.',
+    'Sois attentif au voisinage – surtout le soir : arrive discrètement, ne claque pas les portes et évite de venir en grand groupe.',
   'regeln.care7': "Prends ce dont tu as besoin – et signale-le brièvement dans l'app pour que les autres le sachent.",
   'regeln.footer':
     'Ces conseils résument la pratique de la communauté, sans garantie. Seuls font foi les affichages sur place et les règles d\'hygiène de foodsharing.de.',
 
-  'welcome.title': 'Content de te voir !',
+  'welcome.title': 'Ça fait plaisir de te voir !',
   'welcome.lead':
     "Cette app vit grâce à nous tous : signaler en deux mots ce qui se passe dans un Fairteiler aide tout le monde – et sauve de la nourriture.",
   'welcome.point1': 'Signaler en 10 secondes – sans compte, anonymement.',
   'welcome.point2': 'Propre & fair-play : laisse le Fairteiler comme tu aimerais le trouver.',
   'welcome.point3': 'Respect : pas de photos de la nourriture ni des gens, attention au voisinage.',
-  'welcome.rulesPre': 'Tous les conseils sous',
+  'welcome.rulesPre': 'Tous les conseils dans',
   'welcome.rulesLink': 'Bon à savoir',
   'welcome.iosTip':
     "Astuce : via l'icône de partage → « Sur l'écran d'accueil », ça devient une vraie app.",
@@ -223,7 +223,7 @@ const fr: Messages = {
   'statistik.title': 'Statistiques',
   'statistik.intro':
     "Cette app ne compte l'utilisation que sous forme de totaux quotidiens anonymes – sans adresses IP ni identifiants.",
-  'statistik.privacyLink': 'Détails sous Confidentialité',
+  'statistik.privacyLink': 'Détails dans Confidentialité',
   'statistik.reports7d': 'Signalements (7 jours)',
   'statistik.pushSubs': 'Abonnements push',
   'statistik.withFood': 'Fairteiler avec nourriture',

@@ -98,6 +98,8 @@ const reports = computed(() => usage.value.map((entry) => entry.reports))
 <style scoped>
 .privacylink {
   font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .tiles {
