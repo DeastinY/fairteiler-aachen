@@ -45,6 +45,27 @@ import InstallCard from '../components/InstallCard.vue'
       </a>
     </section>
 
+    <section class="card support">
+      <a
+        href="https://paypal.me/DeastinY"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="linkrow"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 21s-8-4.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.5-8 11-8 11z"></path>
+        </svg>
+        <span class="linkname">Projekt unterstützen</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a8a494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 17L17 7M9 7h8v8"></path>
+        </svg>
+      </a>
+      <p class="supportnote">
+        Freiwillig via PayPal · hilft, die Serverkosten zu decken · keine
+        Spendenbescheinigung möglich
+      </p>
+    </section>
+
     <nav class="card linklist" aria-label="Rechtliches">
       <RouterLink to="/regeln" class="linkrow">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -83,6 +104,18 @@ import InstallCard from '../components/InstallCard.vue'
 .about {
   margin: 16px 16px 0 16px;
   padding: 16px;
+}
+
+.support {
+  margin: 12px 16px 0 16px;
+  padding: 4px 16px 12px 16px;
+}
+
+.supportnote {
+  margin: 0;
+  padding: 0 0 0 30px;
+  font-size: 12px;
+  color: #6b7570;
 }
 
 .abouttitle {
