@@ -7,7 +7,7 @@ from pydantic import BaseModel, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import crud, maintenance, push, seed, status
+from app import crud, hours as hours_mod, maintenance, push, seed, status
 from app.models import FOOD_TAGS, Fairteiler, PushSubscription
 from app.push import PushSettings
 
@@ -80,6 +80,7 @@ def create_app(
             "lon": row.lon,
             "cooled": row.cooled,
             "aroundTheClock": row.around_the_clock,
+            "openNow": hours_mod.is_open_now(row),
             "status": status.derive_status(reports, now),
             "care": status.derive_care(reports, now),
             "activity7d": status.activity_by_day(reports, now),
@@ -88,8 +89,10 @@ def create_app(
             data["description"] = row.description
             data["regionName"] = row.region_name
             data["picture"] = row.picture
+            data["hours"] = row.hours
             data["reports"] = [
                 {
+                    "id": r.id,
                     "type": r.type,
                     "tags": list(r.tags or []),
                     "createdAt": status._aware(r.created_at).isoformat(),
@@ -139,6 +142,23 @@ def create_app(
         sub.fairteiler_ids = body.fairteilerIds
         sub.quiet_hours = body.quietHours
         session.add(sub)
+
+    @app.get("/api/stats")
+    def stats(session: Session = Depends(get_session)):
+        now = dt.datetime.now(dt.timezone.utc)
+        rows = seed.all_fairteiler(session)
+        with_food = 0
+        reports_7d = 0
+        for row in rows:
+            reports = crud.recent_reports(session, row.id)
+            reports_7d += len(reports)
+            if status.derive_status(reports, now)["state"] == "etwas_da":
+                with_food += 1
+        return {
+            "fairteilerTotal": len(rows),
+            "withFood": with_food,
+            "reports7d": reports_7d,
+        }
 
     @app.get("/api/fairteiler")
     def list_fairteiler(session: Session = Depends(get_session)):

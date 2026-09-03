@@ -75,5 +75,6 @@ def test_migrate_adds_missing_columns():
     assert sorted(migrate(engine)) == [
         "fairteiler.around_the_clock",
         "fairteiler.cooled",
+        "fairteiler.hours",
     ]
     assert migrate(engine) == []  # idempotent

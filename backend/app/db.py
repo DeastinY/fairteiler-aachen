@@ -33,6 +33,7 @@ def migrate(engine) -> list[str]:
         "fairteiler": {
             "cooled": "BOOLEAN NOT NULL DEFAULT 0",
             "around_the_clock": "BOOLEAN NOT NULL DEFAULT 0",
+            "hours": "JSON",
         },
     }
     added = []

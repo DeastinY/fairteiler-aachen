@@ -47,6 +47,10 @@ def derive_flags(description: str | None) -> dict:
 def load_seed(session: Session, seed_path: Path) -> int:
     """Upsert fairteiler master data from the stripped seed file."""
     data = json.loads(Path(seed_path).read_text())
+    overrides_path = Path(seed_path).parent / "overrides.json"
+    overrides = (
+        json.loads(overrides_path.read_text()) if overrides_path.exists() else {}
+    )
     count = 0
     for entry in data["fairteiler"]:
         if entry["id"] in VIRTUAL_IDS:
@@ -64,6 +68,7 @@ def load_seed(session: Session, seed_path: Path) -> int:
         flags = derive_flags(entry.get("description"))
         row.cooled = flags["cooled"]
         row.around_the_clock = flags["around_the_clock"]
+        row.hours = overrides.get(str(entry["id"]), {}).get("hours")
         session.add(row)
         count += 1
     return count

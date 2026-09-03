@@ -1,0 +1,14 @@
+{
+  "_comment": "Curated per-Fairteiler facts that the upstream free text cannot provide reliably. hours: day keys mo..su, [start, end) in local hours; only add VERIFIED times (source: upstream description or on-site).",
+  "810": {
+    "_source": "Beschreibung: Öffnungszeiten Mo-Fr 10-18 Uhr, Sa 10-16 Uhr (Second-Hand-Laden BreitSeite)",
+    "hours": {
+      "mo": [[10, 18]],
+      "tu": [[10, 18]],
+      "we": [[10, 18]],
+      "th": [[10, 18]],
+      "fr": [[10, 18]],
+      "sa": [[10, 16]]
+    }
+  }
+}
