@@ -14,6 +14,23 @@ evidence), it does not replace it.
 | `design/` | Design sources: one `.dc.html` per screen + `canvas.json` layout, plus the seeded design-canvas file |
 | `prototype/index.html` | Self-contained clickable prototype — open it on a phone |
 | `IMPLEMENTATION_PLAN.md` | Gap analysis, architecture, milestones |
+| `backend/` | FastAPI API (live status, reports, activity) — `python -m pytest` |
+| `frontend/` | Vue 3 PWA |
+| `scripts/fetch_upstream.py` | One-time/daily seed of master data (be gentle: run at most 1×/day; raw responses stay untracked) |
+
+## Development
+
+```bash
+# backend (Python ≥3.12)
+cd backend && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m pytest        # tests
+.venv/bin/python run.py           # API on :8000, SQLite + seed
+
+# frontend
+cd frontend && npm install
+npm run test                      # vitest
+npm run dev                       # dev server, proxies /api to :8000
+```
 
 ## Showing the prototype on a phone
 

@@ -1,0 +1,60 @@
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import FairteilerCard from '../components/FairteilerCard.vue'
+import { fetchFairteilerList } from '../composables/api'
+import { sortFairteiler } from '../lib/sort'
+import type { FairteilerListItem } from '../types'
+
+const items = ref<FairteilerListItem[] | null>(null)
+const error = ref<string | null>(null)
+
+const sorted = computed(() => (items.value ? sortFairteiler(items.value) : []))
+const reported = computed(
+  () => sorted.value.filter((f) => f.status.state !== 'keine_meldung').length,
+)
+
+async function load() {
+  error.value = null
+  items.value = null
+  try {
+    items.value = await fetchFairteilerList()
+  } catch {
+    error.value = 'Die Fairteiler konnten nicht geladen werden. Bist du online?'
+  }
+}
+
+onMounted(load)
+</script>
+
+<template>
+  <div class="page">
+    <header class="page-head">
+      <h1 class="disp page-title">Alle Fairteiler</h1>
+      <p v-if="items" class="page-sub">
+        {{ items.length }} Standorte in Aachen und Umgebung ·
+        {{ reported }} mit aktueller Meldung
+      </p>
+      <p v-else class="page-sub">Standorte in Aachen und Umgebung</p>
+    </header>
+
+    <p v-if="!items && !error" class="hint">Lade Fairteiler …</p>
+
+    <div v-else-if="error" class="hint error">
+      <p>{{ error }}</p>
+      <button type="button" class="retrybtn" @click="load">Erneut versuchen</button>
+    </div>
+
+    <div v-else class="cards">
+      <FairteilerCard v-for="item in sorted" :key="item.id" :fairteiler="item" />
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.cards {
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+</style>
