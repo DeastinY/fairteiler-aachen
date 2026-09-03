@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import FairteilerCard from '../components/FairteilerCard.vue'
+import OfflineBanner from '../components/OfflineBanner.vue'
 import { fetchFairteilerList } from '../composables/api'
+import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { sortFairteiler } from '../lib/sort'
 import type { FairteilerListItem } from '../types'
 
+const online = useOnline()
 const items = ref<FairteilerListItem[] | null>(null)
 const error = ref<string | null>(null)
+
+const showOffline = computed(() =>
+  offlineBannerVisible(online.value, items.value !== null, error.value !== null),
+)
 
 const sorted = computed(() => (items.value ? sortFairteiler(items.value) : []))
 const reported = computed(
@@ -36,6 +43,8 @@ onMounted(load)
       </p>
       <p v-else class="page-sub">Standorte in Aachen und Umgebung</p>
     </header>
+
+    <OfflineBanner v-if="showOffline" />
 
     <p v-if="!items && !error" class="hint">Lade Fairteiler …</p>
 

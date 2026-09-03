@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import { fetchFairteilerDetail } from '../composables/api'
+import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { reportTypeLabel, tagLabel, tagLabels } from '../lib/labels'
 import { formatRelativeTime } from '../lib/relativeTime'
 import { statusMeta } from '../lib/status'
@@ -11,8 +13,13 @@ import type { FairteilerDetail, Report } from '../types'
 const route = useRoute()
 const router = useRouter()
 
+const online = useOnline()
 const detail = ref<FairteilerDetail | null>(null)
 const error = ref<string | null>(null)
+
+const showOffline = computed(() =>
+  offlineBannerVisible(online.value, detail.value !== null, error.value !== null),
+)
 
 const fairteilerId = computed(() => Number(route.params.id))
 
@@ -119,6 +126,8 @@ function goBack() {
         </svg>
       </button>
     </div>
+
+    <OfflineBanner v-if="showOffline" />
 
     <p v-if="!detail && !error" class="hint">Lade Fairteiler …</p>
 
