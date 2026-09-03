@@ -47,7 +47,24 @@ describe('applyFilter', () => {
   })
 
   it('combines active chips with AND', () => {
-    const result = applyFilter(ITEMS, { etwasDa: true, aroundTheClock: true, cooled: true })
+    const result = applyFilter(ITEMS, {
+      ...emptyFilter(),
+      etwasDa: true,
+      aroundTheClock: true,
+      cooled: true,
+    })
     expect(result.map((f) => f.id)).toEqual([3])
+  })
+
+  it('"Jetzt offen" matches open or 24/7 places and EXCLUDES unknown hours', () => {
+    const items = [
+      makeFairteiler({ id: 1, name: 'Offen', openNow: true }),
+      makeFairteiler({ id: 2, name: 'Rund um die Uhr', aroundTheClock: true, openNow: true }),
+      makeFairteiler({ id: 3, name: 'Geschlossen', openNow: false }),
+      // honest semantics: unknown (null) never counts as "open now"
+      makeFairteiler({ id: 4, name: 'Unbekannt', openNow: null }),
+    ]
+    const result = applyFilter(items, { ...emptyFilter(), openNow: true })
+    expect(result.map((f) => f.id)).toEqual([1, 2])
   })
 })

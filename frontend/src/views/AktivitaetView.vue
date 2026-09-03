@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import {
   fetchFairteilerList,
   fetchPushConfig,
+  fetchStats,
   putPushSubscription,
 } from '../composables/api'
 import { loadPushPrefs, savePushPrefs } from '../composables/pushPrefs'
@@ -14,7 +15,9 @@ import {
   type PushConfig,
 } from '../lib/push'
 import { sortFairteiler } from '../lib/sort'
-import type { FairteilerListItem } from '../types'
+import type { FairteilerListItem, Stats } from '../types'
+
+const stats = ref<Stats | null>(null)
 
 const items = ref<FairteilerListItem[] | null>(null)
 const config = ref<PushConfig | null>(null)
@@ -42,12 +45,14 @@ async function load() {
   selectedIds.value = prefs.ids
   quietHours.value = prefs.quietHours
   try {
-    const [list, pushConfig] = await Promise.all([
+    const [list, pushConfig, statsData] = await Promise.all([
       fetchFairteilerList(),
       fetchPushConfig().catch(() => null),
+      fetchStats().catch(() => null), // stats are a nicety – fail silently
     ])
     items.value = sortFairteiler(list)
     config.value = pushConfig
+    stats.value = statsData
   } catch {
     loadError.value = 'Die Fairteiler konnten nicht geladen werden. Bist du online?'
   }
@@ -154,6 +159,11 @@ function toggleQuietHours() {
       <p class="page-sub">Deine Fairteiler und Benachrichtigungen</p>
     </header>
 
+    <p v-if="stats" class="card statsline" data-test="stats">
+      Diese Woche: {{ stats.reports7d }} Meldungen · gerade
+      {{ stats.withFood }} von {{ stats.fairteilerTotal }} mit Essen
+    </p>
+
     <div v-if="!ready" class="card note" data-test="push-unavailable">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a6516" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="9"></circle>
@@ -223,6 +233,14 @@ function toggleQuietHours() {
 </template>
 
 <style scoped>
+.statsline {
+  margin: 16px 16px 0 16px;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
 .note {
   margin: 16px 16px 0 16px;
   padding: 12px 16px;

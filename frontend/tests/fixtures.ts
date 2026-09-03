@@ -13,6 +13,7 @@ export function makeFairteiler(
     lon: 6.0834,
     aroundTheClock: false,
     cooled: false,
+    openNow: null,
     status: { state: 'keine_meldung', lastReportAt: null, tags: [] },
     care: { needsCleaning: false, needsMaintenance: false },
     activity7d: [0, 0, 0, 0, 0, 0, 0],
@@ -26,6 +27,7 @@ export function makeDetail(overrides: Partial<FairteilerDetail> = {}): Fairteile
     description: 'Öffnungszeiten: rund um die Uhr.\n\nBitte nichts Verdorbenes einstellen.',
     regionName: 'Aachen',
     picture: null,
+    hours: null,
     reports: [],
     ...overrides,
   }

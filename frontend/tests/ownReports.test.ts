@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import {
-  findOwnReport,
   forgetOwnReport,
+  isOwnReport,
   loadOwnReports,
   rememberOwnReport,
 } from '../src/composables/ownReports'
@@ -15,12 +15,17 @@ function minutesAgo(minutes: number): string {
 afterEach(() => localStorage.clear())
 
 describe('own reports store', () => {
-  it('remembers and finds an own report', () => {
+  it('remembers an own report and recognizes it by id', () => {
     rememberOwnReport({ id: 7, fairteilerId: 810, createdAt: minutesAgo(1) }, NOW)
     expect(loadOwnReports(NOW)).toHaveLength(1)
-    expect(findOwnReport(810, minutesAgo(1), NOW)?.id).toBe(7)
-    expect(findOwnReport(1220, minutesAgo(1), NOW)).toBeUndefined()
-    expect(findOwnReport(810, minutesAgo(2), NOW)).toBeUndefined()
+    expect(isOwnReport(7, NOW)).toBe(true)
+    expect(isOwnReport(8, NOW)).toBe(false)
+  })
+
+  it('no longer recognizes an own report once the undo window passed', () => {
+    rememberOwnReport({ id: 7, fairteilerId: 810, createdAt: minutesAgo(1) }, NOW)
+    const later = new Date(NOW.getTime() + 16 * 60_000)
+    expect(isOwnReport(7, later)).toBe(false)
   })
 
   it('prunes entries older than the 15-minute undo window', () => {

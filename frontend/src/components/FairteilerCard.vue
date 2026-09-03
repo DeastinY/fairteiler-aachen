@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { openHint } from '../lib/hours'
 import { tagLabels } from '../lib/labels'
 import { formatRelativeTime } from '../lib/relativeTime'
 import type { FairteilerListItem } from '../types'
@@ -27,7 +28,10 @@ const timeline = computed(() => {
         <StatusBadge :state="fairteiler.status.state" />
       </span>
     </span>
-    <span class="street">{{ fairteiler.street }} · {{ fairteiler.city }}</span>
+    <span class="street">
+      {{ fairteiler.street }} · {{ fairteiler.city }}
+      <span v-if="openHint(fairteiler)" class="openhint">· {{ openHint(fairteiler) }}</span>
+    </span>
     <span class="bottomrow">
       <span class="timeline">{{ timeline }}</span>
       <span class="chart">
@@ -74,6 +78,11 @@ const timeline = computed(() => {
 .street {
   font-size: 13px;
   color: var(--muted);
+}
+
+.openhint {
+  color: var(--gray-ink);
+  font-weight: 500;
 }
 
 .bottomrow {

@@ -14,6 +14,7 @@ function restore(): FairteilerFilter {
         filter.etwasDa = record['etwasDa'] === true
         filter.aroundTheClock = record['aroundTheClock'] === true
         filter.cooled = record['cooled'] === true
+        filter.openNow = record['openNow'] === true
       }
     }
   } catch {

@@ -106,6 +106,49 @@ describe('ListeView', () => {
     expect(fine.find('.badge-warn').exists()).toBe(false)
   })
 
+  it('shows subtle open/closed hints from openNow', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse([
+        makeFairteiler({ id: 1, name: 'Zu', openNow: false }),
+        makeFairteiler({ id: 2, name: 'Offen', openNow: true }),
+        makeFairteiler({ id: 3, name: 'Immer', openNow: true, aroundTheClock: true }),
+        makeFairteiler({ id: 4, name: 'Unbekannt', openNow: null }),
+      ]),
+    )
+
+    const wrapper = mountListe()
+    await flushPromises()
+
+    const cards = wrapper.findAll('.listecard')
+    const byName = (name: string) => cards.find((c) => c.text().includes(name))!
+    expect(byName('Zu').text()).toContain('Geschlossen')
+    expect(byName('Offen').text()).toContain('Jetzt geöffnet')
+    // 24/7 places don't need a redundant hint
+    expect(byName('Immer').text()).not.toContain('Jetzt geöffnet')
+    expect(byName('Unbekannt').text()).not.toContain('Geschlossen')
+    expect(byName('Unbekannt').text()).not.toContain('Jetzt geöffnet')
+  })
+
+  it('the "Jetzt offen" chip filters to known-open places only', async () => {
+    fetchMock.mockResolvedValue(
+      jsonResponse([
+        makeFairteiler({ id: 1, name: 'Zu', openNow: false }),
+        makeFairteiler({ id: 2, name: 'Offen', openNow: true }),
+        makeFairteiler({ id: 3, name: 'Unbekannt', openNow: null }),
+      ]),
+    )
+
+    const wrapper = mountListe()
+    await flushPromises()
+
+    const chip = wrapper.findAll('.filterchip').find((c) => c.text() === 'Jetzt offen')!
+    await chip.trigger('click')
+
+    const cards = wrapper.findAll('.listecard')
+    expect(cards).toHaveLength(1)
+    expect(cards[0]!.text()).toContain('Offen')
+  })
+
   it('filter chips reduce the rendered cards', async () => {
     fetchMock.mockResolvedValue(
       jsonResponse([

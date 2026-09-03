@@ -11,6 +11,7 @@ import { useFilters } from '../composables/useFilters'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { formatDistance, haversineKm, type LatLon } from '../lib/geo'
 import { applyFilter } from '../lib/filters'
+import { openHint } from '../lib/hours'
 import { tagLabels } from '../lib/labels'
 import { formatRelativeTime } from '../lib/relativeTime'
 import { sortFairteiler } from '../lib/sort'
@@ -150,10 +151,14 @@ function distanceTo(item: FairteilerListItem): string | null {
 
 function rowLine(item: FairteilerListItem): string {
   const meta = statusMeta(item.status.state)
-  if (!item.status.lastReportAt) return meta.label
-  const parts = [meta.label, formatRelativeTime(item.status.lastReportAt)]
-  const tags = tagLabels(item.status.tags)
-  if (tags) parts.push(tags)
+  const parts = [meta.label]
+  if (item.status.lastReportAt) {
+    parts.push(formatRelativeTime(item.status.lastReportAt))
+    const tags = tagLabels(item.status.tags)
+    if (tags) parts.push(tags)
+  }
+  const hint = openHint(item)
+  if (hint) parts.push(hint)
   return parts.join(' · ')
 }
 

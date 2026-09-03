@@ -61,16 +61,7 @@ export function forgetOwnReport(id: number, now: Date = new Date()): void {
   persist(loadOwnReports(now).filter((entry) => entry.id !== id))
 }
 
-/**
- * Detail report rows carry no id – an own report is recognized by its
- * fairteiler and exact server timestamp (both stored at creation time).
- */
-export function findOwnReport(
-  fairteilerId: number,
-  createdAt: string,
-  now: Date = new Date(),
-): OwnReport | undefined {
-  return loadOwnReports(now).find(
-    (entry) => entry.fairteilerId === fairteilerId && entry.createdAt === createdAt,
-  )
+/** Detail report rows carry ids – an own report is recognized by its id. */
+export function isOwnReport(reportId: number, now: Date = new Date()): boolean {
+  return loadOwnReports(now).some((entry) => entry.id === reportId)
 }

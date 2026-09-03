@@ -16,10 +16,14 @@ const SUBSCRIPTION_JSON = {
   keys: { p256dh: 'P256', auth: 'AUTH' },
 }
 
-function mockBackend(pushConfig: unknown) {
+function mockBackend(pushConfig: unknown, stats?: unknown) {
   fetchMock.mockImplementation((url: string, init?: RequestInit) => {
     if (url === '/api/fairteiler') return Promise.resolve(jsonResponse(LIST))
     if (url === '/api/push/config') return Promise.resolve(jsonResponse(pushConfig))
+    if (url === '/api/stats') {
+      if (stats === undefined) return Promise.reject(new TypeError('Failed to fetch'))
+      return Promise.resolve(jsonResponse(stats))
+    }
     if (url === '/api/push/subscription' && init?.method === 'PUT') {
       return Promise.resolve(new Response(null, { status: 204 }))
     }
@@ -61,6 +65,35 @@ afterEach(() => {
 })
 
 describe('AktivitaetView', () => {
+  it('shows the weekly stats line from /api/stats', async () => {
+    stubPushEnvironment()
+    mockBackend(
+      { enabled: false, vapidPublicKey: null },
+      { fairteilerTotal: 11, withFood: 4, reports7d: 23 },
+    )
+
+    const wrapper = mount(AktivitaetView)
+    await flushPromises()
+
+    const stats = wrapper.find('[data-test="stats"]')
+    expect(stats.exists()).toBe(true)
+    expect(stats.text().replace(/\s+/g, ' ')).toBe(
+      'Diese Woche: 23 Meldungen · gerade 4 von 11 mit Essen',
+    )
+  })
+
+  it('hides the stats line silently when the fetch fails', async () => {
+    stubPushEnvironment()
+    mockBackend({ enabled: false, vapidPublicKey: null }) // stats reject
+
+    const wrapper = mount(AktivitaetView)
+    await flushPromises()
+
+    expect(wrapper.find('[data-test="stats"]').exists()).toBe(false)
+    // the rest of the page still renders
+    expect(wrapper.text()).toContain('BreitSeite')
+  })
+
   it('keeps the informational note when the server has push disabled', async () => {
     stubPushEnvironment()
     mockBackend({ enabled: false, vapidPublicKey: null })

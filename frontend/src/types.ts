@@ -13,6 +13,17 @@ export interface FairteilerCare {
   needsMaintenance: boolean
 }
 
+export type DayKey = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
+
+/** Local hours per day, ranges [start, end) in (possibly fractional) hours. */
+export type OpeningHours = Partial<Record<DayKey, [number, number][]>>
+
+export interface Stats {
+  fairteilerTotal: number
+  withFood: number
+  reports7d: number
+}
+
 export interface FairteilerStatus {
   state: StatusState
   lastReportAt: string | null
@@ -29,25 +40,27 @@ export interface FairteilerListItem {
   lon: number
   aroundTheClock: boolean
   cooled: boolean
+  /** Open right now? null = unknown (no curated hours). */
+  openNow: boolean | null
   status: FairteilerStatus
   care: FairteilerCare
   activity7d: number[]
 }
 
 export interface Report {
+  id: number
   type: ReportType
   tags: string[]
   createdAt: string
 }
 
-/** POST /api/fairteiler/{id}/reports response – includes the undo id. */
-export interface CreatedReport extends Report {
-  id: number
-}
+/** POST /api/fairteiler/{id}/reports response shape. */
+export type CreatedReport = Report
 
 export interface FairteilerDetail extends FairteilerListItem {
   description: string
   regionName: string
   picture: string | null
+  hours: OpeningHours | null
   reports: Report[]
 }

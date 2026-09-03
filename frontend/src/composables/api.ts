@@ -5,6 +5,7 @@ import type {
   FairteilerDetail,
   FairteilerListItem,
   ReportType,
+  Stats,
 } from '../types'
 import { getDeviceId } from './device'
 
@@ -47,6 +48,10 @@ export function fetchFairteilerList(): Promise<FairteilerListItem[]> {
 
 export function fetchFairteilerDetail(id: number): Promise<FairteilerDetail> {
   return request<FairteilerDetail>(`/api/fairteiler/${id}`)
+}
+
+export function fetchStats(): Promise<Stats> {
+  return request<Stats>('/api/stats')
 }
 
 export function fetchPushConfig(): Promise<PushConfig> {

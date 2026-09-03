@@ -22,8 +22,8 @@ const FOREIGN_CREATED_AT = new Date(Date.now() - 10 * 60_000).toISOString()
 const DETAIL = makeDetail({
   id: 810,
   reports: [
-    { type: 'brought', tags: ['obst'], createdAt: OWN_CREATED_AT },
-    { type: 'empty', tags: [], createdAt: FOREIGN_CREATED_AT },
+    { id: 42, type: 'brought', tags: ['obst'], createdAt: OWN_CREATED_AT },
+    { id: 99, type: 'empty', tags: [], createdAt: FOREIGN_CREATED_AT },
   ],
 })
 
@@ -122,9 +122,9 @@ describe('DetailView', () => {
               id: 810,
               care: { needsCleaning: true, needsMaintenance: true },
               reports: [
-                { type: 'needs_cleaning', tags: [], createdAt: FOREIGN_CREATED_AT },
-                { type: 'needs_maintenance', tags: [], createdAt: FOREIGN_CREATED_AT },
-                { type: 'cleaned', tags: [], createdAt: FOREIGN_CREATED_AT },
+                { id: 1, type: 'needs_cleaning', tags: [], createdAt: FOREIGN_CREATED_AT },
+                { id: 2, type: 'needs_maintenance', tags: [], createdAt: FOREIGN_CREATED_AT },
+                { id: 3, type: 'cleaned', tags: [], createdAt: FOREIGN_CREATED_AT },
               ],
             }),
           ),
@@ -143,6 +143,63 @@ describe('DetailView', () => {
     expect(rows[0]!.text()).toContain('Reinigung nötig gemeldet')
     expect(rows[1]!.text()).toContain('Defekt gemeldet')
     expect(rows[2]!.text()).toContain('Gereinigt / in Ordnung gebracht')
+  })
+
+  it('renders the opening hours table with today emphasized, except for 24/7 places', async () => {
+    fetchMock.mockImplementation((url: string) => {
+      if (url === '/api/fairteiler/810') {
+        return Promise.resolve(
+          jsonResponse(
+            makeDetail({ id: 810, hours: { mo: [[10, 18]], sa: [[10, 16.5]] } }),
+          ),
+        )
+      }
+      throw new Error(`unexpected fetch: ${url}`)
+    })
+
+    const wrapper = mountDetail()
+    await flushPromises()
+
+    const table = wrapper.find('[data-test="hours"]')
+    expect(table.exists()).toBe(true)
+    const rows = table.findAll('.hoursrow')
+    expect(rows).toHaveLength(7)
+    expect(rows[0]!.text()).toContain('Mo')
+    expect(rows[0]!.text()).toContain('10–18 Uhr')
+    expect(rows[1]!.text()).toContain('Geschlossen')
+    expect(rows[5]!.text()).toContain('10–16:30 Uhr')
+    expect(table.findAll('.hoursrow.today')).toHaveLength(1)
+
+    // 24/7 place: chip instead of table
+    fetchMock.mockImplementation(() =>
+      Promise.resolve(
+        jsonResponse(
+          makeDetail({ id: 810, aroundTheClock: true, hours: { mo: [[0, 24]] } }),
+        ),
+      ),
+    )
+    const wrapper247 = mountDetail()
+    await flushPromises()
+    expect(wrapper247.find('[data-test="hours"]').exists()).toBe(false)
+    expect(wrapper247.text()).toContain('Rund um die Uhr')
+  })
+
+  it('hides the hours block when hours are unknown', async () => {
+    const wrapper = mountDetail() // fixture has hours: null
+    await flushPromises()
+    expect(wrapper.find('[data-test="hours"]').exists()).toBe(false)
+  })
+
+  it('links to the fairteiler page on foodsharing.de', async () => {
+    const wrapper = mountDetail()
+    await flushPromises()
+
+    const link = wrapper.find('a.fslink')
+    expect(link.exists()).toBe(true)
+    expect(link.text()).toContain('Auf foodsharing.de ansehen')
+    expect(link.attributes('href')).toBe('https://foodsharing.de/fairteiler/810')
+    expect(link.attributes('target')).toBe('_blank')
+    expect(link.attributes('rel')).toBe('noopener noreferrer')
   })
 
   it('links the Route button to the platform navigation app', async () => {

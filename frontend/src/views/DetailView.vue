@@ -6,9 +6,10 @@ import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import { ApiError, deleteReport, fetchFairteilerDetail } from '../composables/api'
 import { renderMarkdown } from '../lib/markdown'
-import { findOwnReport, forgetOwnReport } from '../composables/ownReports'
+import { forgetOwnReport, isOwnReport } from '../composables/ownReports'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { showToast } from '../composables/useToast'
+import { formatHours, todayKey } from '../lib/hours'
 import { reportTypeLabel, tagLabel, tagLabels } from '../lib/labels'
 import { navigationUrl } from '../lib/navigation'
 import { formatRelativeTime } from '../lib/relativeTime'
@@ -100,8 +101,7 @@ function reportTitle(report: Report): string {
 const undoing = ref(false)
 
 function ownReportId(report: Report): number | null {
-  if (!detail.value) return null
-  return findOwnReport(detail.value.id, report.createdAt)?.id ?? null
+  return isOwnReport(report.id) ? report.id : null
 }
 
 async function undoReport(report: Report) {
@@ -123,6 +123,14 @@ async function undoReport(report: Report) {
     undoing.value = false
   }
 }
+
+/** Hours table rows – omitted for 24/7 places (their chip says it all). */
+const hoursRows = computed(() => {
+  if (!detail.value?.hours || detail.value.aroundTheClock) return null
+  return formatHours(detail.value.hours)
+})
+
+const today = todayKey()
 
 const routeHref = computed(() =>
   detail.value
@@ -234,12 +242,57 @@ function goBack() {
         </div>
       </section>
 
+      <!-- opening hours (24/7 places keep their chip instead) -->
+      <section
+        v-if="hoursRows"
+        class="card block"
+        aria-label="Öffnungszeiten"
+        data-test="hours"
+      >
+        <span class="disp blocktitle">Öffnungszeiten</span>
+        <dl class="hourstable">
+          <div
+            v-for="row in hoursRows"
+            :key="row.key"
+            class="hoursrow"
+            :class="{ today: row.key === today }"
+          >
+            <dt>{{ row.label }}</dt>
+            <dd>{{ row.text }}</dd>
+          </div>
+        </dl>
+      </section>
+
       <!-- description -->
       <section v-if="descriptionHtml" class="card block" aria-label="Beschreibung">
         <span class="disp blocktitle">Über diesen Fairteiler</span>
         <!-- eslint-disable-next-line vue/no-v-html — renderMarkdown escapes all input -->
         <div class="para md" v-html="descriptionHtml"></div>
+        <a
+          :href="`https://foodsharing.de/fairteiler/${detail.id}`"
+          class="fslink"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Auf foodsharing.de ansehen
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7 M9 7h8v8"></path>
+          </svg>
+        </a>
       </section>
+      <div v-else class="fsblock">
+        <a
+          :href="`https://foodsharing.de/fairteiler/${detail.id}`"
+          class="fslink"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Auf foodsharing.de ansehen
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7 M9 7h8v8"></path>
+          </svg>
+        </a>
+      </div>
 
       <!-- recent reports -->
       <section class="reports" aria-label="Letzte Meldungen">
@@ -565,6 +618,55 @@ function goBack() {
 
 .undobtn:disabled {
   opacity: 0.6;
+}
+
+.hourstable {
+  margin: 12px 0 0 0;
+}
+
+.hoursrow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.hoursrow:last-child {
+  border-bottom: none;
+}
+
+.hoursrow dt {
+  color: var(--muted);
+}
+
+.hoursrow dd {
+  margin: 0;
+}
+
+.hoursrow.today dt,
+.hoursrow.today dd {
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.fsblock {
+  margin: 16px 16px 0 16px;
+}
+
+.fslink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fsblock .fslink {
+  margin-top: 0;
 }
 
 .actions {

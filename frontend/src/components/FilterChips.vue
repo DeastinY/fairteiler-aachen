@@ -6,6 +6,7 @@ const filter = useFilters()
 
 const CHIPS: { key: keyof FairteilerFilter; label: string }[] = [
   { key: 'etwasDa', label: 'Etwas da' },
+  { key: 'openNow', label: 'Jetzt offen' },
   { key: 'aroundTheClock', label: 'Rund um die Uhr' },
   { key: 'cooled', label: 'Gekühlt' },
 ]
