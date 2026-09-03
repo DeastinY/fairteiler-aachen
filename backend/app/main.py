@@ -4,10 +4,12 @@ from typing import Literal
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import crud, seed, status
-from app.models import FOOD_TAGS, Fairteiler
+from app import crud, push, seed, status
+from app.models import FOOD_TAGS, Fairteiler, PushSubscription
+from app.push import PushSettings
 
 
 class ReportIn(BaseModel):
@@ -23,11 +25,33 @@ class ReportIn(BaseModel):
         return value
 
 
-def create_app(*, engine, session_factory) -> FastAPI:
+class SubscriptionKeys(BaseModel):
+    p256dh: str
+    auth: str
+
+
+class SubscriptionIn(BaseModel):
+    endpoint: str
+    keys: SubscriptionKeys
+
+
+class PushSubscriptionIn(BaseModel):
+    subscription: SubscriptionIn
+    fairteilerIds: list[int] = []
+    quietHours: bool = False
+
+
+def create_app(
+    *, engine, session_factory, push_settings: PushSettings | None = None
+) -> FastAPI:
+    import os
+
     app = FastAPI(title="Fairteiler Aachen API")
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],  # tightened to the app origin at deploy time
+        # same-origin deploys need no CORS; cross-origin (e.g. GitHub Pages)
+        # sets CORS_ORIGINS="https://<user>.github.io"
+        allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
         allow_methods=["*"],
         allow_headers=["*"],
     )
@@ -73,6 +97,44 @@ def create_app(*, engine, session_factory) -> FastAPI:
     def health():
         return {"status": "ok"}
 
+    @app.get("/api/push/config")
+    def push_config():
+        if push_settings is None:
+            return {"enabled": False, "vapidPublicKey": None}
+        return {"enabled": True, "vapidPublicKey": push_settings.public_key}
+
+    @app.put("/api/push/subscription", status_code=204)
+    def put_push_subscription(
+        body: PushSubscriptionIn,
+        x_device_id: str = Header(min_length=4, max_length=128),
+        session: Session = Depends(get_session),
+    ):
+        if push_settings is None:
+            raise HTTPException(
+                status_code=503,
+                detail="Push ist auf diesem Server nicht aktiviert.",
+            )
+        known_ids = {row.id for row in seed.all_fairteiler(session)}
+        unknown = [i for i in body.fairteilerIds if i not in known_ids]
+        if unknown:
+            raise HTTPException(
+                status_code=422, detail=f"Unbekannte Fairteiler: {unknown}"
+            )
+        endpoint = body.subscription.endpoint
+        existing = session.scalar(
+            select(PushSubscription).where(PushSubscription.endpoint == endpoint)
+        )
+        if not body.fairteilerIds:
+            if existing is not None:
+                session.delete(existing)
+            return
+        sub = existing or PushSubscription(endpoint=endpoint)
+        sub.p256dh = body.subscription.keys.p256dh
+        sub.auth = body.subscription.keys.auth
+        sub.fairteiler_ids = body.fairteilerIds
+        sub.quiet_hours = body.quietHours
+        session.add(sub)
+
     @app.get("/api/fairteiler")
     def list_fairteiler(session: Session = Depends(get_session)):
         now = dt.datetime.now(dt.timezone.utc)
@@ -116,6 +178,9 @@ def create_app(*, engine, session_factory) -> FastAPI:
             tags=body.tags,
             device_hash=device_hash,
         )
+        if push_settings is not None and report.type == "brought":
+            fairteiler = session.get(Fairteiler, fairteiler_id)
+            push.notify_brought(session, fairteiler, report, push_settings)
         return {
             "type": report.type,
             "tags": list(report.tags or []),

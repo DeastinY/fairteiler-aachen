@@ -40,6 +40,21 @@ class Fairteiler(Base):
     picture: Mapped[str | None] = mapped_column(String(400))
 
 
+class PushSubscription(Base):
+    __tablename__ = "push_subscriptions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    endpoint: Mapped[str] = mapped_column(String(500), unique=True, index=True)
+    p256dh: Mapped[str] = mapped_column(String(200))
+    auth: Mapped[str] = mapped_column(String(200))
+    fairteiler_ids: Mapped[list] = mapped_column(JSON, default=list)
+    quiet_hours: Mapped[bool] = mapped_column(default=False)
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: dt.datetime.now(dt.timezone.utc).replace(tzinfo=None),
+    )
+
+
 class Report(Base):
     __tablename__ = "reports"
 
