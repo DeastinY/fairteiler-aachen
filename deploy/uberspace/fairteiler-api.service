@@ -1,0 +1,14 @@
+# ~/.config/systemd/user/fairteiler-api.service  (Uberspace 8, Arch-based)
+[Unit]
+Description=Fairteiler Aachen API
+
+[Service]
+WorkingDirectory=%h/fairteiler-repo/backend
+EnvironmentFile=%h/fairteiler/env
+# U8 web backends require binding 0.0.0.0 (not 127.0.0.1)
+ExecStart=%h/fairteiler/venv/bin/uvicorn run:app --host 0.0.0.0 --port 8000
+Restart=on-failure
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target

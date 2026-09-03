@@ -10,16 +10,16 @@ cd "$ROOT/frontend"
 npm run test
 npm run build
 
-echo "== sync frontend -> ~/html =="
-rsync -az --delete --exclude '.htaccess' dist/ "$UBERSPACE":html/
+echo "== sync frontend -> ~/www =="
+rsync -az --delete --exclude '.htaccess' dist/ "$UBERSPACE":www/
 
 echo "== update backend =="
 ssh "$UBERSPACE" '
   set -eu
   cd ~/fairteiler-repo && git pull --ff-only
   ~/fairteiler/venv/bin/pip install -q -r backend/requirements.txt
-  supervisorctl restart fairteiler-api
-  sleep 3 && supervisorctl status fairteiler-api
+  systemctl --user restart fairteiler-api
+  sleep 3 && systemctl --user --no-pager status fairteiler-api | head -5
 '
 
 echo "== smoke check =="

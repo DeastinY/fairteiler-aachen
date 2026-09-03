@@ -1,24 +1,21 @@
-# Deploying to Uberspace (chosen host)
+# Deploying to Uberspace 8 (chosen host: nix.uberspace.de)
 
-Layout: same origin. Apache serves the built frontend from `~/html`;
-`/api/*` is routed to uvicorn on port 8000. SQLite lives in
-`~/fairteiler/data/`. Everything below assumes Uberspace 7.
+Uberspace 8 is Arch-Linux-based (VMs): systemd **user** services, web
+backends via Caddy/Apache, static DocumentRoot at
+`/var/www/virtual/<user>/html` (symlinked as `~/www`). Layout: same origin —
+Apache serves the built frontend from `~/www`; `/api/*` routes to uvicorn on
+port 8000 (which must bind `0.0.0.0` on U8).
 
 ## One-time setup
 
-1. **Account**: register at https://uberspace.de (first month free, then
-   choose your price ≥ €1). Add your SSH key in the dashboard.
-   Your host is `<user>@<star>.uberspace.de`; the site is
-   `https://<user>.uber.space` (custom domain later via
-   `uberspace web domain add fairteiler-aachen.de`).
+1. **Account**: SSH key added in the dashboard (Logins → SSH keys).
+   Host `<user>@nix.uberspace.de`; site `https://<user>.uber.space`
+   (custom domain later: `uberspace web domain add fairteiler-aachen.de`).
 
-2. **On the server** (`ssh <user>@<star>.uberspace.de`):
+2. **On the server** (`ssh <user>@nix.uberspace.de`):
 
    ```bash
-   # Python for the API
-   uberspace tools version use python 3.12
-
-   # code + venv
+   # code + venv (Arch ships a current python3)
    git clone https://github.com/DeastinY/fairteiler-aachen.git ~/fairteiler-repo
    python3 -m venv ~/fairteiler/venv
    ~/fairteiler/venv/bin/pip install -r ~/fairteiler-repo/backend/requirements.txt
@@ -32,20 +29,21 @@ Layout: same origin. Apache serves the built frontend from `~/html`;
    #    DEVICE_SALT=<long random string>   (CORS_ORIGINS stays unset: same origin)
    chmod 600 ~/fairteiler/env
 
-   # supervisord service
-   cp ~/fairteiler-repo/deploy/uberspace/fairteiler.ini ~/etc/services.d/
-   #   edit it: replace <user> with your username
-   supervisorctl reread && supervisorctl update && supervisorctl status
+   # systemd user service
+   mkdir -p ~/.config/systemd/user
+   cp ~/fairteiler-repo/deploy/uberspace/fairteiler-api.service ~/.config/systemd/user/
+   systemctl --user daemon-reload
+   systemctl --user enable --now fairteiler-api
+   systemctl --user status fairteiler-api      # logs: journalctl --user -u fairteiler-api
 
-   # route /api to the service; everything else stays static from ~/html
-   uberspace web backend set /api --http --port 8000
+   # route /api to the service; everything else stays static from ~/www
+   uberspace web backend add /api port 8000
    uberspace web backend list
 
    # SPA fallback for the frontend routes
-   cp ~/fairteiler-repo/deploy/uberspace/htaccess ~/html/.htaccess
+   cp ~/fairteiler-repo/deploy/uberspace/htaccess ~/www/.htaccess
 
-   # nightly DB backup at 03:15 (kept 14 days in ~/fairteiler/backups)
-   # + nightly retention cleanup at 03:45 (Datenschutz §9: Meldungen > 90 Tage)
+   # nightly DB backup 03:15 + retention cleanup 03:45 (Datenschutz §9: 90 Tage)
    (crontab -l 2>/dev/null; \
     echo "15 3 * * * ~/fairteiler-repo/deploy/uberspace/backup.sh"; \
     echo "45 3 * * * cd ~/fairteiler-repo/backend && set -a && . ~/fairteiler/env && ~/fairteiler/venv/bin/python manage.py prune") | crontab -
@@ -58,27 +56,25 @@ Layout: same origin. Apache serves the built frontend from `~/html`;
 3. **First frontend upload** (from your machine, repo root):
 
    ```bash
-   UBERSPACE=<user>@<star>.uberspace.de deploy/uberspace/deploy.sh
+   UBERSPACE=<user>@nix.uberspace.de deploy/uberspace/deploy.sh
    ```
 
-4. Check `https://<user>.uber.space` — app loads, `/api/health` says ok,
+4. Check `https://<user>.uber.space` — app loads, `/api/health` ok,
    Aktivität shows the push toggles (config enabled).
 
 ## Every later deploy
 
 ```bash
-UBERSPACE=<user>@<star>.uberspace.de deploy/uberspace/deploy.sh
+UBERSPACE=<user>@nix.uberspace.de deploy/uberspace/deploy.sh
 ```
 
-(builds the frontend locally, rsyncs it to `~/html`, updates the repo on
-the server, installs backend deps, restarts the service.)
+(builds the frontend locally with tests, rsyncs to `~/www`, updates the
+repo on the server, installs backend deps, restarts the service.)
 
 ## Before flipping it public
 
-- Fill every `[PLACEHOLDER]` in the Impressum/Datenschutz views
-  (frontend/src/views/ImpressumView.vue, DatenschutzView.vue — sourced
-  from docs/legal/).
-- Decide the report retention period (Datenschutz §9) and add the cleanup
-  cron once decided.
-- Uberspace keeps no Apache access logs by default — matches our
-  Datenschutzerklärung nicely; don't enable them.
+- Fill every `[PLACEHOLDER]` in the Impressum/Datenschutz views.
+- Conclude the AV-Vertrag (Auftragsverarbeitung) with Uberspace — the
+  Datenschutzerklärung already states it exists.
+- Uberspace keeps no per-user Apache access logs by default; don't enable
+  them (matches the Datenschutzerklärung).
