@@ -10,6 +10,8 @@ const en: Messages = {
   'common.offline': 'Offline – last known state',
   'common.noFilterMatch': 'No Fairteiler match the selected filters.',
 
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Map',
   'nav.liste': 'List',
   'nav.aktivitaet': 'Activity',

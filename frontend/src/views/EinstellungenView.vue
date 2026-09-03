@@ -103,7 +103,7 @@ function cancelClear() {
           <span class="rowname">{{ t('einstellungen.notifications') }}</span>
           <span class="rownote">{{ t('einstellungen.notificationsNote') }}</span>
         </div>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a8a494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="dir-flip" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a8a494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M9 6l6 6-6 6"></path>
         </svg>
       </RouterLink>

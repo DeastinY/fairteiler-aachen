@@ -10,6 +10,8 @@ const uk: Messages = {
   'common.offline': 'Офлайн – останній відомий стан',
   'common.noFilterMatch': 'Жоден Fairteiler не відповідає вибраним фільтрам.',
 
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Мапа',
   'nav.liste': 'Список',
   'nav.aktivitaet': 'Активність',

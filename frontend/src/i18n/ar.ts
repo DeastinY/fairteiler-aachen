@@ -10,6 +10,8 @@ const ar: Messages = {
   'common.offline': 'غير متصل – آخر حالة معروفة',
   'common.noFilterMatch': 'لا يوجد Fairteiler يطابق الفلاتر المحددة.',
 
+  'common.listSeparator': '، ',
+
   'nav.karte': 'الخريطة',
   'nav.liste': 'القائمة',
   'nav.aktivitaet': 'النشاط',

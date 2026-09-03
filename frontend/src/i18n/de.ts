@@ -15,6 +15,8 @@ const de = {
   'common.noFilterMatch': 'Keine Fairteiler entsprechen den gewählten Filtern.',
 
   // bottom navigation
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Karte',
   'nav.liste': 'Liste',
   'nav.aktivitaet': 'Aktivität',

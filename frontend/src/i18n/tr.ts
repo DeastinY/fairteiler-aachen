@@ -10,6 +10,8 @@ const tr: Messages = {
   'common.offline': 'Çevrimdışı – bilinen son durum',
   'common.noFilterMatch': 'Seçilen filtrelere uyan Fairteiler yok.',
 
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Harita',
   'nav.liste': 'Liste',
   'nav.aktivitaet': 'Etkinlik',

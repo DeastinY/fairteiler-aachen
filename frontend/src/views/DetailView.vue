@@ -11,7 +11,7 @@ import { forgetOwnReport, isOwnReport } from '../composables/ownReports'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { showToast } from '../composables/useToast'
 import { t, useI18n } from '../i18n'
-import { formatHours, todayKey } from '../lib/hours'
+import { dayLabel, formatHours, todayKey, DAY_KEYS } from '../lib/hours'
 import { reportTypeLabel, tagLabel, tagLabels } from '../lib/labels'
 import { navigationUrl } from '../lib/navigation'
 import { formatRelativeTime } from '../lib/relativeTime'
@@ -74,14 +74,13 @@ const dotColor = computed(() =>
  * the source is untrusted, renderMarkdown escapes ALL input HTML first. */
 const descriptionHtml = computed(() => renderMarkdown(detail.value?.description))
 
-const WEEKDAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'] as const
-
 const dayLabels = computed(() => {
   const labels: string[] = []
   const today = new Date()
   for (let offset = 6; offset >= 1; offset -= 1) {
     const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - offset)
-    labels.push(WEEKDAYS[day.getDay()] ?? '')
+    // getDay(): 0 = Sunday; DAY_KEYS starts at Monday
+    labels.push(dayLabel(DAY_KEYS[(day.getDay() + 6) % 7]!))
   }
   labels.push(t('detail.today'))
   return labels
@@ -212,7 +211,7 @@ function goBack() {
         <path d="M182 66 C186 56 206 56 210 66 C206 76 186 76 182 66 Z" fill="#8fc3a4"></path>
       </svg>
       <button type="button" class="roundbtn backbtn" :aria-label="t('common.back')" @click="goBack">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="dir-flip" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
       </button>
@@ -267,7 +266,7 @@ function goBack() {
           </span>
         </div>
         <p class="page-sub">{{ address }}</p>
-        <p v-if="detail.regionName" class="region">{{ detail.regionName }}</p>
+        <p v-if="detail.regionName && detail.regionName !== detail.city" class="region">{{ detail.regionName }}</p>
         <div v-if="detail.aroundTheClock || detail.cooled" class="inforow">
           <span v-if="detail.aroundTheClock" class="infochip">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -338,7 +337,15 @@ function goBack() {
             :class="{ today: row.key === today }"
           >
             <dt>{{ row.label }}</dt>
-            <dd>{{ row.text }}</dd>
+            <dd>
+              <template v-if="row.ranges.length === 0">{{ row.text }}</template>
+              <template v-else>
+                <template v-for="(range, index) in row.ranges" :key="index">
+                  <template v-if="index > 0"> {{ t('hours.join') }} </template>
+                  <bdi dir="ltr">{{ range }}</bdi>
+                </template>
+              </template>
+            </dd>
           </div>
         </dl>
       </section>
@@ -347,7 +354,7 @@ function goBack() {
       <section v-if="descriptionHtml" class="card block" aria-label="Beschreibung">
         <span class="disp blocktitle">{{ t('detail.about') }}</span>
         <!-- eslint-disable-next-line vue/no-v-html — renderMarkdown escapes all input -->
-        <div class="para md" v-html="descriptionHtml"></div>
+        <div class="para md ltr-content" dir="ltr" v-html="descriptionHtml"></div>
         <p v-if="locale !== 'de'" class="descsource">{{ t('detail.descriptionSource') }}</p>
         <a
           :href="`https://foodsharing.de/fairteiler/${detail.id}`"
@@ -517,6 +524,9 @@ function goBack() {
 
 .titlerow h1 {
   margin: 0;
+  min-width: 0;
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .page-sub {
@@ -658,6 +668,7 @@ function goBack() {
 .reportrow {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid var(--border-soft);
@@ -709,7 +720,8 @@ function goBack() {
 }
 
 .reportbody {
-  flex: 1;
+  flex: 1 1 180px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -785,6 +797,10 @@ function goBack() {
 
 .fsblock .fslink {
   margin-top: 0;
+}
+
+.ltr-content {
+  text-align: start;
 }
 
 .descsource {

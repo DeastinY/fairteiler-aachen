@@ -18,7 +18,7 @@ function goBack() {
   <div class="page">
     <div class="head">
       <button type="button" class="roundbtn backbtn" :aria-label="t('common.back')" @click="goBack">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="dir-flip" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
       </button>
@@ -29,7 +29,10 @@ function goBack() {
       <p v-if="germanOnly && locale !== 'de'" class="german-note">
         {{ t('legal.germanOnly') }}
       </p>
-      <slot />
+      <div v-if="germanOnly" dir="ltr" class="ltr-content" data-test="ltr-content">
+        <slot />
+      </div>
+      <slot v-else />
     </article>
   </div>
 </template>
@@ -59,7 +62,11 @@ function goBack() {
 }
 
 .legal {
-  padding: 8px 20px 24px 20px;
+  padding: 8px 20px 48px 20px;
+}
+
+.ltr-content {
+  text-align: start;
 }
 
 .german-note {

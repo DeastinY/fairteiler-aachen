@@ -62,6 +62,8 @@ describe('StatistikView', () => {
     expect(tiles[1]!.text()).toContain('Push-Abos')
     expect(tiles[2]!.text()).toContain('4')
     expect(tiles[2]!.text()).toContain('11')
+    // fraction order is locked left-to-right even in RTL locales
+    expect(tiles[2]!.find('bdi[dir="ltr"]').exists()).toBe(true)
     expect(tiles[2]!.text()).toContain('Fairteiler mit Essen')
   })
 
@@ -90,7 +92,9 @@ describe('StatistikView', () => {
     // only first, middle and last date labels are visible
     const labelTexts = views.findAll('.label').map((l) => l.text()).filter(Boolean)
     expect(labelTexts).toHaveLength(3)
-    expect(labelTexts[2]).toBe('4.9.')
+    expect(labelTexts[2]).toBe('4.9.') // Intl.DateTimeFormat('de', numeric day.month)
+    // labels are bidi-isolated for RTL locales
+    expect(views.findAll('.label bdi').length).toBeGreaterThan(0)
 
     const reports = wrapper.find('[data-test="reports-chart"]')
     expect(reports.text()).toContain('Meldungen pro Tag')

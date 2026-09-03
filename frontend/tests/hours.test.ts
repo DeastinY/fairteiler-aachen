@@ -26,6 +26,9 @@ describe('formatHours', () => {
   it('joins multiple ranges of one day', () => {
     const rows = formatHours({ we: [[8, 12], [14, 18]] })
     expect(rows[2]!.text).toBe('8–12 Uhr und 14–18 Uhr')
+    // per-range strings are exposed for <bdi dir="ltr"> wrapping in RTL
+    expect(rows[2]!.ranges).toEqual(['8–12 Uhr', '14–18 Uhr'])
+    expect(rows[3]!.ranges).toEqual([])
   })
 })
 

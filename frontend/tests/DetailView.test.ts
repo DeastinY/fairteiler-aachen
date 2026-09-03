@@ -166,6 +166,8 @@ describe('DetailView', () => {
     expect(rows).toHaveLength(7)
     expect(rows[0]!.text()).toContain('Mo')
     expect(rows[0]!.text()).toContain('10–18 Uhr')
+    // time ranges are bidi-isolated for RTL locales
+    expect(rows[0]!.find('bdi[dir="ltr"]').text()).toBe('10–18 Uhr')
     expect(rows[1]!.text()).toContain('Geschlossen')
     expect(rows[5]!.text()).toContain('10–16:30 Uhr')
     expect(table.findAll('.hoursrow.today')).toHaveLength(1)
@@ -188,6 +190,23 @@ describe('DetailView', () => {
     const wrapper = mountDetail() // fixture has hours: null
     await flushPromises()
     expect(wrapper.find('[data-test="hours"]').exists()).toBe(false)
+  })
+
+  it('renders the activity chart weekday labels from i18n and isolates the description LTR', async () => {
+    const wrapper = mountDetail()
+    await flushPromises()
+
+    const days = wrapper.findAll('.chartday').map((d) => d.text())
+    expect(days).toHaveLength(7)
+    expect(days[6]).toBe('Heute')
+    const known = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
+    for (const label of days.slice(0, 6)) {
+      expect(known).toContain(label)
+    }
+
+    // upstream German description keeps LTR direction in any locale
+    const description = wrapper.find('.md')
+    expect(description.attributes('dir')).toBe('ltr')
   })
 
   it('links to the fairteiler page on foodsharing.de', async () => {

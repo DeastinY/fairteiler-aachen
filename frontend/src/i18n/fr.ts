@@ -10,6 +10,8 @@ const fr: Messages = {
   'common.offline': 'Hors ligne – dernier état connu',
   'common.noFilterMatch': 'Aucun Fairteiler ne correspond aux filtres choisis.',
 
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Carte',
   'nav.liste': 'Liste',
   'nav.aktivitaet': 'Activité',

@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import BottomNav from '../src/components/BottomNav.vue'
+import { tagLabels } from '../src/lib/labels'
 import {
   _resetI18nForTests,
   detectLocale,
@@ -128,6 +129,14 @@ describe('detectLocale', () => {
       'Deutsch', 'English', 'Türkçe', 'العربية', 'Русский',
       'Polski', 'Українська', 'Nederlands', 'Français',
     ])
+  })
+})
+
+describe('locale-aware list separator', () => {
+  it('joins tag labels with the Arabic comma in ar and a plain comma in de', async () => {
+    expect(tagLabels(['obst', 'gemuese'])).toBe('Obst, Gemüse')
+    await setLocale('ar')
+    expect(tagLabels(['obst', 'gemuese'])).toBe('فواكه، خضار')
   })
 })
 

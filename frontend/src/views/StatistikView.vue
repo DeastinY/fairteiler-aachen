@@ -3,8 +3,10 @@ import { computed, onMounted, ref } from 'vue'
 import BarSeries from '../components/BarSeries.vue'
 import SkeletonBlock from '../components/SkeletonBlock.vue'
 import { fetchStats } from '../composables/api'
-import { t } from '../i18n'
+import { t, useI18n } from '../i18n'
 import type { Stats } from '../types'
+
+const { locale } = useI18n()
 
 const stats = ref<Stats | null>(null)
 const failed = ref(false)
@@ -17,10 +19,17 @@ onMounted(async () => {
   }
 })
 
-/** "YYYY-MM-DD" -> "4.9." (locale-neutral numeric day.month). */
+/** "YYYY-MM-DD" -> localized short numeric date (e.g. de "4.9.", ar "٤/٩"). */
 function shortDate(day: string): string {
-  const [, month, date] = day.split('-')
-  return `${Number(date)}.${Number(month)}.`
+  const [year, month, date] = day.split('-').map(Number)
+  try {
+    return new Intl.DateTimeFormat(locale.value, {
+      day: 'numeric',
+      month: 'numeric',
+    }).format(new Date(year!, (month ?? 1) - 1, date))
+  } catch {
+    return `${date}.${month}.`
+  }
 }
 
 const usage = computed(() => stats.value?.usage14d ?? [])
@@ -57,7 +66,7 @@ const reports = computed(() => usage.value.map((entry) => entry.reports))
           <span class="tilelabel">{{ t('statistik.pushSubs') }}</span>
         </div>
         <div class="card tile">
-          <span class="tilevalue">{{ stats.withFood }}&hairsp;/&hairsp;{{ stats.fairteilerTotal }}</span>
+          <span class="tilevalue"><bdi dir="ltr">{{ stats.withFood }}&hairsp;/&hairsp;{{ stats.fairteilerTotal }}</bdi></span>
           <span class="tilelabel">{{ t('statistik.withFood') }}</span>
         </div>
       </div>

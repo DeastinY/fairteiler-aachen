@@ -24,19 +24,19 @@ export interface HoursRow {
   key: DayKey
   label: string
   text: string
+  /** Formatted ranges, one entry each – wrap them in <bdi dir="ltr"> for RTL. */
+  ranges: string[]
 }
 
 /** Seven Mo–So rows; days without ranges read "Geschlossen". */
 export function formatHours(hours: OpeningHours): HoursRow[] {
   return DAY_KEYS.map((key) => {
-    const ranges = hours[key] ?? []
+    const ranges = (hours[key] ?? []).map(formatRange)
     return {
       key,
       label: dayLabel(key),
-      text:
-        ranges.length > 0
-          ? ranges.map(formatRange).join(` ${t('hours.join')} `)
-          : t('hours.closed'),
+      text: ranges.length > 0 ? ranges.join(` ${t('hours.join')} `) : t('hours.closed'),
+      ranges,
     }
   })
 }

@@ -10,6 +10,8 @@ const pl: Messages = {
   'common.offline': 'Offline – ostatni znany stan',
   'common.noFilterMatch': 'Żaden Fairteiler nie pasuje do wybranych filtrów.',
 
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Mapa',
   'nav.liste': 'Lista',
   'nav.aktivitaet': 'Aktywność',

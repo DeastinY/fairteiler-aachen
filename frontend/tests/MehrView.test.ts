@@ -24,6 +24,11 @@ describe('MehrView', () => {
     expect(targets).toContain('/datenschutz')
   })
 
+  it('marks chevrons with the RTL mirror class', () => {
+    const wrapper = mount(MehrView, globalStubs)
+    expect(wrapper.findAll('svg.dir-flip').length).toBeGreaterThanOrEqual(4)
+  })
+
   it('describes the project and links foodsharing.de as a user-clicked link', () => {
     const wrapper = mount(MehrView, globalStubs)
     expect(wrapper.text()).toContain('unabhängiges, privates und nichtkommerzielles')

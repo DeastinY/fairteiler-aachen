@@ -20,7 +20,7 @@ export function tagLabel(tag: string): string {
 }
 
 export function tagLabels(tags: string[]): string {
-  return tags.map(tagLabel).join(', ')
+  return tags.map(tagLabel).join(t('common.listSeparator'))
 }
 
 const REPORT_TYPES: readonly ReportType[] = [

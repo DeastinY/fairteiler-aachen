@@ -10,6 +10,8 @@ const ru: Messages = {
   'common.offline': 'Офлайн – последнее известное состояние',
   'common.noFilterMatch': 'Ни один Fairteiler не подходит под выбранные фильтры.',
 
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Карта',
   'nav.liste': 'Список',
   'nav.aktivitaet': 'Активность',

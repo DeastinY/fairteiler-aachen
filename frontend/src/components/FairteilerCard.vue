@@ -68,6 +68,10 @@ const timeline = computed(() => {
 .name {
   font-weight: 650;
   font-size: 17px;
+  min-width: 0;
+  flex: 1;
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .badges {
@@ -75,6 +79,7 @@ const timeline = computed(() => {
   gap: 6px;
   flex-wrap: wrap;
   justify-content: flex-end;
+  flex-shrink: 1;
 }
 
 .street {
@@ -97,7 +102,11 @@ const timeline = computed(() => {
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 6px;
+}
+
+.timeline {
+  min-width: 0;
 }
 
 .timeline {

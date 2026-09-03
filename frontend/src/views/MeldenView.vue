@@ -337,6 +337,10 @@ function close() {
   padding: 0;
   min-height: 24px;
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .placestreet {

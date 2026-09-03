@@ -226,3 +226,8 @@ button {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* directional icons (chevrons, back arrows) mirror in RTL */
+[dir='rtl'] .dir-flip {
+  transform: scaleX(-1);
+}

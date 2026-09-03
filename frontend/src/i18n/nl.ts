@@ -10,6 +10,8 @@ const nl: Messages = {
   'common.offline': 'Offline – laatst bekende stand',
   'common.noFilterMatch': 'Geen Fairteiler past bij de gekozen filters.',
 
+  'common.listSeparator': ', ',
+
   'nav.karte': 'Kaart',
   'nav.liste': 'Lijst',
   'nav.aktivitaet': 'Activiteit',

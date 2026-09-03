@@ -43,7 +43,7 @@ const labelIndices = computed(() => {
         :data-value="value"
       ></div>
       <span class="label" :class="{ empty: !labelIndices.has(index) }">
-        {{ labelIndices.has(index) ? labels[index] : '' }}
+        <bdi>{{ labelIndices.has(index) ? labels[index] : '' }}</bdi>
       </span>
     </div>
   </div>
