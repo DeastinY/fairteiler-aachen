@@ -5,6 +5,7 @@ import CareBadges from '../components/CareBadges.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import { ApiError, deleteReport, fetchFairteilerDetail } from '../composables/api'
+import { renderMarkdown } from '../lib/markdown'
 import { findOwnReport, forgetOwnReport } from '../composables/ownReports'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { showToast } from '../composables/useToast'
@@ -64,14 +65,9 @@ const dotColor = computed(() =>
   detail.value ? statusMeta(detail.value.status.state).dotColor : '#c08a1e',
 )
 
-/** Description as escaped plain-text paragraphs — never rendered as HTML. */
-const paragraphs = computed(() => {
-  if (!detail.value?.description) return []
-  return detail.value.description
-    .split(/\n{2,}/)
-    .map((p) => p.trim())
-    .filter((p) => p.length > 0)
-})
+/** Description rendered through our own escaping markdown renderer —
+ * the source is untrusted, renderMarkdown escapes ALL input HTML first. */
+const descriptionHtml = computed(() => renderMarkdown(detail.value?.description))
 
 const WEEKDAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'] as const
 
@@ -239,9 +235,10 @@ function goBack() {
       </section>
 
       <!-- description -->
-      <section v-if="paragraphs.length" class="card block" aria-label="Beschreibung">
+      <section v-if="descriptionHtml" class="card block" aria-label="Beschreibung">
         <span class="disp blocktitle">Über diesen Fairteiler</span>
-        <p v-for="(paragraph, index) in paragraphs" :key="index" class="para">{{ paragraph }}</p>
+        <!-- eslint-disable-next-line vue/no-v-html — renderMarkdown escapes all input -->
+        <div class="para md" v-html="descriptionHtml"></div>
       </section>
 
       <!-- recent reports -->
@@ -634,4 +631,16 @@ function goBack() {
 .meldenbtn:hover {
   color: var(--surface);
 }
+
+.md :deep(p) { margin: 0 0 10px 0; }
+.md :deep(p:last-child) { margin-bottom: 0; }
+.md :deep(ul) { margin: 0 0 10px 0; padding-left: 20px; }
+.md :deep(li) { margin: 2px 0; }
+.md :deep(hr) { border: none; border-top: 1px solid #edeadf; margin: 12px 0; }
+.md :deep(strong) { font-weight: 650; }
+.md :deep(a) { color: #2f7d54; word-break: break-all; }
+.md { overflow-wrap: anywhere; }
+
+.titlerow { flex-wrap: wrap; }
+.titlerow h1 { min-width: 0; overflow-wrap: anywhere; }
 </style>

@@ -16,11 +16,30 @@ AROUND_THE_CLOCK_HINTS = (
 )
 
 
+COOLED_NEGATIONS = (
+    "kein kühlschrank",
+    "keinen kühlschrank",
+    "ohne kühlschrank",
+    "nicht mehr kühlt",
+    "kühlt nicht",
+    "als schrank umgebaut",
+)
+
+
 def derive_flags(description: str | None) -> dict:
-    """Heuristic attribute flags from the upstream free-text description."""
-    text = (description or "").lower()
+    """Heuristic attribute flags from the upstream free-text description.
+
+    Markdown markers are stripped before matching ("**keinen** Kühlschrank"),
+    and common negations beat the keyword ("kein Kühlschrank", a fridge that
+    "nicht mehr kühlt" or was "als Schrank umgebaut").
+    """
+    text = (description or "").lower().replace("*", "").replace("_", "")
+    text = " ".join(text.split())  # collapse whitespace/newlines
+    cooled = "kühlschrank" in text and not any(
+        negation in text for negation in COOLED_NEGATIONS
+    )
     return {
-        "cooled": "kühlschrank" in text,
+        "cooled": cooled,
         "around_the_clock": any(hint in text for hint in AROUND_THE_CLOCK_HINTS),
     }
 

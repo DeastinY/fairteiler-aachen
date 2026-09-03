@@ -30,6 +30,28 @@ def test_breitseite_neither(client):
     assert point["aroundTheClock"] is False
 
 
+def test_cooled_negations_from_real_descriptions(client):
+    # 1981: "Es gibt hier **keinen** Kühlschrank."
+    assert get(client, 1981)["cooled"] is False
+    # 2420: "ein roter ungebauter Kühlschrank - der nicht mehr kühlt"
+    assert get(client, 2420)["cooled"] is False
+    # 1411: "ein roter Kühlschrank, der als Schrank umgebaut wurde"
+    assert get(client, 1411)["cooled"] is False
+    # positives stay positive
+    assert get(client, 795)["cooled"] is True
+    assert get(client, 810)["cooled"] is True
+    assert get(client, 2383)["cooled"] is True
+
+
+def test_derive_flags_negation_phrases():
+    assert derive_flags("Es gibt hier **keinen** Kühlschrank.")["cooled"] is False
+    assert derive_flags("kein Kühlschrank vorhanden")["cooled"] is False
+    assert derive_flags("ohne Kühlschrank")["cooled"] is False
+    assert derive_flags("ein Kühlschrank, der nicht mehr kühlt")["cooled"] is False
+    assert derive_flags("Kühlschrank, als Schrank umgebaut")["cooled"] is False
+    assert derive_flags("ein Regal und ein Kühlschrank")["cooled"] is True
+
+
 def test_derive_flags_heuristics():
     assert derive_flags("Ein Kühlschrank steht bereit") == {
         "cooled": True,

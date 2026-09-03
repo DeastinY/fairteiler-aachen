@@ -51,12 +51,18 @@
 }
 
 html,
+html { overflow-x: hidden; }
+
 body {
+  overflow-x: hidden;
   background: var(--bg);
   color: var(--ink);
 }
 
+html { overflow-x: hidden; }
+
 body {
+  overflow-x: hidden;
   margin: 0;
   font-family: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
