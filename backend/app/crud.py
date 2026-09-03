@@ -8,6 +8,7 @@ from app.models import Report
 from app.status import ACTIVITY_DAYS
 
 RATE_LIMIT_MINUTES = 10
+UNDO_WINDOW_MINUTES = 15
 DEVICE_SALT = "fairteiler-aachen"  # overridden via env in production
 
 

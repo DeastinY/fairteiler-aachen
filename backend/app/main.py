@@ -189,9 +189,36 @@ def create_app(
             fairteiler = session.get(Fairteiler, fairteiler_id)
             push.notify_brought(session, fairteiler, report, push_settings)
         return {
+            "id": report.id,
             "type": report.type,
             "tags": list(report.tags or []),
             "createdAt": status._aware(report.created_at).isoformat(),
         }
+
+    @app.delete("/api/reports/{report_id}", status_code=204)
+    def delete_own_report(
+        report_id: int,
+        x_device_id: str = Header(min_length=4, max_length=128),
+        session: Session = Depends(get_session),
+    ):
+        from app.models import Report
+
+        report = session.get(Report, report_id)
+        if report is None:
+            raise HTTPException(status_code=404, detail="Meldung nicht gefunden")
+        if report.device_hash != crud.hash_device(x_device_id):
+            raise HTTPException(
+                status_code=403, detail="Nur eigene Meldungen können gelöscht werden."
+            )
+        age = dt.datetime.now(dt.timezone.utc) - status._aware(report.created_at)
+        if age > dt.timedelta(minutes=crud.UNDO_WINDOW_MINUTES):
+            raise HTTPException(
+                status_code=403,
+                detail=(
+                    "Eigene Meldungen lassen sich nur innerhalb von "
+                    f"{crud.UNDO_WINDOW_MINUTES} Minuten zurücknehmen."
+                ),
+            )
+        session.delete(report)
 
     return app

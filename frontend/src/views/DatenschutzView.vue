@@ -50,7 +50,7 @@ import LegalPage from '../components/LegalPage.vue'
       anonym gespeichert: Zeitpunkt, Kategorie, betroffener Fairteiler und die
       gehashte Geräte-Kennung. Es werden keine Namen, Konten oder Standortdaten
       gespeichert. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (Zweck der App —
-      aktuelle Verfügbarkeit anzeigen).
+      aktuelle Verfügbarkeit anzeigen). Eigene Meldungen können innerhalb von 15 Minuten in der App zurückgenommen werden.
     </p>
 
     <h2>6. Standort (optional)</h2>
