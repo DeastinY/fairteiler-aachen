@@ -1,15 +1,10 @@
+import { t, type MessageKey } from '../i18n'
 import type { DayKey, FairteilerListItem, OpeningHours } from '../types'
 
 export const DAY_KEYS: DayKey[] = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
 
-export const DAY_LABELS: Record<DayKey, string> = {
-  mo: 'Mo',
-  tu: 'Di',
-  we: 'Mi',
-  th: 'Do',
-  fr: 'Fr',
-  sa: 'Sa',
-  su: 'So',
+export function dayLabel(key: DayKey): string {
+  return t(`hours.${key}` as MessageKey)
 }
 
 /** 16.5 -> "16:30", 10 -> "10". */
@@ -20,9 +15,9 @@ function formatHour(value: number): string {
   return `${whole}:${String(minutes).padStart(2, '0')}`
 }
 
-/** [10, 18] -> "10–18 Uhr", [10, 16.5] -> "10–16:30 Uhr". */
+/** [10, 18] -> "10–18 Uhr", [10, 16.5] -> "10–16:30 Uhr" (per locale). */
 export function formatRange(range: [number, number]): string {
-  return `${formatHour(range[0])}–${formatHour(range[1])} Uhr`
+  return t('hours.range', { from: formatHour(range[0]), to: formatHour(range[1]) })
 }
 
 export interface HoursRow {
@@ -37,8 +32,11 @@ export function formatHours(hours: OpeningHours): HoursRow[] {
     const ranges = hours[key] ?? []
     return {
       key,
-      label: DAY_LABELS[key],
-      text: ranges.length > 0 ? ranges.map(formatRange).join(' und ') : 'Geschlossen',
+      label: dayLabel(key),
+      text:
+        ranges.length > 0
+          ? ranges.map(formatRange).join(` ${t('hours.join')} `)
+          : t('hours.closed'),
     }
   })
 }
@@ -58,7 +56,7 @@ export function todayKey(now: Date = new Date()): DayKey {
 export function openHint(
   item: Pick<FairteilerListItem, 'openNow' | 'aroundTheClock'>,
 ): string | null {
-  if (item.openNow === false) return 'Geschlossen'
-  if (item.openNow === true && !item.aroundTheClock) return 'Jetzt geöffnet'
+  if (item.openNow === false) return t('hours.closed')
+  if (item.openNow === true && !item.aroundTheClock) return t('hours.openNow')
   return null
 }
