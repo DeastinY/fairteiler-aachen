@@ -7,7 +7,10 @@ from pydantic import BaseModel, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import crud, hours as hours_mod, maintenance, push, seed, status, usage
+import json as json_mod
+import pathlib
+
+from app import crud, hours as hours_mod, maintenance, push, seed, status, telegram, usage
 from app.models import FOOD_TAGS, Fairteiler, PushSubscription
 from app.push import PushSettings
 
@@ -143,6 +146,12 @@ def create_app(
         sub.quiet_hours = body.quietHours
         session.add(sub)
 
+    @app.get("/api/groups")
+    def groups():
+        path = pathlib.Path(__file__).resolve().parents[1] / "seed" / "groups.json"
+        data = json_mod.loads(path.read_text())
+        return {"groups": data["groups"]}
+
     @app.get("/api/stats")
     def stats(session: Session = Depends(get_session)):
         now = dt.datetime.now(dt.timezone.utc)
@@ -210,9 +219,11 @@ def create_app(
             tags=body.tags,
             device_hash=device_hash,
         )
-        if push_settings is not None and report.type == "brought":
+        if report.type == "brought":
             fairteiler = session.get(Fairteiler, fairteiler_id)
-            push.notify_brought(session, fairteiler, report, push_settings)
+            if push_settings is not None:
+                push.notify_brought(session, fairteiler, report, push_settings)
+            telegram.notify_brought(fairteiler.name, body.tags)
         return {
             "id": report.id,
             "type": report.type,
