@@ -1,3 +1,5 @@
+import { apiUrl } from '../lib/apiBase'
+import type { PushConfig, PushSubscriptionPayload } from '../lib/push'
 import type { FairteilerDetail, FairteilerListItem, Report, ReportType } from '../types'
 import { getDeviceId } from './device'
 
@@ -19,7 +21,7 @@ export class ApiError extends Error {
 const GENERIC_ERROR = 'Da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.'
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, init)
+  const response = await fetch(apiUrl(path), init)
   if (!response.ok) {
     let detail = GENERIC_ERROR
     try {
@@ -30,6 +32,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     }
     throw new ApiError(response.status, detail)
   }
+  if (response.status === 204) return undefined as T
   return (await response.json()) as T
 }
 
@@ -39,6 +42,19 @@ export function fetchFairteilerList(): Promise<FairteilerListItem[]> {
 
 export function fetchFairteilerDetail(id: number): Promise<FairteilerDetail> {
   return request<FairteilerDetail>(`/api/fairteiler/${id}`)
+}
+
+export function fetchPushConfig(): Promise<PushConfig> {
+  return request<PushConfig>('/api/push/config')
+}
+
+/** Full-state upsert; an empty fairteilerIds list unsubscribes server-side. */
+export function putPushSubscription(payload: PushSubscriptionPayload): Promise<void> {
+  return request<void>('/api/push/subscription', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
 }
 
 export function submitReport(

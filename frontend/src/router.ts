@@ -14,10 +14,21 @@ export const routes = [
     name: 'aktivitaet',
     component: () => import('./views/AktivitaetView.vue'),
   },
+  { path: '/mehr', name: 'mehr', component: () => import('./views/MehrView.vue') },
+  {
+    path: '/impressum',
+    name: 'impressum',
+    component: () => import('./views/ImpressumView.vue'),
+  },
+  {
+    path: '/datenschutz',
+    name: 'datenschutz',
+    component: () => import('./views/DatenschutzView.vue'),
+  },
 ]
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior() {
     return { top: 0 }

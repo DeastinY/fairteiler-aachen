@@ -1,15 +1,29 @@
 # Fairteiler Aachen — Frontend
 
-Vue 3 + Vite + TypeScript PWA (Karte als Schemakarte ohne externe Kachel-Server,
-Liste, Detail, Melden, Aktivität). Talks only to our own backend under `/api`
-(dev proxy to `http://127.0.0.1:8000`, see `vite.config.ts`) — never to
-foodsharing.de. The only external resource is the Google Fonts stylesheet.
+Vue 3 + Vite + TypeScript PWA (Schemakarte, Liste, Detail, Melden, Aktivität
+mit Push-Toggles, Mehr mit Impressum/Datenschutz). Talks only to our own
+backend under `/api` — never to foodsharing.de (the Mehr tab contains one
+user-clicked link to foodsharing.de, no request our app makes). Fonts are
+self-hosted (`public/fonts/`, GDPR); there are ZERO external hosts at runtime.
 
-- Offline: service worker (vite-plugin-pwa/Workbox) precaches the shell and
-  keeps `/api/fairteiler*` GETs for ~6h (NetworkFirst); POSTs are never
-  intercepted. Views show "Offline – letzter bekannter Stand" when offline.
-- Installable: manifest + icons in `public/icons/` (rendered from
-  `public/favicon.svg` via rsvg-convert).
+- Service worker (`src/sw.ts`, injectManifest): precaches the shell + fonts +
+  icons, NetworkFirst for GET `/api/fairteiler*` (~6h), Web Push notifications
+  (`push` + `notificationclick`). POSTs are never intercepted.
+- Push UI: Aktivität tab reads `/api/push/config`; toggles PUT the full state
+  to `/api/push/subscription` after browser permission.
+- Legal texts live in `../docs/legal/*.md` and are mirrored verbatim in the
+  Impressum/Datenschutz views. `[PLACEHOLDER]` marks must be filled before
+  launch (styled amber in the app).
+
+## Deployment (GitHub Pages / cross-origin API)
+
+Environment variables at build time:
+
+- `VITE_BASE` – public base path, e.g. `/fairteiler-aachen/` (default `/`)
+- `VITE_API_BASE` – API origin, e.g. `https://api.example.org`
+  (default empty = same origin / dev proxy)
+
+`npm run build` also writes `dist/404.html` (SPA fallback for Pages).
 
 ## Commands
 

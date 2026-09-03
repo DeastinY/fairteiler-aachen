@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { showToast } from '../composables/useToast'
 
 const route = useRoute()
 
@@ -10,12 +9,15 @@ const active = computed<string>(() => {
   if (route.path.startsWith('/liste') || route.path.startsWith('/fairteiler')) return 'liste'
   if (route.path.startsWith('/aktivitaet')) return 'aktivitaet'
   if (route.path.startsWith('/melden')) return 'melden'
+  if (
+    route.path.startsWith('/mehr') ||
+    route.path.startsWith('/impressum') ||
+    route.path.startsWith('/datenschutz')
+  ) {
+    return 'mehr'
+  }
   return ''
 })
-
-function onMehr() {
-  showToast('„Mehr" kommt in einem späteren Schritt.')
-}
 </script>
 
 <template>
@@ -44,14 +46,14 @@ function onMehr() {
       </svg>
       <span>Aktivität</span>
     </RouterLink>
-    <button type="button" class="navbtn" @click="onMehr">
+    <RouterLink to="/mehr" class="navbtn" :class="{ active: active === 'mehr' }">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <circle cx="5" cy="12" r="1.4" fill="currentColor"></circle>
         <circle cx="12" cy="12" r="1.4" fill="currentColor"></circle>
         <circle cx="19" cy="12" r="1.4" fill="currentColor"></circle>
       </svg>
       <span>Mehr</span>
-    </button>
+    </RouterLink>
   </nav>
 </template>
 

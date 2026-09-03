@@ -3,6 +3,8 @@ import {
   ApiError,
   fetchFairteilerDetail,
   fetchFairteilerList,
+  fetchPushConfig,
+  putPushSubscription,
   submitReport,
 } from '../src/composables/api'
 import { getDeviceId } from '../src/composables/device'
@@ -77,6 +79,32 @@ describe('api composable', () => {
     expect(error).toBeInstanceOf(ApiError)
     expect(error.status).toBe(429)
     expect(error.message).toBe(detail)
+  })
+
+  it('fetches the push config from /api/push/config', async () => {
+    fetchMock.mockResolvedValue(jsonResponse({ enabled: true, vapidPublicKey: 'KEY' }))
+
+    const config = await fetchPushConfig()
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/push/config', undefined)
+    expect(config).toEqual({ enabled: true, vapidPublicKey: 'KEY' })
+  })
+
+  it('PUTs the push subscription and accepts a 204 without body', async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 204 }))
+    const payload = {
+      subscription: { endpoint: 'https://push.example/x', keys: { p256dh: 'P', auth: 'A' } },
+      fairteilerIds: [810],
+      quietHours: true,
+    }
+
+    await expect(putPushSubscription(payload)).resolves.toBeUndefined()
+
+    const [url, init] = fetchMock.mock.calls[0]!
+    expect(url).toBe('/api/push/subscription')
+    expect(init.method).toBe('PUT')
+    expect(init.headers['Content-Type']).toBe('application/json')
+    expect(JSON.parse(init.body)).toEqual(payload)
   })
 
   it('falls back to a generic German message for non-JSON errors', async () => {
