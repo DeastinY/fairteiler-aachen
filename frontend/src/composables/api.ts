@@ -57,7 +57,10 @@ export function fetchPushConfig(): Promise<PushConfig> {
 export function putPushSubscription(payload: PushSubscriptionPayload): Promise<void> {
   return request<void>('/api/push/subscription', {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Device-Id': getDeviceId(),
+    },
     body: JSON.stringify(payload),
   })
 }

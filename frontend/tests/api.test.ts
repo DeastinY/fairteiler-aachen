@@ -116,6 +116,9 @@ describe('api composable', () => {
     expect(url).toBe('/api/push/subscription')
     expect(init.method).toBe('PUT')
     expect(init.headers['Content-Type']).toBe('application/json')
+    // the backend requires the device header on every write — regression
+    // guard for the 422 that broke saving subscriptions in production
+    expect(init.headers['X-Device-Id']).toBeTruthy()
     expect(JSON.parse(init.body)).toEqual(payload)
   })
 
