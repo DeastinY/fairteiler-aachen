@@ -1,0 +1,53 @@
+import datetime as dt
+
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.db import Base
+
+# Report types
+BROUGHT = "brought"
+TAKEN = "taken"
+EMPTY = "empty"
+REPORT_TYPES = (BROUGHT, TAKEN, EMPTY)
+
+FOOD_TAGS = (
+    "brot_backwaren",
+    "obst",
+    "gemuese",
+    "gekuehltes",
+    "konserven",
+    "zubereitetes",
+    "sonstiges",
+)
+
+# Upstream entries that are not physical food-share points
+VIRTUAL_IDS = {1578}
+
+
+class Fairteiler(Base):
+    __tablename__ = "fairteiler"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)  # upstream id
+    name: Mapped[str] = mapped_column(String(200))
+    description: Mapped[str | None] = mapped_column(Text)
+    street: Mapped[str | None] = mapped_column(String(200))
+    postal_code: Mapped[str | None] = mapped_column(String(20))
+    city: Mapped[str | None] = mapped_column(String(100))
+    lat: Mapped[float] = mapped_column(Float)
+    lon: Mapped[float] = mapped_column(Float)
+    region_name: Mapped[str | None] = mapped_column(String(100))
+    picture: Mapped[str | None] = mapped_column(String(400))
+
+
+class Report(Base):
+    __tablename__ = "reports"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    fairteiler_id: Mapped[int] = mapped_column(
+        ForeignKey("fairteiler.id"), index=True
+    )
+    type: Mapped[str] = mapped_column(String(20))
+    tags: Mapped[list] = mapped_column(JSON, default=list)
+    device_hash: Mapped[str] = mapped_column(String(64), index=True)
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), index=True)
