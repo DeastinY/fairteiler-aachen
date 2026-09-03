@@ -190,7 +190,11 @@ def create_app(
         usage.count(session, "detail_views")
         now = dt.datetime.now(dt.timezone.utc)
         reports = crud.recent_reports(session, row.id)
-        return serialize(row, reports, now, with_description=True)
+        data = serialize(row, reports, now, with_description=True)
+        data["bestTime"] = status.best_time_of_day(
+            crud.recent_reports(session, row.id, days=90)
+        )
+        return data
 
     @app.post("/api/fairteiler/{fairteiler_id}/reports", status_code=201)
     def create_report(

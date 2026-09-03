@@ -64,6 +64,37 @@ def activity_by_day(reports: list[Report], now: dt.datetime) -> list[int]:
     return buckets
 
 
+MIN_REPORTS_FOR_BEST_TIME = 5
+BEST_TIME_SHARE = 0.5  # a bucket must hold at least half of all brought reports
+
+
+def best_time_of_day(reports: list) -> str | None:
+    """morning/afternoon/evening (Europe/Berlin) — or None when the data is
+    too thin or has no clear winner. Only 'brought' reports count."""
+    from zoneinfo import ZoneInfo
+
+    berlin = ZoneInfo("Europe/Berlin")
+    buckets = {"morning": 0, "afternoon": 0, "evening": 0}
+    total = 0
+    for report in reports:
+        if report.type != BROUGHT:
+            continue
+        hour = _aware(report.created_at).astimezone(berlin).hour
+        if 6 <= hour < 12:
+            buckets["morning"] += 1
+        elif 12 <= hour < 18:
+            buckets["afternoon"] += 1
+        elif 18 <= hour < 23:
+            buckets["evening"] += 1
+        else:
+            continue  # night drops don't make a recommendation
+        total += 1
+    if total < MIN_REPORTS_FOR_BEST_TIME:
+        return None
+    best, count = max(buckets.items(), key=lambda kv: kv[1])
+    return best if count / total >= BEST_TIME_SHARE else None
+
+
 def _aware(value: dt.datetime) -> dt.datetime:
     """SQLite drops tzinfo; stored values are UTC."""
     if value.tzinfo is None:
