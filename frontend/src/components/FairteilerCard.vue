@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { t } from '../i18n'
 import { openHint } from '../lib/hours'
 import { tagLabels } from '../lib/labels'
 import { formatRelativeTime } from '../lib/relativeTime'
@@ -12,7 +13,7 @@ const props = defineProps<{ fairteiler: FairteilerListItem }>()
 
 const timeline = computed(() => {
   const { status } = props.fairteiler
-  if (!status.lastReportAt) return 'Noch keine Meldung'
+  if (!status.lastReportAt) return t('time.none')
   const time = formatRelativeTime(status.lastReportAt)
   const tags = tagLabels(status.tags)
   return tags ? `${time} · ${tags}` : time
@@ -36,7 +37,7 @@ const timeline = computed(() => {
       <span class="timeline">{{ timeline }}</span>
       <span class="chart">
         <ActivityBars :days="fairteiler.activity7d" />
-        <span class="caption">Meldungen · 7 Tage</span>
+        <span class="caption">{{ t('liste.chartCaption') }}</span>
       </span>
     </span>
   </RouterLink>

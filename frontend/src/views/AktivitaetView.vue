@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { t } from '../i18n'
 import {
   fetchFairteilerList,
   fetchPushConfig,
@@ -33,10 +34,8 @@ const availability = computed(() => pushAvailability(config.value, supported))
 const ready = computed(() => availability.value === 'ready')
 
 const unavailableNote = computed(() => {
-  if (availability.value === 'unsupported') {
-    return 'Dein Browser unterstützt keine Push-Benachrichtigungen.'
-  }
-  return 'Benachrichtigungen sind auf diesem Server (noch) nicht aktiviert.'
+  if (availability.value === 'unsupported') return t('aktivitaet.unsupported')
+  return t('aktivitaet.serverDisabled')
 })
 
 async function load() {
@@ -54,7 +53,7 @@ async function load() {
     config.value = pushConfig
     stats.value = statsData
   } catch {
-    loadError.value = 'Die Fairteiler konnten nicht geladen werden. Bist du online?'
+    loadError.value = t('common.loadError')
   }
 }
 
@@ -70,8 +69,7 @@ async function syncServer(): Promise<boolean> {
   if (!key) return false
   const permission = await Notification.requestPermission()
   if (permission !== 'granted') {
-    hint.value =
-      'Benachrichtigungen sind im Browser blockiert – du kannst sie in den Browser-Einstellungen wieder erlauben.'
+    hint.value = t('aktivitaet.permissionBlocked')
     return false
   }
   // never hang forever: serviceWorker.ready only resolves once a SW is
@@ -81,8 +79,7 @@ async function syncServer(): Promise<boolean> {
     new Promise<null>((resolve) => setTimeout(() => resolve(null), 8000)),
   ])
   if (!registration) {
-    hint.value =
-      'Push ist gerade nicht verfügbar (kein aktiver Service Worker) – bitte lade die App neu.'
+    hint.value = t('aktivitaet.noServiceWorker')
     return false
   }
   let subscription = await registration.pushManager.getSubscription()
@@ -98,7 +95,7 @@ async function syncServer(): Promise<boolean> {
     quietHours.value,
   )
   if (!payload) {
-    hint.value = 'Das Push-Abo konnte nicht eingerichtet werden.'
+    hint.value = t('aktivitaet.subscribeFailed')
     return false
   }
   await putPushSubscription(payload)
@@ -119,7 +116,7 @@ async function applyChange(mutate: () => void, revert: () => void) {
     savePushPrefs(selectedIds.value, quietHours.value)
   } catch {
     revert()
-    hint.value = 'Konnte nicht gespeichert werden – bitte versuch es später noch einmal.'
+    hint.value = t('aktivitaet.saveFailed')
   } finally {
     saving.value = false
   }
@@ -155,13 +152,19 @@ function toggleQuietHours() {
 <template>
   <div class="page">
     <header class="page-head">
-      <h1 class="disp page-title">Aktivität</h1>
-      <p class="page-sub">Deine Fairteiler und Benachrichtigungen</p>
+      <h1 class="disp page-title">{{ t('aktivitaet.title') }}</h1>
+      <p class="page-sub">{{ t('aktivitaet.subtitle') }}</p>
     </header>
 
     <p v-if="stats" class="card statsline" data-test="stats">
-      Diese Woche: {{ stats.reports7d }} Meldungen · gerade
-      {{ stats.withFood }} von {{ stats.fairteilerTotal }} mit Essen
+      <span>{{
+        t(stats.reports7d === 1 ? 'aktivitaet.statsOne' : 'aktivitaet.statsMany', {
+          n: stats.reports7d,
+          withFood: stats.withFood,
+          total: stats.fairteilerTotal,
+        })
+      }}</span>
+      <RouterLink to="/statistik" class="statslink">{{ t('aktivitaet.statsLink') }}</RouterLink>
     </p>
 
     <div v-if="!ready" class="card note" data-test="push-unavailable">
@@ -174,10 +177,10 @@ function toggleQuietHours() {
 
     <p v-if="hint" class="card hintcard" role="alert">{{ hint }}</p>
 
-    <p v-if="!items && !loadError" class="hint">Lade Fairteiler …</p>
+    <p v-if="!items && !loadError" class="hint">{{ t('common.loading') }}</p>
     <div v-else-if="loadError" class="hint error">
       <p>{{ loadError }}</p>
-      <button type="button" class="retrybtn" @click="load">Erneut versuchen</button>
+      <button type="button" class="retrybtn" @click="load">{{ t('common.retry') }}</button>
     </div>
 
     <div v-else-if="items" class="card list">
@@ -189,7 +192,7 @@ function toggleQuietHours() {
         <div class="rowbody">
           <span class="rowname" :class="{ muted: !isFollowed(item.id) }">{{ item.name }}</span>
           <span class="rownote">
-            {{ isFollowed(item.id) ? 'Sofort, wenn etwas gebracht wird' : 'Stumm' }}
+            {{ isFollowed(item.id) ? t('aktivitaet.followOn') : t('aktivitaet.followOff') }}
           </span>
         </div>
         <button
@@ -198,7 +201,7 @@ function toggleQuietHours() {
           role="switch"
           :aria-checked="isFollowed(item.id)"
           :disabled="!ready || saving"
-          :aria-label="`Benachrichtigungen für ${item.name}`"
+          :aria-label="t('aktivitaet.followAria', { name: item.name })"
           @click="toggleFairteiler(item.id)"
         >
           <span class="knob"></span>
@@ -212,8 +215,8 @@ function toggleQuietHours() {
           <path d="M20 13a8 8 0 1 1-9-10 6.5 6.5 0 0 0 9 10z"></path>
         </svg>
         <div class="rowbody">
-          <span class="rowname">Ruhezeiten</span>
-          <span class="rownote">Keine Benachrichtigungen von 21 bis 8 Uhr</span>
+          <span class="rowname">{{ t('aktivitaet.quietTitle') }}</span>
+          <span class="rownote">{{ t('aktivitaet.quietNote') }}</span>
         </div>
         <button
           type="button"
@@ -221,7 +224,7 @@ function toggleQuietHours() {
           role="switch"
           :aria-checked="quietHours"
           :disabled="!ready || saving"
-          aria-label="Ruhezeiten"
+          :aria-label="t('aktivitaet.quietTitle')"
           data-test="quiet-toggle"
           @click="toggleQuietHours"
         >
@@ -239,6 +242,14 @@ function toggleQuietHours() {
   font-size: 13px;
   font-weight: 500;
   color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statslink {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .note {

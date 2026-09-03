@@ -4,7 +4,9 @@ Vue 3 + Vite + TypeScript PWA: Leaflet-Karte (basemap.de/BKG-Kacheln), Liste
 mit Filtern (Etwas da / Rund um die Uhr / Gekühlt), Detail mit Route-Absprung
 und Undo eigener Meldungen, Melden inkl. Zustandsmeldungen (gereinigt /
 Reinigung nötig / defekt), Aktivität mit Push-Toggles, Willkommens-Screen,
-Mehr (Einstellungen, Regeln, Impressum, Datenschutz).
+Mehr (Einstellungen, Regeln, Statistik, Impressum, Datenschutz).
+Mehrsprachig (de/en/tr/ar/ru/pl/uk/nl/fr, handgerolltes i18n in src/i18n/,
+Deutsch als Fallback, andere Sprachen lazy geladen; ar mit dir=rtl).
 
 Runtime-Hosts: unser Backend (`/api`) und die Kartenkacheln von
 `sgx.geodatenzentrum.de` (basemap.de, staatlich betrieben) – sonst nichts.

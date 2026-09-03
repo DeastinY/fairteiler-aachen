@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { t, useI18n, type LocaleCode } from '../i18n'
 import { useInstallPrompt } from '../composables/useInstallPrompt'
 import {
   isWelcomeDone,
@@ -10,6 +11,12 @@ import {
 
 const router = useRouter()
 const { mode, prompt } = useInstallPrompt()
+const { locale, setLocale, locales } = useI18n()
+
+function onLanguageChange(event: Event) {
+  const value = (event.target as HTMLSelectElement).value as LocaleCode
+  void setLocale(value)
+}
 
 function entryPath(): string {
   const base = import.meta.env.BASE_URL
@@ -42,17 +49,25 @@ async function onInstall() {
 </script>
 
 <template>
-  <div v-if="visible" class="welcome" role="dialog" aria-modal="true" aria-label="Willkommen">
+  <div v-if="visible" class="welcome" role="dialog" aria-modal="true" :aria-label="t('welcome.aria')">
     <div class="inner">
+      <select
+        class="langselect"
+        :value="locale"
+        :aria-label="t('einstellungen.languageAria')"
+        data-test="welcome-language"
+        @change="onLanguageChange"
+      >
+        <option v-for="entry in locales" :key="entry.code" :value="entry.code">
+          {{ entry.name }}
+        </option>
+      </select>
       <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M5 20 C5 11 10 5 20 4 C21 14 15 19 8 19"></path>
         <path d="M5 20 C8 15 12 12 16 10"></path>
       </svg>
-      <h1 class="disp title">Schön, dass du da bist!</h1>
-      <p class="lead">
-        Diese App lebt von uns allen: Wer kurz meldet, was im Fairteiler los
-        ist, hilft allen anderen – und rettet Lebensmittel.
-      </p>
+      <h1 class="disp title">{{ t('welcome.title') }}</h1>
+      <p class="lead">{{ t('welcome.lead') }}</p>
 
       <ul class="points">
         <li>
@@ -60,42 +75,39 @@ async function onInstall() {
             <circle cx="12" cy="12" r="9"></circle>
             <path d="M12 7v5l3 3"></path>
           </svg>
-          <span>Melden in 10 Sekunden – ohne Konto, anonym.</span>
+          <span>{{ t('welcome.point1') }}</span>
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="9"></circle>
             <path d="M8.5 12.5l2.5 2.5 5-5.5"></path>
           </svg>
-          <span>Sauber &amp; fair: Hinterlasse den Fairteiler, wie du ihn vorfinden möchtest.</span>
+          <span>{{ t('welcome.point2') }}</span>
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 21s-7-4.4-9-8.5C1.5 9 3.5 6 6.5 6c2 0 3.5 1 5.5 3 2-2 3.5-3 5.5-3 3 0 5 3 3.5 6.5-2 4.1-9 8.5-9 8.5z"></path>
           </svg>
-          <span>Respekt: keine Fotos von Essen oder Menschen, Rücksicht auf die Nachbarschaft.</span>
+          <span>{{ t('welcome.point3') }}</span>
         </li>
       </ul>
 
       <p class="regeln">
-        Alle Hinweise unter
+        {{ t('welcome.rulesPre') }}
         <button type="button" class="regelnbtn" data-test="welcome-regeln" @click="openRegeln">
-          Gut zu wissen
+          {{ t('welcome.rulesLink') }}
         </button>.
       </p>
 
       <div v-if="mode === 'promptable'" class="installblock">
         <button type="button" class="installbtn" :disabled="installing" @click="onInstall">
-          Installieren
+          {{ t('install.button') }}
         </button>
       </div>
-      <p v-else-if="mode === 'ios'" class="iosline">
-        Tipp: Über das Teilen-Symbol → „Zum Home-Bildschirm" wird daraus eine
-        richtige App.
-      </p>
+      <p v-else-if="mode === 'ios'" class="iosline">{{ t('welcome.iosTip') }}</p>
 
       <button type="button" class="startbtn" data-test="welcome-start" @click="close">
-        Los geht's
+        {{ t('welcome.start') }}
       </button>
     </div>
   </div>
@@ -118,6 +130,20 @@ async function onInstall() {
   padding: 48px 28px calc(28px + env(safe-area-inset-bottom)) 28px;
   display: flex;
   flex-direction: column;
+}
+
+.langselect {
+  align-self: flex-end;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-height: 44px;
+  margin-bottom: 10px;
 }
 
 .title {

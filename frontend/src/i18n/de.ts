@@ -142,6 +142,7 @@ const de = {
   'aktivitaet.subtitle': 'Deine Fairteiler und Benachrichtigungen',
   'aktivitaet.statsOne': 'Diese Woche: 1 Meldung · gerade {withFood} von {total} mit Essen',
   'aktivitaet.statsMany': 'Diese Woche: {n} Meldungen · gerade {withFood} von {total} mit Essen',
+  'aktivitaet.statsLink': 'Mehr unter Statistik',
   'aktivitaet.serverDisabled': 'Benachrichtigungen sind auf diesem Server (noch) nicht aktiviert.',
   'aktivitaet.unsupported': 'Dein Browser unterstützt keine Push-Benachrichtigungen.',
   'aktivitaet.followOn': 'Sofort, wenn etwas gebracht wird',
@@ -159,6 +160,7 @@ const de = {
   'mehr.subtitle': 'Über diese App und Rechtliches',
   'mehr.settings': 'Einstellungen',
   'mehr.rules': 'Gut zu wissen – Regeln & Hygiene',
+  'mehr.statistik': 'Nutzung & Transparenz',
   'mehr.impressum': 'Impressum',
   'mehr.datenschutz': 'Datenschutz',
   'mehr.aboutTitle': 'Über diese App',
@@ -214,9 +216,11 @@ const de = {
   'regeln.care2': 'Nimm Verdorbenes gleich mit heraus und entsorge es.',
   'regeln.care3': 'Kühlschranktüren gut schließen.',
   'regeln.care4':
-    'Fotografiere keine anderen Menschen am Fairteiler – nicht alle möchten gesehen werden.',
-  'regeln.care5':
-    'Nimm, was du brauchst – und melde es kurz in der App, damit andere Bescheid wissen.',
+    'Mache keine Fotos von den Lebensmitteln und teile keine Bilder vom Inhalt – das kann die Kooperationen mit den Betrieben gefährden, aus denen die geretteten Lebensmittel stammen.',
+  'regeln.care5': 'Fotografiere keine anderen Menschen am Fairteiler – nicht alle möchten gesehen werden.',
+  'regeln.care6':
+    'Nimm Rücksicht auf die Nachbarschaft – besonders abends leise ankommen, Türen nicht knallen und keine größeren Gruppen bilden.',
+  'regeln.care7': 'Nimm, was du brauchst – und melde es kurz in der App, damit andere Bescheid wissen.',
   'regeln.footer':
     'Diese Hinweise fassen die Community-Praxis zusammen, ohne Gewähr. Verbindlich sind die Aushänge vor Ort und die Hygieneregeln von foodsharing.de.',
 
@@ -226,7 +230,7 @@ const de = {
     'Diese App lebt von uns allen: Wer kurz meldet, was im Fairteiler los ist, hilft allen anderen – und rettet Lebensmittel.',
   'welcome.point1': 'Melden in 10 Sekunden – ohne Konto, anonym.',
   'welcome.point2': 'Sauber & fair: Hinterlasse den Fairteiler, wie du ihn vorfinden möchtest.',
-  'welcome.point3': 'Respekt: keine Fotos von anderen, nimm was du brauchst.',
+  'welcome.point3': 'Respekt: keine Fotos von Essen oder Menschen, Rücksicht auf die Nachbarschaft.',
   'welcome.rulesPre': 'Alle Hinweise unter',
   'welcome.rulesLink': 'Gut zu wissen',
   'welcome.iosTip':
@@ -237,7 +241,25 @@ const de = {
   // legal
   'legal.germanOnly': 'Rechtstexte sind nur auf Deutsch verfügbar.',
 
+  // Statistik (transparency)
+  'statistik.title': 'Statistik',
+  'statistik.intro':
+    'Diese App zählt Nutzung nur als anonyme Tagessummen – ohne IP-Adressen, ohne Kennungen.',
+  'statistik.privacyLink': 'Details im Datenschutz',
+  'statistik.reports7d': 'Meldungen (7 Tage)',
+  'statistik.pushSubs': 'Push-Abos',
+  'statistik.withFood': 'Fairteiler mit Essen',
+  'statistik.viewsChart': 'App-Aufrufe pro Tag',
+  'statistik.reportsChart': 'Meldungen pro Tag',
+  'statistik.footer':
+    'Die Daten aktualisieren sich laufend; Aufrufe aus dem Cache oder offline werden nicht gezählt.',
+  'statistik.unavailable': 'Gerade nicht verfügbar.',
+
   // api
+  'common.activityAria': 'Meldungen der letzten 7 Tage',
+  'mehr.support': 'Projekt unterstützen',
+  'mehr.supportNote': 'Freiwillig via PayPal · hilft, die Serverkosten zu decken · keine Spendenbescheinigung möglich',
+  'aktivitaet.noServiceWorker': 'Push ist gerade nicht verfügbar (kein aktiver Service Worker) – bitte lade die App neu.',
   'api.genericError': 'Da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.',
 }
 

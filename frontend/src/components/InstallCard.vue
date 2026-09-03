@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { t } from '../i18n'
 import { useInstallPrompt } from '../composables/useInstallPrompt'
 
 const { mode, prompt } = useInstallPrompt()
@@ -21,19 +22,16 @@ async function onInstall() {
   <section
     v-if="mode === 'promptable' || mode === 'ios'"
     class="card installcard"
-    aria-label="Als App installieren"
+    :aria-label="t('install.title')"
   >
     <div class="head">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 3v12 M7 10l5 5 5-5"></path>
         <path d="M4 19h16"></path>
       </svg>
-      <span class="disp title">Als App installieren</span>
+      <span class="disp title">{{ t('install.title') }}</span>
     </div>
-    <p class="caption">
-      Offline nutzbar, eigenes Icon – und auf iOS gibt es Push-Benachrichtigungen
-      nur in der installierten App.
-    </p>
+    <p class="caption">{{ t('install.caption') }}</p>
 
     <button
       v-if="mode === 'promptable'"
@@ -42,19 +40,19 @@ async function onInstall() {
       :disabled="busy"
       @click="onInstall"
     >
-      Installieren
+      {{ t('install.button') }}
     </button>
 
     <ol v-else class="steps">
       <li>
-        Tippe auf das Teilen-Symbol
+        {{ t('install.ios1') }}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 3v12 M8 6l4-4 4 4"></path>
           <path d="M5 11v9h14v-9"></path>
         </svg>
-        in Safari
+        {{ t('install.ios1b') }}
       </li>
-      <li>Wähle „Zum Home-Bildschirm"</li>
+      <li>{{ t('install.ios2') }}</li>
     </ol>
   </section>
 </template>

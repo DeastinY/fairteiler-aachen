@@ -5,7 +5,7 @@ import LegalPage from '../components/LegalPage.vue'
 </script>
 
 <template>
-  <LegalPage title="Impressum">
+  <LegalPage title="Impressum" german-only>
     <p>Angaben gemäß § 5 DDG:</p>
 
     <address>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { t, type MessageKey } from '../i18n'
 import {
   ApiError,
   deleteReport,
@@ -25,21 +26,17 @@ const selectedTags = ref<string[]>([])
 const submitting = ref(false)
 const submitError = ref<string | null>(null)
 
-const ACTIONS: { type: ReportType; title: string; note?: string }[] = [
-  {
-    type: 'brought',
-    title: 'Ich habe etwas gebracht',
-    note: 'Andere sehen sofort, dass es sich lohnt',
-  },
-  { type: 'taken', title: 'Ich habe etwas mitgenommen' },
-  { type: 'empty', title: 'Der Fairteiler ist leer' },
+const ACTIONS: { type: ReportType; titleKey: MessageKey; noteKey?: MessageKey }[] = [
+  { type: 'brought', titleKey: 'melden.brought', noteKey: 'melden.broughtNote' },
+  { type: 'taken', titleKey: 'melden.taken' },
+  { type: 'empty', titleKey: 'melden.empty' },
 ]
 
 /** Condition reports – never change the food status, tracked separately. */
-const CONDITIONS: { type: ReportType; title: string }[] = [
-  { type: 'cleaned', title: 'Gereinigt / in Ordnung gebracht' },
-  { type: 'needs_cleaning', title: 'Reinigung nötig' },
-  { type: 'needs_maintenance', title: 'Etwas ist defekt' },
+const CONDITIONS: { type: ReportType; titleKey: MessageKey }[] = [
+  { type: 'cleaned', titleKey: 'melden.cleaned' },
+  { type: 'needs_cleaning', titleKey: 'melden.needsCleaning' },
+  { type: 'needs_maintenance', titleKey: 'melden.defect' },
 ]
 
 const selected = computed(() =>
@@ -55,7 +52,7 @@ async function load() {
     const preselected = list.find((f) => f.id === fromQuery)
     selectedId.value = preselected?.id ?? list[0]?.id ?? null
   } catch {
-    loadError.value = 'Die Fairteiler konnten nicht geladen werden. Bist du online?'
+    loadError.value = t('common.loadError')
   }
 }
 
@@ -78,12 +75,12 @@ async function undoReport(reportId: number) {
   try {
     await deleteReport(reportId)
     forgetOwnReport(reportId)
-    showToast('Meldung zurückgenommen.')
+    showToast(t('detail.undone'))
   } catch (e) {
     showToast(
       e instanceof ApiError
         ? e.message
-        : 'Konnte nicht zurückgenommen werden – bitte versuch es später noch einmal.',
+        : t('detail.undoFailed'),
     )
   }
 }
@@ -103,17 +100,17 @@ async function submit() {
       fairteilerId,
       createdAt: created.createdAt,
     })
-    showToast('Danke! Deine Meldung ist online.', {
+    showToast(t('melden.success'), {
       green: true,
       duration: 6000,
-      action: { label: 'Rückgängig', handler: () => void undoReport(created.id) },
+      action: { label: t('melden.undoAction'), handler: () => void undoReport(created.id) },
     })
     router.push(`/fairteiler/${fairteilerId}`)
   } catch (e) {
     if (e instanceof ApiError) {
       submitError.value = e.message
     } else {
-      submitError.value = 'Keine Verbindung – bitte versuch es gleich noch einmal.'
+      submitError.value = t('melden.networkError')
     }
   } finally {
     submitting.value = false
@@ -131,19 +128,19 @@ function close() {
     <!-- header -->
     <div class="head">
       <div class="headrow">
-        <button type="button" class="roundbtn closebtn" aria-label="Schließen" @click="close">
+        <button type="button" class="roundbtn closebtn" :aria-label="t('common.close')" @click="close">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <path d="M6 6l12 12 M18 6L6 18"></path>
           </svg>
         </button>
-        <span class="disp headtitle">Meldung</span>
+        <span class="disp headtitle">{{ t('melden.title') }}</span>
         <span class="headspacer" aria-hidden="true"></span>
       </div>
 
-      <p v-if="!fairteiler && !loadError" class="hint">Lade Fairteiler …</p>
+      <p v-if="!fairteiler && !loadError" class="hint">{{ t('common.loading') }}</p>
       <div v-else-if="loadError" class="hint error">
         <p>{{ loadError }}</p>
-        <button type="button" class="retrybtn" @click="load">Erneut versuchen</button>
+        <button type="button" class="retrybtn" @click="load">{{ t('common.retry') }}</button>
       </div>
 
       <label v-else class="placecard">
@@ -152,8 +149,8 @@ function close() {
           <circle cx="12" cy="10" r="2.5"></circle>
         </svg>
         <span class="placebody">
-          <span class="placelabel">Fairteiler</span>
-          <select v-model.number="selectedId" class="placeselect" aria-label="Fairteiler auswählen">
+          <span class="placelabel">{{ t('melden.fairteilerLabel') }}</span>
+          <select v-model.number="selectedId" class="placeselect" :aria-label="t('melden.selectAria')">
             <option v-for="f in fairteiler" :key="f.id" :value="f.id">
               {{ f.name }}
             </option>
@@ -165,8 +162,8 @@ function close() {
 
     <template v-if="fairteiler && !loadError">
       <!-- action choice (food actions + condition reports = one radio group) -->
-      <div class="section" role="radiogroup" aria-label="Was möchtest du melden?">
-        <div class="disp sectiontitle">Was möchtest du melden?</div>
+      <div class="section" role="radiogroup" :aria-label="t('melden.what')">
+        <div class="disp sectiontitle">{{ t('melden.what') }}</div>
         <div class="actionlist">
           <button
             v-for="action in ACTIONS"
@@ -191,8 +188,8 @@ function close() {
               </svg>
             </span>
             <span class="actionbody">
-              <span class="actiontitle">{{ action.title }}</span>
-              <span v-if="action.note" class="actionnote">{{ action.note }}</span>
+              <span class="actiontitle">{{ t(action.titleKey) }}</span>
+              <span v-if="action.noteKey" class="actionnote">{{ t(action.noteKey) }}</span>
             </span>
             <svg class="check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 13l4 4 10-10"></path>
@@ -201,7 +198,7 @@ function close() {
         </div>
 
         <!-- condition reports -->
-        <div class="disp subsectiontitle">Zustand melden</div>
+        <div class="disp subsectiontitle">{{ t('melden.condition') }}</div>
         <div class="actionlist">
           <button
             v-for="condition in CONDITIONS"
@@ -225,7 +222,7 @@ function close() {
                 <path d="M14.5 6.5a4 4 0 0 1 5-5l-3 3 1 2 2 1 3-3a4 4 0 0 1-5 5L8 19.5a2 2 0 0 1-3-3z"></path>
               </svg>
             </span>
-            <span class="conditiontitle">{{ condition.title }}</span>
+            <span class="conditiontitle">{{ t(condition.titleKey) }}</span>
             <svg class="check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2f7d54" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 13l4 4 10-10"></path>
             </svg>
@@ -236,8 +233,8 @@ function close() {
       <!-- tags (only meaningful when something was brought) -->
       <div v-if="selectedType === 'brought'" class="section">
         <div class="tagshead">
-          <span class="disp sectiontitle notitlegap">Was ist jetzt da?</span>
-          <span class="tagsnote">Mehrfachauswahl · optional</span>
+          <span class="disp sectiontitle notitlegap">{{ t('melden.tagsTitle') }}</span>
+          <span class="tagsnote">{{ t('melden.tagsNote') }}</span>
         </div>
         <div class="tags">
           <button
@@ -255,7 +252,7 @@ function close() {
 
       <div class="section">
         <RouterLink to="/regeln" class="regelnlink" data-test="regeln-link">
-          Was darf in den Fairteiler?
+          {{ t('melden.rulesLink') }}
         </RouterLink>
       </div>
 
@@ -268,9 +265,9 @@ function close() {
           :disabled="submitting || selectedId === null"
           @click="submit"
         >
-          {{ submitting ? 'Wird gesendet …' : 'Meldung senden' }}
+          {{ submitting ? t('melden.submitting') : t('melden.submit') }}
         </button>
-        <p class="finenote">Ohne Anmeldung möglich · für alle sichtbar · in 10 Sekunden erledigt</p>
+        <p class="finenote">{{ t('melden.footer') }}</p>
       </div>
     </template>
   </div>

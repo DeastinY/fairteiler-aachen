@@ -77,9 +77,11 @@ describe('AktivitaetView', () => {
 
     const stats = wrapper.find('[data-test="stats"]')
     expect(stats.exists()).toBe(true)
-    expect(stats.text().replace(/\s+/g, ' ')).toBe(
+    expect(stats.find('span').text().replace(/\s+/g, ' ')).toBe(
       'Diese Woche: 23 Meldungen · gerade 4 von 11 mit Essen',
     )
+    // muted cross-link to the transparency page
+    expect(stats.find('.statslink').text()).toBe('Mehr unter Statistik')
   })
 
   it('hides the stats line silently when the fetch fails', async () => {

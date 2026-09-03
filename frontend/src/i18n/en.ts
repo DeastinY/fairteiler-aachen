@@ -125,6 +125,7 @@ const en: Messages = {
   'aktivitaet.subtitle': 'Your Fairteiler and notifications',
   'aktivitaet.statsOne': 'This week: 1 report · right now {withFood} of {total} with food',
   'aktivitaet.statsMany': 'This week: {n} reports · right now {withFood} of {total} with food',
+  'aktivitaet.statsLink': 'More under Statistics',
   'aktivitaet.serverDisabled': 'Notifications are not (yet) enabled on this server.',
   'aktivitaet.unsupported': "Your browser doesn't support push notifications.",
   'aktivitaet.followOn': 'Right away when food is dropped off',
@@ -141,6 +142,7 @@ const en: Messages = {
   'mehr.subtitle': 'About this app and legal notes',
   'mehr.settings': 'Settings',
   'mehr.rules': 'Good to know – rules & hygiene',
+  'mehr.statistik': 'Usage & transparency',
   'mehr.impressum': 'Impressum (legal notice)',
   'mehr.datenschutz': 'Privacy (in German)',
   'mehr.aboutTitle': 'About this app',
@@ -191,8 +193,12 @@ const en: Messages = {
   'regeln.care1': "Leave the Fairteiler the way you'd like to find it – clean and tidy.",
   'regeln.care2': 'Take spoiled food out right away and dispose of it.',
   'regeln.care3': 'Close fridge doors properly.',
-  'regeln.care4': "Don't photograph other people at the Fairteiler – not everyone wants to be seen.",
-  'regeln.care5': 'Take what you need – and report it briefly in the app so others know.',
+  'regeln.care4':
+    'Don\'t photograph the food or share pictures of the contents – that can endanger the cooperations with the businesses the rescued food comes from.',
+  'regeln.care5': "Don't photograph other people at the Fairteiler – not everyone wants to be seen.",
+  'regeln.care6':
+    'Be considerate of the neighborhood – arrive quietly in the evening, don\'t slam doors, and avoid gathering in larger groups.',
+  'regeln.care7': 'Take what you need – and report it briefly in the app so others know.',
   'regeln.footer':
     'These notes summarize community practice, without guarantee. The notices on site and the foodsharing.de hygiene rules are binding.',
 
@@ -201,7 +207,7 @@ const en: Messages = {
     'This app lives through all of us: a quick report on what\'s happening at a Fairteiler helps everyone else – and saves food.',
   'welcome.point1': 'Report in 10 seconds – no account, anonymous.',
   'welcome.point2': "Clean & fair: leave the Fairteiler the way you'd like to find it.",
-  'welcome.point3': "Respect: no photos of other people, take what you need.",
+  'welcome.point3': 'Respect: no photos of food or people, be considerate of the neighborhood.',
   'welcome.rulesPre': 'All the details under',
   'welcome.rulesLink': 'Good to know',
   'welcome.iosTip': 'Tip: via the share icon → "Add to Home Screen" this becomes a real app.',
@@ -210,6 +216,23 @@ const en: Messages = {
 
   'legal.germanOnly': 'Legal texts are only available in German.',
 
+  'statistik.title': 'Statistics',
+  'statistik.intro':
+    'This app counts usage only as anonymous daily totals – no IP addresses, no identifiers.',
+  'statistik.privacyLink': 'Details under Privacy',
+  'statistik.reports7d': 'Reports (7 days)',
+  'statistik.pushSubs': 'Push subscriptions',
+  'statistik.withFood': 'Fairteiler with food',
+  'statistik.viewsChart': 'App visits per day',
+  'statistik.reportsChart': 'Reports per day',
+  'statistik.footer':
+    'The data updates continuously; cached or offline visits are not counted.',
+  'statistik.unavailable': 'Currently unavailable.',
+
+  'common.activityAria': 'Reports of the last 7 days',
+  'mehr.support': 'Support the project',
+  'mehr.supportNote': 'Voluntary via PayPal · helps cover the server costs · no donation receipt possible',
+  'aktivitaet.noServiceWorker': 'Push is unavailable right now (no active service worker) – please reload the app.',
   'api.genericError': 'Something went wrong. Please try again later.',
 }
 

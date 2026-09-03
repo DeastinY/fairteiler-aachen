@@ -3,6 +3,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { t } from '../i18n'
 import FilterChips from '../components/FilterChips.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
 import { fetchFairteilerList } from '../composables/api'
@@ -71,7 +72,7 @@ async function load() {
     await nextTick()
     initMap()
   } catch {
-    error.value = 'Die Fairteiler konnten nicht geladen werden. Bist du online?'
+    error.value = t('common.loadError')
   }
 }
 
@@ -169,7 +170,7 @@ function openDetail(id: number) {
 function useLocation() {
   geoHint.value = null
   if (!('geolocation' in navigator)) {
-    geoHint.value = 'Standort ist in diesem Browser nicht verfügbar.'
+    geoHint.value = t('karte.geoUnsupported')
     return
   }
   locating.value = true
@@ -184,7 +185,7 @@ function useLocation() {
     },
     () => {
       locating.value = false
-      geoHint.value = 'Standort nicht verfügbar – Sortierung ohne Entfernung.'
+      geoHint.value = t('karte.geoDenied')
     },
     { timeout: 10_000, maximumAge: 60_000 },
   )
@@ -194,7 +195,7 @@ function useLocation() {
 <template>
   <div class="page">
     <div class="map-area">
-      <div ref="mapEl" class="map" aria-label="Karte der Fairteiler in Aachen"></div>
+      <div ref="mapEl" class="map" :aria-label="t('karte.mapAria')"></div>
 
       <!-- brand pill + locate -->
       <div class="map-topbar">
@@ -203,14 +204,14 @@ function useLocation() {
             <path d="M5 20 C5 11 10 5 20 4 C21 14 15 19 8 19"></path>
             <path d="M5 20 C8 15 12 12 16 10"></path>
           </svg>
-          <span class="disp brandname">Fairteiler Aachen</span>
+          <span class="disp brandname">{{ t('common.appName') }}</span>
         </div>
         <button type="button" class="locbtn" :disabled="locating" @click="useLocation">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="7"></circle>
             <path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3"></path>
           </svg>
-          {{ locating ? 'Suche …' : 'Standort verwenden' }}
+          {{ locating ? t('karte.locating') : t('karte.locate') }}
         </button>
       </div>
 
@@ -224,25 +225,25 @@ function useLocation() {
 
       <OfflineBanner v-if="showOffline" class="sheet-offline" />
 
-      <p v-if="!items && !error" class="hint">Lade Fairteiler …</p>
+      <p v-if="!items && !error" class="hint">{{ t('common.loading') }}</p>
 
       <div v-else-if="error" class="hint error">
         <p>{{ error }}</p>
-        <button type="button" class="retrybtn" @click="load">Erneut versuchen</button>
+        <button type="button" class="retrybtn" @click="load">{{ t('common.retry') }}</button>
       </div>
 
       <template v-else-if="items">
         <div class="sheethead">
-          <span class="disp sheettitle">In deiner Nähe</span>
-          <RouterLink to="/liste" class="alllink">Alle {{ items.length }} anzeigen</RouterLink>
+          <span class="disp sheettitle">{{ t('karte.nearby') }}</span>
+          <RouterLink to="/liste" class="alllink">{{ t('karte.showAll', { n: items.length }) }}</RouterLink>
         </div>
         <p class="summary">
-          {{ reportedCount }} von {{ items.length }} mit aktueller Meldung
+          {{ t('karte.summary', { reported: reportedCount, total: items.length }) }}
         </p>
         <p v-if="geoHint" class="geohint">{{ geoHint }}</p>
 
         <p v-if="filtered.length === 0" class="summary nofilter">
-          Keine Fairteiler entsprechen den gewählten Filtern.
+          {{ t('common.noFilterMatch') }}
         </p>
 
         <button

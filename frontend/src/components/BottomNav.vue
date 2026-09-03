@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { t } from '../i18n'
 
 const route = useRoute()
 
@@ -13,6 +14,7 @@ const active = computed<string>(() => {
     route.path.startsWith('/mehr') ||
     route.path.startsWith('/einstellungen') ||
     route.path.startsWith('/regeln') ||
+    route.path.startsWith('/statistik') ||
     route.path.startsWith('/impressum') ||
     route.path.startsWith('/datenschutz')
   ) {
@@ -29,15 +31,15 @@ const active = computed<string>(() => {
         <path d="M12 21s-7-5.1-7-11a7 7 0 0 1 14 0c0 5.9-7 11-7 11z"></path>
         <circle cx="12" cy="10" r="2.5"></circle>
       </svg>
-      <span>Karte</span>
+      <span>{{ t('nav.karte') }}</span>
     </RouterLink>
     <RouterLink to="/liste" class="navbtn" :class="{ active: active === 'liste' }">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M8 6h13 M8 12h13 M8 18h13 M3.5 6h.01 M3.5 12h.01 M3.5 18h.01"></path>
       </svg>
-      <span>Liste</span>
+      <span>{{ t('nav.liste') }}</span>
     </RouterLink>
-    <RouterLink to="/melden" class="navplus" aria-label="Meldung erstellen">
+    <RouterLink to="/melden" class="navplus" :aria-label="t('nav.melden')">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fdfcf8" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
         <path d="M12 5v14 M5 12h14"></path>
       </svg>
@@ -46,7 +48,7 @@ const active = computed<string>(() => {
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M3 12h4l2.5-6 4 12 2.5-6h5"></path>
       </svg>
-      <span>Aktivität</span>
+      <span>{{ t('nav.aktivitaet') }}</span>
     </RouterLink>
     <RouterLink to="/mehr" class="navbtn" :class="{ active: active === 'mehr' }">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -54,7 +56,7 @@ const active = computed<string>(() => {
         <circle cx="12" cy="12" r="1.4" fill="currentColor"></circle>
         <circle cx="19" cy="12" r="1.4" fill="currentColor"></circle>
       </svg>
-      <span>Mehr</span>
+      <span>{{ t('nav.mehr') }}</span>
     </RouterLink>
   </nav>
 </template>

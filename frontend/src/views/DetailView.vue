@@ -9,12 +9,15 @@ import { renderMarkdown } from '../lib/markdown'
 import { forgetOwnReport, isOwnReport } from '../composables/ownReports'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { showToast } from '../composables/useToast'
+import { t, useI18n } from '../i18n'
 import { formatHours, todayKey } from '../lib/hours'
 import { reportTypeLabel, tagLabel, tagLabels } from '../lib/labels'
 import { navigationUrl } from '../lib/navigation'
 import { formatRelativeTime } from '../lib/relativeTime'
 import { statusMeta } from '../lib/status'
 import type { FairteilerDetail, Report } from '../types'
+
+const { locale } = useI18n()
 
 const route = useRoute()
 const router = useRouter()
@@ -33,7 +36,7 @@ async function load() {
   detail.value = null
   error.value = null
   if (!Number.isInteger(fairteilerId.value) || fairteilerId.value <= 0) {
-    error.value = 'Dieser Fairteiler wurde nicht gefunden.'
+    error.value = t('detail.notFound')
     return
   }
   try {
@@ -42,7 +45,7 @@ async function load() {
     error.value =
       e instanceof Error && e.message.length > 0 && !(e instanceof TypeError)
         ? e.message
-        : 'Der Fairteiler konnte nicht geladen werden. Bist du online?'
+        : t('detail.loadError')
   }
 }
 
@@ -58,8 +61,8 @@ const address = computed(() => {
 const statusLine = computed(() => {
   if (!detail.value) return ''
   const { status } = detail.value
-  if (!status.lastReportAt) return 'Noch keine aktuelle Meldung'
-  return `Zuletzt gemeldet ${formatRelativeTime(status.lastReportAt)}`
+  if (!status.lastReportAt) return t('detail.noCurrentReport')
+  return t('detail.lastReported', { time: formatRelativeTime(status.lastReportAt) })
 })
 
 const dotColor = computed(() =>
@@ -79,7 +82,7 @@ const dayLabels = computed(() => {
     const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - offset)
     labels.push(WEEKDAYS[day.getDay()] ?? '')
   }
-  labels.push('Heute')
+  labels.push(t('detail.today'))
   return labels
 })
 
@@ -111,13 +114,13 @@ async function undoReport(report: Report) {
   try {
     await deleteReport(reportId)
     forgetOwnReport(reportId)
-    showToast('Meldung zurückgenommen.')
+    showToast(t('detail.undone'))
     await load()
   } catch (e) {
     showToast(
       e instanceof ApiError
         ? e.message
-        : 'Konnte nicht zurückgenommen werden – bitte versuch es später noch einmal.',
+        : t('detail.undoFailed'),
     )
   } finally {
     undoing.value = false
@@ -161,7 +164,7 @@ function goBack() {
         <circle cx="196" cy="66" r="30" fill="none" stroke="#8fc3a4" stroke-width="2.5"></circle>
         <path d="M182 66 C186 56 206 56 210 66 C206 76 186 76 182 66 Z" fill="#8fc3a4"></path>
       </svg>
-      <button type="button" class="roundbtn backbtn" aria-label="Zurück" @click="goBack">
+      <button type="button" class="roundbtn backbtn" :aria-label="t('common.back')" @click="goBack">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
@@ -170,11 +173,11 @@ function goBack() {
 
     <OfflineBanner v-if="showOffline" />
 
-    <p v-if="!detail && !error" class="hint">Lade Fairteiler …</p>
+    <p v-if="!detail && !error" class="hint">{{ t('common.loading') }}</p>
 
     <div v-else-if="error" class="hint error">
       <p>{{ error }}</p>
-      <button type="button" class="retrybtn" @click="load">Erneut versuchen</button>
+      <button type="button" class="retrybtn" @click="load">{{ t('common.retry') }}</button>
     </div>
 
     <template v-else-if="detail">
@@ -195,13 +198,13 @@ function goBack() {
               <circle cx="12" cy="12" r="9"></circle>
               <path d="M12 7v5l3 3"></path>
             </svg>
-            Rund um die Uhr
+            {{ t('detail.aroundTheClock') }}
           </span>
           <span v-if="detail.cooled" class="infochip">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
               <path d="M12 2v20 M4 6l16 12 M20 6L4 18"></path>
             </svg>
-            Gekühlt
+            {{ t('detail.cooled') }}
           </span>
         </div>
       </div>
@@ -220,10 +223,10 @@ function goBack() {
       </section>
 
       <!-- activity -->
-      <section class="card block" aria-label="Aktivität">
+      <section class="card block" :aria-label="t('detail.activity')">
         <div class="blockhead">
-          <span class="disp blocktitle">Aktivität</span>
-          <span class="blocknote">Meldungen pro Tag · letzte 7 Tage</span>
+          <span class="disp blocktitle">{{ t('detail.activity') }}</span>
+          <span class="blocknote">{{ t('detail.activityCaption') }}</span>
         </div>
         <div class="chart">
           <div v-for="(count, index) in detail.activity7d" :key="index" class="chartcol">
@@ -249,7 +252,7 @@ function goBack() {
         aria-label="Öffnungszeiten"
         data-test="hours"
       >
-        <span class="disp blocktitle">Öffnungszeiten</span>
+        <span class="disp blocktitle">{{ t('hours.title') }}</span>
         <dl class="hourstable">
           <div
             v-for="row in hoursRows"
@@ -265,16 +268,17 @@ function goBack() {
 
       <!-- description -->
       <section v-if="descriptionHtml" class="card block" aria-label="Beschreibung">
-        <span class="disp blocktitle">Über diesen Fairteiler</span>
+        <span class="disp blocktitle">{{ t('detail.about') }}</span>
         <!-- eslint-disable-next-line vue/no-v-html — renderMarkdown escapes all input -->
         <div class="para md" v-html="descriptionHtml"></div>
+        <p v-if="locale !== 'de'" class="descsource">{{ t('detail.descriptionSource') }}</p>
         <a
           :href="`https://foodsharing.de/fairteiler/${detail.id}`"
           class="fslink"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Auf foodsharing.de ansehen
+          {{ t('detail.fsLink') }}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M7 17L17 7 M9 7h8v8"></path>
           </svg>
@@ -287,7 +291,7 @@ function goBack() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Auf foodsharing.de ansehen
+          {{ t('detail.fsLink') }}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M7 17L17 7 M9 7h8v8"></path>
           </svg>
@@ -295,11 +299,11 @@ function goBack() {
       </div>
 
       <!-- recent reports -->
-      <section class="reports" aria-label="Letzte Meldungen">
-        <h2 class="disp sectiontitle">Letzte Meldungen</h2>
+      <section class="reports" :aria-label="t('detail.reports')">
+        <h2 class="disp sectiontitle">{{ t('detail.reports') }}</h2>
         <div class="card reportcard">
           <p v-if="detail.reports.length === 0" class="empty">
-            Noch keine Meldungen – sei die erste Person!
+            {{ t('detail.noReports') }}
           </p>
           <div v-for="(report, index) in detail.reports" :key="index" class="reportrow">
             <span class="reporticon" :class="report.type">
@@ -335,7 +339,7 @@ function goBack() {
               :disabled="undoing"
               @click="undoReport(report)"
             >
-              Zurücknehmen
+              {{ t('detail.undo') }}
             </button>
           </div>
         </div>
@@ -353,13 +357,13 @@ function goBack() {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M3 11l19-8-8 19-2.5-8.5z"></path>
           </svg>
-          Route
+          {{ t('detail.route') }}
         </a>
         <RouterLink :to="`/melden?fairteiler=${detail.id}`" class="meldenbtn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fdfcf8" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
             <path d="M12 5v14 M5 12h14"></path>
           </svg>
-          Jetzt melden
+          {{ t('detail.reportNow') }}
         </RouterLink>
       </div>
     </template>
@@ -381,7 +385,7 @@ function goBack() {
 
 .backbtn {
   position: absolute;
-  left: 16px;
+  inset-inline-start: 16px;
   top: 16px;
   background: rgba(253, 252, 248, 0.92);
 }
@@ -669,6 +673,12 @@ function goBack() {
   margin-top: 0;
 }
 
+.descsource {
+  font-size: 12px;
+  color: var(--faint);
+  margin: 8px 0 0 0;
+}
+
 .actions {
   padding: 16px;
   margin-top: 4px;
@@ -736,7 +746,7 @@ function goBack() {
 
 .md :deep(p) { margin: 0 0 10px 0; }
 .md :deep(p:last-child) { margin-bottom: 0; }
-.md :deep(ul) { margin: 0 0 10px 0; padding-left: 20px; }
+.md :deep(ul) { margin: 0 0 10px 0; padding-inline-start: 20px; }
 .md :deep(li) { margin: 2px 0; }
 .md :deep(hr) { border: none; border-top: 1px solid #edeadf; margin: 12px 0; }
 .md :deep(strong) { font-weight: 650; }

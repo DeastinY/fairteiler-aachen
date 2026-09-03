@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import { t, type MessageKey } from '../i18n'
 import type { FairteilerFilter } from '../lib/filters'
 import { useFilters } from '../composables/useFilters'
 
 const filter = useFilters()
 
-const CHIPS: { key: keyof FairteilerFilter; label: string }[] = [
-  { key: 'etwasDa', label: 'Etwas da' },
-  { key: 'openNow', label: 'Jetzt offen' },
-  { key: 'aroundTheClock', label: 'Rund um die Uhr' },
-  { key: 'cooled', label: 'Gekühlt' },
+const CHIPS: { key: keyof FairteilerFilter; labelKey: MessageKey }[] = [
+  { key: 'etwasDa', labelKey: 'filters.etwasDa' },
+  { key: 'openNow', labelKey: 'filters.openNow' },
+  { key: 'aroundTheClock', labelKey: 'filters.aroundTheClock' },
+  { key: 'cooled', labelKey: 'filters.cooled' },
 ]
 
 function toggle(key: keyof FairteilerFilter) {
@@ -17,7 +18,7 @@ function toggle(key: keyof FairteilerFilter) {
 </script>
 
 <template>
-  <div class="chips" role="group" aria-label="Filter">
+  <div class="chips" role="group" :aria-label="t('filters.aria')">
     <button
       v-for="chip in CHIPS"
       :key="chip.key"
@@ -27,7 +28,7 @@ function toggle(key: keyof FairteilerFilter) {
       :aria-pressed="filter[chip.key]"
       @click="toggle(chip.key)"
     >
-      {{ chip.label }}
+      {{ t(chip.labelKey) }}
     </button>
   </div>
 </template>

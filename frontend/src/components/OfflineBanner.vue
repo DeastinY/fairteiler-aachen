@@ -1,5 +1,9 @@
+<script setup lang="ts">
+import { t } from '../i18n'
+</script>
+
 <template>
-  <p class="offline" role="status">Offline – letzter bekannter Stand</p>
+  <p class="offline" role="status">{{ t('common.offline') }}</p>
 </template>
 
 <style scoped>

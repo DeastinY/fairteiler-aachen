@@ -5,7 +5,7 @@ import LegalPage from '../components/LegalPage.vue'
 </script>
 
 <template>
-  <LegalPage title="Datenschutzerklärung">
+  <LegalPage title="Datenschutzerklärung" german-only>
     <p>Stand: 3. September 2026</p>
 
     <h2>1. Verantwortlicher</h2>

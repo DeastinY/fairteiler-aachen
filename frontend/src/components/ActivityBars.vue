@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { t } from '../i18n'
 
 const props = withDefaults(
   defineProps<{
@@ -25,7 +26,7 @@ const heights = computed(() => {
     class="bars"
     :style="{ height: `${maxHeight}px` }"
     role="img"
-    aria-label="Meldungen der letzten 7 Tage"
+    :aria-label="t('common.activityAria')"
   >
     <span
       v-for="(height, index) in heights"

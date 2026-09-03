@@ -125,6 +125,7 @@ const pl: Messages = {
   'aktivitaet.subtitle': 'Twoje Fairteiler i powiadomienia',
   'aktivitaet.statsOne': 'W tym tygodniu: 1 zgłoszenie · teraz jedzenie w {withFood} z {total}',
   'aktivitaet.statsMany': 'W tym tygodniu: {n} zgłoszeń · teraz jedzenie w {withFood} z {total}',
+  'aktivitaet.statsLink': 'Więcej w sekcji Statystyki',
   'aktivitaet.serverDisabled': 'Powiadomienia nie są (jeszcze) włączone na tym serwerze.',
   'aktivitaet.unsupported': 'Twoja przeglądarka nie obsługuje powiadomień push.',
   'aktivitaet.followOn': 'Od razu, gdy ktoś przyniesie jedzenie',
@@ -141,6 +142,7 @@ const pl: Messages = {
   'mehr.subtitle': 'O aplikacji i informacje prawne',
   'mehr.settings': 'Ustawienia',
   'mehr.rules': 'Warto wiedzieć – zasady i higiena',
+  'mehr.statistik': 'Użycie i przejrzystość',
   'mehr.impressum': 'Impressum (nota prawna)',
   'mehr.datenschutz': 'Prywatność (po niemiecku)',
   'mehr.aboutTitle': 'O tej aplikacji',
@@ -191,8 +193,12 @@ const pl: Messages = {
   'regeln.care1': 'Zostaw Fairteiler takim, jakim chcesz go zastać – czystym i uporządkowanym.',
   'regeln.care2': 'Zepsute od razu wyjmij i wyrzuć.',
   'regeln.care3': 'Dobrze zamykaj drzwi lodówki.',
-  'regeln.care4': 'Nie fotografuj innych osób przy Fairteiler – nie każdy chce być widoczny.',
-  'regeln.care5': 'Bierz, ile potrzebujesz – i krótko zgłoś to w aplikacji, żeby inni wiedzieli.',
+  'regeln.care4':
+    'Nie fotografuj żywności i nie udostępniaj zdjęć zawartości – to może zagrozić współpracy ze sklepami, z których pochodzi uratowana żywność.',
+  'regeln.care5': 'Nie fotografuj innych osób przy Fairteiler – nie każdy chce być widoczny.',
+  'regeln.care6':
+    'Miej wzgląd na sąsiedztwo – zwłaszcza wieczorem przychodź cicho, nie trzaskaj drzwiami i nie twórzcie większych grup.',
+  'regeln.care7': 'Bierz, ile potrzebujesz – i krótko zgłoś to w aplikacji, żeby inni wiedzieli.',
   'regeln.footer':
     'Te wskazówki podsumowują praktykę społeczności, bez gwarancji. Wiążące są ogłoszenia na miejscu i zasady higieny foodsharing.de.',
 
@@ -201,7 +207,7 @@ const pl: Messages = {
     'Ta aplikacja żyje dzięki nam wszystkim: kto krótko zgłosi, co dzieje się w Fairteiler, pomaga innym – i ratuje jedzenie.',
   'welcome.point1': 'Zgłoszenie w 10 sekund – bez konta, anonimowo.',
   'welcome.point2': 'Czysto i fair: zostaw Fairteiler takim, jakim chcesz go zastać.',
-  'welcome.point3': 'Szacunek: żadnych zdjęć innych osób, bierz tyle, ile potrzebujesz.',
+  'welcome.point3': 'Szacunek: bez zdjęć jedzenia i ludzi, wzgląd na sąsiedztwo.',
   'welcome.rulesPre': 'Wszystkie wskazówki w sekcji',
   'welcome.rulesLink': 'Warto wiedzieć',
   'welcome.iosTip':
@@ -211,6 +217,23 @@ const pl: Messages = {
 
   'legal.germanOnly': 'Teksty prawne są dostępne tylko po niemiecku.',
 
+  'statistik.title': 'Statystyki',
+  'statistik.intro':
+    'Ta aplikacja liczy użycie tylko jako anonimowe sumy dzienne – bez adresów IP i bez identyfikatorów.',
+  'statistik.privacyLink': 'Szczegóły w sekcji Prywatność',
+  'statistik.reports7d': 'Zgłoszenia (7 dni)',
+  'statistik.pushSubs': 'Subskrypcje push',
+  'statistik.withFood': 'Fairteiler z jedzeniem',
+  'statistik.viewsChart': 'Odwiedziny aplikacji dziennie',
+  'statistik.reportsChart': 'Zgłoszenia dziennie',
+  'statistik.footer':
+    'Dane aktualizują się na bieżąco; wizyty z pamięci podręcznej lub offline nie są liczone.',
+  'statistik.unavailable': 'Chwilowo niedostępne.',
+
+  'common.activityAria': 'Zgłoszenia z ostatnich 7 dni',
+  'mehr.support': 'Wesprzyj projekt',
+  'mehr.supportNote': 'Dobrowolnie przez PayPal · pomaga pokryć koszty serwera · bez możliwości potwierdzenia darowizny',
+  'aktivitaet.noServiceWorker': 'Push jest teraz niedostępny (brak aktywnego service workera) – załaduj aplikację ponownie.',
   'api.genericError': 'Coś poszło nie tak. Spróbuj później jeszcze raz.',
 }
 

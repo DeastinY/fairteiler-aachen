@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { t } from '../i18n'
 import FairteilerCard from '../components/FairteilerCard.vue'
 import FilterChips from '../components/FilterChips.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
@@ -32,7 +33,7 @@ async function load() {
   try {
     items.value = await fetchFairteilerList()
   } catch {
-    error.value = 'Die Fairteiler konnten nicht geladen werden. Bist du online?'
+    error.value = t('common.loadError')
   }
 }
 
@@ -42,27 +43,26 @@ onMounted(load)
 <template>
   <div class="page">
     <header class="page-head">
-      <h1 class="disp page-title">Alle Fairteiler</h1>
+      <h1 class="disp page-title">{{ t('liste.title') }}</h1>
       <p v-if="items" class="page-sub">
-        {{ items.length }} Standorte in Aachen und Umgebung ·
-        {{ reported }} mit aktueller Meldung
+        {{ t('liste.summary', { total: items.length, reported }) }}
       </p>
-      <p v-else class="page-sub">Standorte in Aachen und Umgebung</p>
+      <p v-else class="page-sub">{{ t('liste.subtitle') }}</p>
       <FilterChips class="listchips" />
     </header>
 
     <OfflineBanner v-if="showOffline" />
 
-    <p v-if="!items && !error" class="hint">Lade Fairteiler …</p>
+    <p v-if="!items && !error" class="hint">{{ t('common.loading') }}</p>
 
     <div v-else-if="error" class="hint error">
       <p>{{ error }}</p>
-      <button type="button" class="retrybtn" @click="load">Erneut versuchen</button>
+      <button type="button" class="retrybtn" @click="load">{{ t('common.retry') }}</button>
     </div>
 
     <div v-else class="cards">
       <p v-if="sorted.length === 0" class="hint">
-        Keine Fairteiler entsprechen den gewählten Filtern.
+        {{ t('common.noFilterMatch') }}
       </p>
       <FairteilerCard v-for="item in sorted" :key="item.id" :fairteiler="item" />
     </div>

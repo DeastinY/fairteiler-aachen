@@ -55,6 +55,13 @@ test('welcome overlay sits above the map and dismisses cleanly', async ({ page }
   const start = page.locator('[data-test="welcome-start"]')
   await expect(start).toBeVisible()
 
+  // i18n: switching the language on the welcome screen re-renders its copy
+  await expect(start).toHaveText("Los geht's")
+  await page.locator('[data-test="welcome-language"]').selectOption('en')
+  await expect(start).toHaveText("Let's go")
+  await page.locator('[data-test="welcome-language"]').selectOption('de')
+  await expect(start).toHaveText("Los geht's")
+
   // regression: Leaflet panes must not rise above the overlay or steal taps
   const topElementInsideOverlay = await page.evaluate(() => {
     const el = document.elementFromPoint(195, 200)

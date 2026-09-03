@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { t, useI18n } from '../i18n'
 
-defineProps<{ title: string }>()
+defineProps<{ title: string; germanOnly?: boolean }>()
+
+const { locale } = useI18n()
 
 const router = useRouter()
 
@@ -14,7 +17,7 @@ function goBack() {
 <template>
   <div class="page">
     <div class="head">
-      <button type="button" class="roundbtn backbtn" aria-label="Zurück" @click="goBack">
+      <button type="button" class="roundbtn backbtn" :aria-label="t('common.back')" @click="goBack">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
@@ -23,6 +26,9 @@ function goBack() {
       <span class="spacer" aria-hidden="true"></span>
     </div>
     <article class="legal">
+      <p v-if="germanOnly && locale !== 'de'" class="german-note">
+        {{ t('legal.germanOnly') }}
+      </p>
       <slot />
     </article>
   </div>
@@ -54,6 +60,16 @@ function goBack() {
 
 .legal {
   padding: 8px 20px 24px 20px;
+}
+
+.german-note {
+  background: var(--amber-soft);
+  color: var(--amber-ink);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 4px 0 6px 0;
 }
 
 .legal :slotted(h2) {

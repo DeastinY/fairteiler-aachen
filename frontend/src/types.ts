@@ -18,10 +18,20 @@ export type DayKey = 'mo' | 'tu' | 'we' | 'th' | 'fr' | 'sa' | 'su'
 /** Local hours per day, ranges [start, end) in (possibly fractional) hours. */
 export type OpeningHours = Partial<Record<DayKey, [number, number][]>>
 
+export interface UsageDay {
+  day: string // "YYYY-MM-DD"
+  listViews: number
+  detailViews: number
+  reports: number
+}
+
 export interface Stats {
   fairteilerTotal: number
   withFood: number
   reports7d: number
+  pushSubscriptions: number
+  /** 14 entries, oldest first, zero-filled. */
+  usage14d: UsageDay[]
 }
 
 export interface FairteilerStatus {

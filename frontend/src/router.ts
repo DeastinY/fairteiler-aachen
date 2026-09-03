@@ -22,6 +22,11 @@ export const routes = [
   },
   { path: '/regeln', name: 'regeln', component: () => import('./views/RegelnView.vue') },
   {
+    path: '/statistik',
+    name: 'statistik',
+    component: () => import('./views/StatistikView.vue'),
+  },
+  {
     path: '/impressum',
     name: 'impressum',
     component: () => import('./views/ImpressumView.vue'),

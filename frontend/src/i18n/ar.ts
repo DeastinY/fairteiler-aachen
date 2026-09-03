@@ -125,6 +125,7 @@ const ar: Messages = {
   'aktivitaet.subtitle': 'الـ Fairteiler الخاصة بك والإشعارات',
   'aktivitaet.statsOne': 'هذا الأسبوع: بلاغ واحد · حاليًا {withFood} من {total} فيها طعام',
   'aktivitaet.statsMany': 'هذا الأسبوع: {n} بلاغات · حاليًا {withFood} من {total} فيها طعام',
+  'aktivitaet.statsLink': 'المزيد في «الإحصاءات»',
   'aktivitaet.serverDisabled': 'الإشعارات غير مفعّلة (بعد) على هذا الخادم.',
   'aktivitaet.unsupported': 'متصفحك لا يدعم إشعارات الدفع.',
   'aktivitaet.followOn': 'فورًا عند إحضار طعام',
@@ -141,6 +142,7 @@ const ar: Messages = {
   'mehr.subtitle': 'عن التطبيق والمعلومات القانونية',
   'mehr.settings': 'الإعدادات',
   'mehr.rules': 'جدير بالمعرفة – قواعد ونظافة',
+  'mehr.statistik': 'الاستخدام والشفافية',
   'mehr.impressum': 'Impressum (بيان قانوني)',
   'mehr.datenschutz': 'الخصوصية (بالألمانية)',
   'mehr.aboutTitle': 'عن هذا التطبيق',
@@ -189,8 +191,12 @@ const ar: Messages = {
   'regeln.care1': 'اترك الـ Fairteiler كما تحب أن تجده – نظيفًا ومرتبًا.',
   'regeln.care2': 'أخرج الطعام الفاسد فورًا وتخلّص منه.',
   'regeln.care3': 'أغلق أبواب الثلاجة جيدًا.',
-  'regeln.care4': 'لا تصوّر أشخاصًا آخرين عند الـ Fairteiler – ليس الجميع يرغب في الظهور.',
-  'regeln.care5': 'خذ ما تحتاجه – وبلّغ عنه بإيجاز في التطبيق ليعلم الآخرون.',
+  'regeln.care4':
+    'لا تصوّر الأطعمة ولا تشارك صور المحتوى – فقد يعرّض ذلك التعاون مع المتاجر التي تأتي منها الأغذية المنقذة للخطر.',
+  'regeln.care5': 'لا تصوّر أشخاصًا آخرين عند الـ Fairteiler – ليس الجميع يرغب في الظهور.',
+  'regeln.care6':
+    'راعِ الجيران – خاصة في المساء: قدوم هادئ، لا تصفق الأبواب، ولا تتجمعوا في مجموعات كبيرة.',
+  'regeln.care7': 'خذ ما تحتاجه – وبلّغ عنه بإيجاز في التطبيق ليعلم الآخرون.',
   'regeln.footer':
     'تلخّص هذه الإرشادات ممارسات المجتمع دون ضمان. الملزم هو اللوحات في الموقع وقواعد النظافة على foodsharing.de.',
 
@@ -199,7 +205,7 @@ const ar: Messages = {
     'هذا التطبيق يعيش بنا جميعًا: من يبلّغ بسرعة عمّا يجري في الـ Fairteiler يساعد الآخرين – وينقذ الطعام.',
   'welcome.point1': 'بلّغ خلال 10 ثوانٍ – بدون حساب، وبشكل مجهول.',
   'welcome.point2': 'نظافة وإنصاف: اترك الـ Fairteiler كما تحب أن تجده.',
-  'welcome.point3': 'احترام: لا صور للآخرين، وخذ ما تحتاجه.',
+  'welcome.point3': 'احترام: لا صور للطعام أو الأشخاص، ومراعاة الجيران.',
   'welcome.rulesPre': 'كل الإرشادات تحت',
   'welcome.rulesLink': 'جدير بالمعرفة',
   'welcome.iosTip': 'نصيحة: عبر أيقونة المشاركة ← «إضافة إلى الشاشة الرئيسية» يصبح تطبيقًا حقيقيًا.',
@@ -208,6 +214,23 @@ const ar: Messages = {
 
   'legal.germanOnly': 'النصوص القانونية متاحة بالألمانية فقط.',
 
+  'statistik.title': 'الإحصاءات',
+  'statistik.intro':
+    'يحسب هذا التطبيق الاستخدام كمجاميع يومية مجهولة فقط – بلا عناوين IP وبلا معرّفات.',
+  'statistik.privacyLink': 'التفاصيل في «الخصوصية»',
+  'statistik.reports7d': 'البلاغات (7 أيام)',
+  'statistik.pushSubs': 'اشتراكات الإشعارات',
+  'statistik.withFood': 'Fairteiler فيها طعام',
+  'statistik.viewsChart': 'زيارات التطبيق يوميًا',
+  'statistik.reportsChart': 'البلاغات يوميًا',
+  'statistik.footer':
+    'تُحدَّث البيانات باستمرار؛ الزيارات من الذاكرة المؤقتة أو دون اتصال لا تُحسب.',
+  'statistik.unavailable': 'غير متاح حاليًا.',
+
+  'common.activityAria': 'بلاغات آخر 7 أيام',
+  'mehr.support': 'ادعم المشروع',
+  'mehr.supportNote': 'تبرع طوعي عبر PayPal · يساعد في تغطية تكاليف الخادم · لا يمكن إصدار إيصال تبرع',
+  'aktivitaet.noServiceWorker': 'الإشعارات غير متاحة حاليًا (لا يوجد service worker نشط) – أعد تحميل التطبيق من فضلك.',
   'api.genericError': 'حدث خطأ ما. حاول مجددًا لاحقًا.',
 }
 

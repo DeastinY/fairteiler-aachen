@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { t, useI18n, type LocaleCode } from '../i18n'
 import {
   clearLocalData,
   loadAutoLocate,
@@ -9,6 +10,13 @@ import { resetFilters } from '../composables/useFilters'
 import { showToast } from '../composables/useToast'
 
 const appVersion = __APP_VERSION__
+
+const { locale, setLocale, locales } = useI18n()
+
+function onLanguageChange(event: Event) {
+  const value = (event.target as HTMLSelectElement).value as LocaleCode
+  void setLocale(value)
+}
 
 const autoLocate = ref(loadAutoLocate())
 const confirmClear = ref(false)
@@ -27,7 +35,7 @@ function onClearTap() {
   resetFilters()
   autoLocate.value = false
   confirmClear.value = false
-  showToast('Lokale Daten gelöscht.')
+  showToast(t('einstellungen.cleared'))
 }
 
 function cancelClear() {
@@ -38,26 +46,47 @@ function cancelClear() {
 <template>
   <div class="page">
     <header class="page-head">
-      <h1 class="disp page-title">Einstellungen</h1>
-      <p class="page-sub">Alles lokal auf deinem Gerät</p>
+      <h1 class="disp page-title">{{ t('einstellungen.title') }}</h1>
+      <p class="page-sub">{{ t('einstellungen.subtitle') }}</p>
     </header>
 
     <div class="card list">
+      <div class="row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M3 12h18 M12 3c2.5 2.5 3.8 5.6 3.8 9S14.5 18.5 12 21c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3z"></path>
+        </svg>
+        <div class="rowbody">
+          <span class="rowname">{{ t('einstellungen.language') }}</span>
+        </div>
+        <select
+          class="langselect"
+          :value="locale"
+          :aria-label="t('einstellungen.languageAria')"
+          data-test="language-select"
+          @change="onLanguageChange"
+        >
+          <option v-for="entry in locales" :key="entry.code" :value="entry.code">
+            {{ entry.name }}
+          </option>
+        </select>
+      </div>
+
       <div class="row">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="7"></circle>
           <path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3"></path>
         </svg>
         <div class="rowbody">
-          <span class="rowname">Entfernungen anzeigen</span>
-          <span class="rownote">Karte fragt beim Öffnen automatisch nach deinem Standort</span>
+          <span class="rowname">{{ t('einstellungen.distances') }}</span>
+          <span class="rownote">{{ t('einstellungen.distancesNote') }}</span>
         </div>
         <button
           type="button"
           class="switch"
           role="switch"
           :aria-checked="autoLocate"
-          aria-label="Entfernungen anzeigen"
+          :aria-label="t('einstellungen.distances')"
           data-test="auto-locate"
           @click="toggleAutoLocate"
         >
@@ -71,8 +100,8 @@ function cancelClear() {
           <path d="M10.3 20a2 2 0 0 0 3.4 0"></path>
         </svg>
         <div class="rowbody">
-          <span class="rowname">Benachrichtigungen &amp; Ruhezeiten</span>
-          <span class="rownote">Im Tab „Aktivität" einstellen</span>
+          <span class="rowname">{{ t('einstellungen.notifications') }}</span>
+          <span class="rownote">{{ t('einstellungen.notificationsNote') }}</span>
         </div>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a8a494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M9 6l6 6-6 6"></path>
@@ -84,30 +113,25 @@ function cancelClear() {
       <div class="clearblock">
         <template v-if="!confirmClear">
           <button type="button" class="clearbtn" data-test="clear-data" @click="onClearTap">
-            Lokale Daten löschen
+            {{ t('einstellungen.clear') }}
           </button>
         </template>
         <template v-else>
-          <p class="confirmtext" data-test="clear-confirm-text">Wirklich alle lokalen Daten löschen?</p>
+          <p class="confirmtext" data-test="clear-confirm-text">{{ t('einstellungen.clearConfirm') }}</p>
           <div class="confirmrow">
             <button type="button" class="confirmbtn danger" data-test="clear-confirm" @click="onClearTap">
-              Ja, löschen
+              {{ t('einstellungen.clearYes') }}
             </button>
             <button type="button" class="confirmbtn" data-test="clear-cancel" @click="cancelClear">
-              Abbrechen
+              {{ t('einstellungen.clearNo') }}
             </button>
           </div>
         </template>
-        <p class="caption">
-          Entfernt Geräte-Kennung, Filter, Einstellungen und die lokale
-          Benachrichtigungs-Auswahl aus diesem Browser.
-        </p>
+        <p class="caption">{{ t('einstellungen.clearCaption') }}</p>
       </div>
     </div>
 
-    <p class="footer">
-      Fairteiler Aachen v{{ appVersion }} · Quellcode: AGPL-3.0
-    </p>
+    <p class="footer">{{ t('einstellungen.version', { version: appVersion }) }}</p>
   </div>
 </template>
 
@@ -243,6 +267,19 @@ function cancelClear() {
   color: var(--muted);
   text-align: center;
   margin: 10px 0 0 0;
+}
+
+.langselect {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-height: 44px;
+  max-width: 50%;
 }
 
 .footer {

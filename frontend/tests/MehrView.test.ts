@@ -19,6 +19,7 @@ describe('MehrView', () => {
       .map((link) => link.props('to'))
     expect(targets).toContain('/einstellungen')
     expect(targets).toContain('/regeln')
+    expect(targets).toContain('/statistik')
     expect(targets).toContain('/impressum')
     expect(targets).toContain('/datenschutz')
   })

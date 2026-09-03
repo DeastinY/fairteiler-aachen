@@ -125,6 +125,7 @@ const tr: Messages = {
   'aktivitaet.subtitle': 'Fairteiler’lerin ve bildirimlerin',
   'aktivitaet.statsOne': 'Bu hafta: 1 bildirim · şu an {total} noktadan {withFood} tanesinde yiyecek var',
   'aktivitaet.statsMany': 'Bu hafta: {n} bildirim · şu an {total} noktadan {withFood} tanesinde yiyecek var',
+  'aktivitaet.statsLink': "Daha fazlası İstatistik'te",
   'aktivitaet.serverDisabled': 'Bildirimler bu sunucuda (henüz) etkin değil.',
   'aktivitaet.unsupported': 'Tarayıcın push bildirimlerini desteklemiyor.',
   'aktivitaet.followOn': 'Yiyecek bırakılınca hemen',
@@ -141,6 +142,7 @@ const tr: Messages = {
   'mehr.subtitle': 'Uygulama hakkında ve yasal bilgiler',
   'mehr.settings': 'Ayarlar',
   'mehr.rules': 'Bilmekte fayda var – kurallar & hijyen',
+  'mehr.statistik': 'Kullanım & şeffaflık',
   'mehr.impressum': 'Impressum (yasal bilgi)',
   'mehr.datenschutz': 'Gizlilik (Almanca)',
   'mehr.aboutTitle': 'Bu uygulama hakkında',
@@ -192,9 +194,11 @@ const tr: Messages = {
   'regeln.care2': 'Bozulmuş gıdayı hemen çıkar ve at.',
   'regeln.care3': 'Buzdolabı kapılarını iyice kapat.',
   'regeln.care4':
-    "Fairteiler'deki diğer insanların fotoğrafını çekme – herkes görünmek istemez.",
-  'regeln.care5':
-    'İhtiyacın kadarını al – ve uygulamada kısaca bildir ki diğerleri de bilsin.',
+    'Yiyeceklerin fotoğrafını çekme ve içeriğin görüntülerini paylaşma – bu, kurtarılan gıdaların geldiği işletmelerle iş birliğini tehlikeye atabilir.',
+  'regeln.care5': "Fairteiler'deki diğer insanların fotoğrafını çekme – herkes görünmek istemez.",
+  'regeln.care6':
+    'Komşulara saygılı ol – özellikle akşamları sessiz gel, kapıları çarpma ve büyük gruplar oluşturma.',
+  'regeln.care7': 'İhtiyacın kadarını al – ve uygulamada kısaca bildir ki diğerleri de bilsin.',
   'regeln.footer':
     'Bu notlar topluluk pratiğini özetler, garanti verilmez. Bağlayıcı olan yerindeki duyurular ve foodsharing.de hijyen kurallarıdır.',
 
@@ -203,7 +207,7 @@ const tr: Messages = {
     "Bu uygulama hepimizle yaşar: Fairteiler'de neler olduğunu kısaca bildiren, diğer herkese yardım eder – ve gıda kurtarır.",
   'welcome.point1': '10 saniyede bildir – hesapsız, anonim.',
   'welcome.point2': "Temiz & adil: Fairteiler'i bulmak istediğin gibi bırak.",
-  'welcome.point3': 'Saygı: başkalarının fotoğrafını çekme, ihtiyacın kadarını al.',
+  'welcome.point3': 'Saygı: yiyecek veya insan fotoğrafı yok, komşulara saygı.',
   'welcome.rulesPre': 'Tüm ayrıntılar şurada:',
   'welcome.rulesLink': 'Bilmekte fayda var',
   'welcome.iosTip':
@@ -213,6 +217,23 @@ const tr: Messages = {
 
   'legal.germanOnly': 'Yasal metinler yalnızca Almanca mevcuttur.',
 
+  'statistik.title': 'İstatistik',
+  'statistik.intro':
+    'Bu uygulama kullanımı yalnızca anonim günlük toplamlar olarak sayar – IP adresi yok, kimlik yok.',
+  'statistik.privacyLink': "Ayrıntılar Gizlilik'te",
+  'statistik.reports7d': 'Bildirimler (7 gün)',
+  'statistik.pushSubs': 'Push abonelikleri',
+  'statistik.withFood': 'Yiyecek olan Fairteiler',
+  'statistik.viewsChart': 'Günlük uygulama ziyaretleri',
+  'statistik.reportsChart': 'Günlük bildirimler',
+  'statistik.footer':
+    'Veriler sürekli güncellenir; önbellekten veya çevrimdışı ziyaretler sayılmaz.',
+  'statistik.unavailable': 'Şu anda kullanılamıyor.',
+
+  'common.activityAria': 'Son 7 günün bildirimleri',
+  'mehr.support': 'Projeyi destekle',
+  'mehr.supportNote': 'PayPal ile gönüllü · sunucu maliyetlerine yardımcı olur · bağış makbuzu verilemez',
+  'aktivitaet.noServiceWorker': 'Push şu anda kullanılamıyor (etkin service worker yok) – lütfen uygulamayı yeniden yükle.',
   'api.genericError': 'Bir şeyler ters gitti. Lütfen daha sonra tekrar dene.',
 }
 
