@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "typecheck": "vue-tsc -b",
     "e2e": "playwright test",
-    "check:dist": "node scripts/check-precache.mjs"
+    "check:dist": "node scripts/check-precache.mjs",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -23,6 +24,7 @@
     "@types/leaflet": "^1.9.22",
     "@types/node": "^24.13.3",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vitest/coverage-v8": "^5.0.0",
     "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.9.1",
     "happy-dom": "^20.13.2",
