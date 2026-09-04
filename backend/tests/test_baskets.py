@@ -83,3 +83,77 @@ def test_daily_cap(client, monkeypatch):
     for _ in range(baskets.DAILY_CAP + 10):
         client.get("/api/baskets")
     assert len(fetch.calls) == baskets.DAILY_CAP
+
+
+# --- basket notifications -------------------------------------------------
+
+BASKET_SUB = {
+    "subscription": {
+        "endpoint": "https://push.example/basket-fan",
+        "keys": {"p256dh": "k", "auth": "a"},
+    },
+    "fairteilerIds": [810],
+    "quietHours": False,
+    "baskets": True,
+}
+
+
+def test_put_stores_baskets_flag(push_client, db):
+    from app.models import PushSubscription
+
+    assert (
+        push_client.put(
+            "/api/push/subscription", json=BASKET_SUB, headers={"X-Device-Id": "bsub"}
+        ).status_code
+        == 204
+    )
+    assert db.query(PushSubscription).one().baskets is True
+
+
+def test_first_fetch_seeds_silently(push_client, sent, monkeypatch):
+    push_client.put("/api/push/subscription", json=BASKET_SUB, headers={"X-Device-Id": "bsub"})
+    monkeypatch.setattr(baskets, "_fetch_upstream", fake_fetcher([AACHEN_BASKET]))
+    push_client.get("/api/baskets")
+    assert sent == []  # existing baskets on first sight never notify
+
+
+def test_new_basket_notifies_only_basket_subscribers(push_client, sent, monkeypatch, db):
+    # subscriber without baskets flag
+    push_client.put(
+        "/api/push/subscription",
+        json={**BASKET_SUB, "baskets": False,
+              "subscription": {"endpoint": "https://push.example/no-baskets",
+                               "keys": {"p256dh": "k", "auth": "a"}}},
+        headers={"X-Device-Id": "nosub"},
+    )
+    push_client.put("/api/push/subscription", json=BASKET_SUB, headers={"X-Device-Id": "bsub"})
+
+    monkeypatch.setattr(baskets, "_fetch_upstream", fake_fetcher([AACHEN_BASKET]))
+    push_client.get("/api/baskets")  # seeds
+    baskets._cache["fetched_at"] -= dt.timedelta(minutes=baskets.TTL_MINUTES + 1)
+
+    new_basket = {"id": 777, "lat": 50.78, "lon": 6.09}
+    monkeypatch.setattr(baskets, "_fetch_upstream", fake_fetcher([AACHEN_BASKET, new_basket]))
+    push_client.get("/api/baskets")
+
+    assert len(sent) == 1
+    endpoint, payload = sent[0]
+    assert endpoint == "https://push.example/basket-fan"
+    assert payload["url"] == "/"
+    assert payload["tag"] == "basket-777"
+
+    # same basket again: no repeat notification
+    baskets._cache["fetched_at"] -= dt.timedelta(minutes=baskets.TTL_MINUTES + 1)
+    push_client.get("/api/baskets")
+    assert len(sent) == 1
+
+
+def test_vanished_baskets_are_pruned_from_seen(push_client, sent, monkeypatch, db):
+    from app.models import BasketSeen
+
+    monkeypatch.setattr(baskets, "_fetch_upstream", fake_fetcher([AACHEN_BASKET]))
+    push_client.get("/api/baskets")
+    baskets._cache["fetched_at"] -= dt.timedelta(minutes=baskets.TTL_MINUTES + 1)
+    monkeypatch.setattr(baskets, "_fetch_upstream", fake_fetcher([]))
+    push_client.get("/api/baskets")
+    assert db.query(BasketSeen).count() == 0

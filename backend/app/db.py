@@ -30,6 +30,9 @@ def migrate(engine) -> list[str]:
     from sqlalchemy import inspect, text
 
     wanted = {
+        "push_subscriptions": {
+            "baskets": "BOOLEAN NOT NULL DEFAULT 0",
+        },
         "fairteiler": {
             "cooled": "BOOLEAN NOT NULL DEFAULT 0",
             "around_the_clock": "BOOLEAN NOT NULL DEFAULT 0",

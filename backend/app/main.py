@@ -43,6 +43,7 @@ class PushSubscriptionIn(BaseModel):
     subscription: SubscriptionIn
     fairteilerIds: list[int] = []
     quietHours: bool = False
+    baskets: bool = False
 
 
 def create_app(
@@ -134,7 +135,7 @@ def create_app(
         existing = session.scalar(
             select(PushSubscription).where(PushSubscription.endpoint == endpoint)
         )
-        if not body.fairteilerIds:
+        if not body.fairteilerIds and not body.baskets:
             if existing is not None:
                 session.delete(existing)
             return
@@ -143,11 +144,12 @@ def create_app(
         sub.auth = body.subscription.keys.auth
         sub.fairteiler_ids = body.fairteilerIds
         sub.quiet_hours = body.quietHours
+        sub.baskets = body.baskets
         session.add(sub)
 
     @app.get("/api/baskets")
-    def baskets():
-        return baskets_mod.get_baskets()
+    def baskets(session: Session = Depends(get_session)):
+        return baskets_mod.get_baskets(session=session, push_settings=push_settings)
 
     @app.get("/api/stats")
     def stats(session: Session = Depends(get_session)):

@@ -55,6 +55,7 @@ class PushSubscription(Base):
     auth: Mapped[str] = mapped_column(String(200))
     fairteiler_ids: Mapped[list] = mapped_column(JSON, default=list)
     quiet_hours: Mapped[bool] = mapped_column(default=False)
+    baskets: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[dt.datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: dt.datetime.now(dt.timezone.utc).replace(tzinfo=None),
@@ -71,6 +72,14 @@ class UsageCounter(Base):
     day: Mapped[str] = mapped_column(String(10), index=True)  # YYYY-MM-DD (UTC)
     metric: Mapped[str] = mapped_column(String(40), index=True)
     count: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class BasketSeen(Base):
+    """Basket ids we have already announced — prevents duplicate pushes."""
+
+    __tablename__ = "baskets_seen"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)  # upstream basket id
 
 
 class BlockedDevice(Base):

@@ -12,7 +12,12 @@ Design contract (see IMPLEMENTATION_PLAN "Data sourcing"):
 
 import datetime as dt
 import json
+import logging
 import urllib.request
+
+from sqlalchemy import select
+
+logger = logging.getLogger(__name__)
 
 TTL_MINUTES = 30
 DAILY_CAP = 30
@@ -45,7 +50,54 @@ def _in_bbox(marker: dict) -> bool:
         return False
 
 
-def get_baskets(now: dt.datetime | None = None) -> dict:
+def _announce_new_baskets(session, push_settings, current_ids: set[int]) -> None:
+    """Push 'new basket' to opted-in subscribers; first sighting seeds silently."""
+    from app.models import BasketSeen, PushSubscription
+    from app.push import EndpointGone, _berlin_now, _send_webpush, is_quiet
+
+    seen_rows = list(session.scalars(select(BasketSeen)))
+    seen_ids = {row.id for row in seen_rows}
+    first_run = len(seen_ids) == 0 and len(current_ids) > 0
+
+    # prune vanished, add new
+    for row in seen_rows:
+        if row.id not in current_ids:
+            session.delete(row)
+    new_ids = current_ids - seen_ids
+    for basket_id in new_ids:
+        session.add(BasketSeen(id=basket_id))
+
+    if first_run or not new_ids or push_settings is None:
+        return
+    subscribers = [
+        s for s in session.scalars(select(PushSubscription)) if s.baskets
+    ]
+    if not subscribers:
+        return
+    quiet_now = is_quiet(_berlin_now())
+    for basket_id in sorted(new_ids):
+        payload = json.dumps(
+            {
+                "title": "Neuer Essenskorb in der Nähe",
+                "body": "Jemand bietet Lebensmittel an – Details auf der Karte.",
+                "url": "/",
+                "tag": f"basket-{basket_id}",
+            },
+            ensure_ascii=False,
+        )
+        for sub in subscribers:
+            if sub.quiet_hours and quiet_now:
+                continue
+            info = {"endpoint": sub.endpoint, "keys": {"p256dh": sub.p256dh, "auth": sub.auth}}
+            try:
+                _send_webpush(info, payload, settings=push_settings)
+            except EndpointGone:
+                session.delete(sub)
+            except Exception:  # noqa: BLE001
+                logger.exception("basket push to %s failed", sub.endpoint[:40])
+
+
+def get_baskets(session=None, push_settings=None, now: dt.datetime | None = None) -> dict:
     moment = now or dt.datetime.now(dt.timezone.utc)
     today = moment.date().isoformat()
     if _cache["day"] != today:
@@ -67,6 +119,13 @@ def get_baskets(now: dt.datetime | None = None) -> dict:
             ]
             _cache["fetched_at"] = moment
             fresh = True
+            if session is not None:
+                try:
+                    _announce_new_baskets(
+                        session, push_settings, {b["id"] for b in _cache["items"]}
+                    )
+                except Exception:  # noqa: BLE001 — announcing must never break the API
+                    logger.exception("basket announcement failed")
         except Exception:  # noqa: BLE001 — degrade to stale cache
             fresh = False
 
