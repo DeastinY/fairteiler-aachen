@@ -76,6 +76,11 @@ const en: Messages = {
   'karte.geoUnsupported': 'Location is not available in this browser.',
   'karte.geoDenied': 'Location unavailable – sorting without distance.',
 
+  'karte.osmContributors': ' contributors',
+  'karte.details': 'Details',
+  'karte.deselect': 'Close selection',
+  'karte.farAway': 'You seem to be further away – the map stays with the Fairteiler.',
+
   'liste.title': 'All Fairteiler',
   'liste.subtitle': 'Locations in and around Aachen',
   'liste.summary': '{total} locations in and around Aachen · {reported} with a recent report',

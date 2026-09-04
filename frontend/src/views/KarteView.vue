@@ -15,15 +15,20 @@ import { formatDistance, haversineKm, type LatLon } from '../lib/geo'
 import { applyFilter } from '../lib/filters'
 import { openHint } from '../lib/hours'
 import { tagLabels } from '../lib/labels'
+import { navigationUrl } from '../lib/navigation'
 import { formatRelativeTime } from '../lib/relativeTime'
 import { sortFairteiler } from '../lib/sort'
 import { statusMeta } from '../lib/status'
 import type { FairteilerListItem } from '../types'
 
-const TILE_URL =
-  'https://sgx.geodatenzentrum.de/wmts_basemapde/tile/1.0.0/de_basemapde_web_raster_farbe/default/GLOBAL_WEBMERCATOR/{z}/{y}/{x}.png'
-const ATTRIBUTION =
-  '© <a href="https://basemap.de" target="_blank" rel="noopener noreferrer">basemap.de</a> / BKG 2026'
+const TILE_URL = 'https://tile.openstreetmap.de/{z}/{x}/{y}.png'
+
+/** Flying to a fix further than this from the region would leave the map lost. */
+const MAX_FLY_DISTANCE_KM = 100
+const SELECT_ZOOM = 16
+const LOCATE_ZOOM = 15
+/** Accuracy circles beyond this radius just swallow the map – cap the visual. */
+const MAX_ACCURACY_RADIUS_M = 200
 
 const router = useRouter()
 const online = useOnline()
@@ -33,13 +38,17 @@ const items = ref<FairteilerListItem[] | null>(null)
 const error = ref<string | null>(null)
 
 const userPos = ref<LatLon | null>(null)
+const userAccuracy = ref<number | null>(null)
 const geoHint = ref<string | null>(null)
 const locating = ref(false)
+
+const selected = ref<FairteilerListItem | null>(null)
 
 const mapEl = ref<HTMLDivElement | null>(null)
 let map: L.Map | null = null
 let markerLayer: L.LayerGroup | null = null
-let userMarker: L.CircleMarker | null = null
+let userMarker: L.Marker | null = null
+let accuracyCircle: L.Circle | null = null
 
 const filtered = computed(() =>
   items.value ? applyFilter(items.value, filter) : [],
@@ -65,6 +74,22 @@ const nearest = computed(() => {
 
 const topRows = computed(() => nearest.value.slice(0, 3))
 
+const selectedRouteHref = computed(() =>
+  selected.value
+    ? navigationUrl(
+        selected.value.lat,
+        selected.value.lon,
+        selected.value.name,
+        navigator.userAgent,
+      )
+    : null,
+)
+
+/** Announced via the aria-live region so a selection is never silent. */
+const selectionAnnouncement = computed(() =>
+  selected.value ? `${selected.value.name} – ${rowLine(selected.value)}` : '',
+)
+
 async function load() {
   error.value = null
   items.value = null
@@ -87,49 +112,67 @@ onBeforeUnmount(() => {
   map = null
   markerLayer = null
   userMarker = null
+  accuracyCircle = null
 })
 
 function initMap() {
   if (map || !mapEl.value || !items.value?.length) return
   map = L.map(mapEl.value, { zoomControl: false })
-  L.tileLayer(TILE_URL, { maxZoom: 18, attribution: ATTRIBUTION }).addTo(map)
+  L.tileLayer(TILE_URL, {
+    maxZoom: 19,
+    attribution: `© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>${t('karte.osmContributors')}`,
+  }).addTo(map)
+  L.control.zoom({ position: 'bottomright' }).addTo(map)
   markerLayer = L.layerGroup().addTo(map)
   const bounds = L.latLngBounds(
     items.value.map((item) => [item.lat, item.lon] as [number, number]),
   )
   map.fitBounds(bounds, { padding: [36, 36], maxZoom: 16 })
+  // tapping empty map clears the selection
+  map.on('click', deselect)
   renderMarkers()
+}
+
+/** Teardrop pin: status-colored fill, white inner dot, shadow, tip-anchored. */
+function pinHtml(color: string, isSelected: boolean): string {
+  const scale = isSelected ? 1.35 : 1
+  const width = Math.round(30 * scale)
+  const height = Math.round(40 * scale)
+  const ring = isSelected
+    ? '<circle cx="15" cy="14" r="12.5" fill="none" stroke="#fdfcf8" stroke-width="2.5" opacity="0.9"></circle>'
+    : ''
+  return (
+    `<svg width="${width}" height="${height}" viewBox="0 0 30 40" aria-hidden="true" style="display:block;filter:drop-shadow(0 3px 4px rgba(34,48,31,0.35))">` +
+    `<path d="M15 39 C10 30 2 22.5 2 14 A13 13 0 0 1 28 14 C28 22.5 20 30 15 39 Z" fill="${color}" stroke="#fdfcf8" stroke-width="2"></path>` +
+    ring +
+    '<circle cx="15" cy="14" r="4.5" fill="#fdfcf8"></circle>' +
+    '</svg>'
+  )
+}
+
+function pinIcon(item: FairteilerListItem, isSelected: boolean): L.DivIcon {
+  const color = statusMeta(item.status.state).dotColor
+  // the wrapper div is the ≥44px tap target; the pin sits tip-down inside it
+  const size: [number, number] = isSelected ? [48, 56] : [44, 48]
+  return L.divIcon({
+    className: `pin-wrap${isSelected ? ' pin-selected' : ''}`,
+    html: `<div class="pin-inner">${pinHtml(color, isSelected)}</div>`,
+    iconSize: size,
+    iconAnchor: [size[0] / 2, size[1] - 2],
+  })
 }
 
 function renderMarkers() {
   if (!map || !markerLayer) return
   markerLayer.clearLayers()
   for (const item of filtered.value) {
-    const color = statusMeta(item.status.state).dotColor
-    const visual = L.circleMarker([item.lat, item.lon], {
-      radius: 10,
-      color: '#fdfcf8',
-      weight: 2.5,
-      fillColor: color,
-      fillOpacity: 1,
-      interactive: false,
+    const marker = L.marker([item.lat, item.lon], {
+      icon: pinIcon(item, selected.value?.id === item.id),
     })
-    // invisible, larger circle = the actual tap target (~44px diameter)
-    const hit = L.circleMarker([item.lat, item.lon], {
-      radius: 22,
-      stroke: false,
-      fill: true,
-      fillOpacity: 0,
-    })
-    hit.on('click', () => openDetail(item.id))
-    hit.bindTooltip(`${item.name} – ${statusMeta(item.status.state).label}`, {
-      direction: 'top',
-      offset: L.point(0, -10),
-    })
-    markerLayer.addLayer(visual)
-    markerLayer.addLayer(hit)
-    // axe: interactive SVG paths need a name and a role
-    const el = hit.getElement?.()
+    marker.on('click', () => onMarkerTap(item))
+    markerLayer.addLayer(marker)
+    // axe: the interactive pin element needs a name and a role
+    const el = marker.getElement?.()
     if (el) {
       el.setAttribute('role', 'button')
       el.setAttribute('aria-label', item.name)
@@ -138,19 +181,66 @@ function renderMarkers() {
   }
 }
 
-watch(filtered, renderMarkers)
+/** First tap selects and flies in; a second tap on the same pin opens details. */
+function onMarkerTap(item: FairteilerListItem) {
+  if (selected.value?.id === item.id) {
+    openDetail(item.id)
+    return
+  }
+  selected.value = item
+  map?.flyTo([item.lat, item.lon], SELECT_ZOOM, { animate: true })
+  renderMarkers()
+}
+
+function deselect() {
+  if (!selected.value) return
+  selected.value = null
+  renderMarkers()
+}
+
+watch(filtered, () => {
+  if (selected.value && !filtered.value.some((f) => f.id === selected.value?.id)) {
+    selected.value = null
+  }
+  renderMarkers()
+})
 
 function renderUserMarker() {
   if (!map || !userPos.value) return
   userMarker?.remove()
-  userMarker = L.circleMarker([userPos.value.lat, userPos.value.lon], {
-    radius: 7,
-    color: '#fdfcf8',
-    weight: 3,
-    fillColor: '#3b6ea5',
-    fillOpacity: 1,
+  accuracyCircle?.remove()
+  const latlng: [number, number] = [userPos.value.lat, userPos.value.lon]
+  if (userAccuracy.value && userAccuracy.value > 0) {
+    accuracyCircle = L.circle(latlng, {
+      radius: Math.min(userAccuracy.value, MAX_ACCURACY_RADIUS_M),
+      color: '#3b6ea5',
+      weight: 1,
+      opacity: 0.4,
+      fillColor: '#3b6ea5',
+      fillOpacity: 0.12,
+      interactive: false,
+    }).addTo(map)
+  }
+  userMarker = L.marker(latlng, {
+    icon: L.divIcon({
+      className: 'userdot-wrap',
+      html: '<span class="userdot-pulse"></span><span class="userdot-core"></span>',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+    }),
     interactive: false,
   }).addTo(map)
+}
+
+/** Bounding-box center of all fairteiler – the "home" of this map. */
+function regionCenter(): LatLon | null {
+  if (!items.value?.length) return null
+  const lats = items.value.map((f) => f.lat)
+  const lons = items.value.map((f) => f.lon)
+  return {
+    lat: (Math.min(...lats) + Math.max(...lats)) / 2,
+    lon: (Math.min(...lons) + Math.max(...lons)) / 2,
+  }
 }
 
 function distanceTo(item: FairteilerListItem): string | null {
@@ -189,7 +279,17 @@ function useLocation() {
         lat: position.coords.latitude,
         lon: position.coords.longitude,
       }
+      userAccuracy.value = position.coords.accuracy ?? null
       renderUserMarker()
+      const center = regionCenter()
+      if (center && haversineKm(userPos.value, center) > MAX_FLY_DISTANCE_KM) {
+        // don't jump the map to another city – distances still work
+        geoHint.value = t('karte.farAway')
+      } else {
+        map?.flyTo([userPos.value.lat, userPos.value.lon], LOCATE_ZOOM, {
+          animate: true,
+        })
+      }
     },
     () => {
       locating.value = false
@@ -232,6 +332,9 @@ function useLocation() {
     <div class="sheet">
       <div class="grip" aria-hidden="true"></div>
 
+      <!-- selections are announced, never silent -->
+      <p class="sr-only" role="status">{{ selectionAnnouncement }}</p>
+
       <OfflineBanner v-if="showOffline" class="sheet-offline" />
 
       <div v-if="!items && !error" data-test="skeletons">
@@ -251,6 +354,47 @@ function useLocation() {
       <div v-else-if="error" class="hint error">
         <p>{{ error }}</p>
         <button type="button" class="retrybtn" @click="load">{{ t('common.retry') }}</button>
+      </div>
+
+      <!-- selected fairteiler card -->
+      <div v-else-if="selected" class="selcard" data-test="selection-card">
+        <div class="selhead">
+          <span class="dot" :style="{ background: statusMeta(selected.status.state).dotColor }"></span>
+          <span class="disp selname">{{ selected.name }}</span>
+          <button
+            type="button"
+            class="roundbtn selclose"
+            :aria-label="t('karte.deselect')"
+            data-test="deselect"
+            @click="deselect"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12 M18 6L6 18"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="selline">{{ rowLine(selected) }}</p>
+        <p class="selstreet">
+          {{ selected.street }} · {{ selected.city }}
+          <span v-if="distanceTo(selected)"> · {{ distanceTo(selected) }}</span>
+        </p>
+        <div class="selactions">
+          <a
+            v-if="selectedRouteHref"
+            :href="selectedRouteHref"
+            class="selroute"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 11l19-8-8 19-2.5-8.5z"></path>
+            </svg>
+            {{ t('detail.route') }}
+          </a>
+          <button type="button" class="seldetails" data-test="selection-details" @click="openDetail(selected.id)">
+            {{ t('karte.details') }}
+          </button>
+        </div>
       </div>
 
       <template v-else-if="items">
@@ -285,6 +429,8 @@ function useLocation() {
           </svg>
         </button>
       </template>
+
+      <p v-if="selected && geoHint" class="geohint">{{ geoHint }}</p>
     </div>
   </div>
 </template>
@@ -306,6 +452,84 @@ function useLocation() {
   min-height: 300px;
   background: #e9e5d8;
   z-index: 1;
+}
+
+/* Leaflet pins (divIcon) */
+.map :deep(.pin-wrap) {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.map :deep(.pin-inner) {
+  pointer-events: none;
+}
+
+.map :deep(.pin-selected) {
+  z-index: 700 !important;
+}
+
+/* user location: pulsing blue dot */
+.map :deep(.userdot-wrap) {
+  background: none;
+  border: none;
+}
+
+.map :deep(.userdot-core) {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #3b6ea5;
+  border: 2.5px solid #fdfcf8;
+  box-shadow: 0 1px 4px rgba(34, 48, 31, 0.4);
+}
+
+.map :deep(.userdot-pulse) {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(59, 110, 165, 0.45);
+  animation: userdot-pulse 2s ease-out infinite;
+}
+
+@keyframes userdot-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map :deep(.userdot-pulse) {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* zoom control: house style, ≥44px targets, clear of the sheet overlap */
+.map :deep(.leaflet-control-zoom) {
+  margin-bottom: 44px;
+  margin-inline-end: 12px;
+  border: none;
+  box-shadow: 0 3px 12px rgba(34, 48, 31, 0.18);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.map :deep(.leaflet-control-zoom a) {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 20px;
+  color: var(--ink);
+  background: var(--surface);
 }
 
 .map-topbar {
@@ -382,6 +606,88 @@ function useLocation() {
 
 .sheet-offline {
   margin: 0 0 10px 0;
+}
+
+/* selection card */
+.selcard {
+  padding: 2px 0 6px 0;
+}
+
+.selhead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selname {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  font-size: 18px;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.selclose {
+  background: var(--gray-soft);
+  width: 36px;
+  height: 36px;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--gray-ink);
+}
+
+.selline {
+  font-size: 13px;
+  color: var(--ink);
+  margin: 4px 0 0 0;
+}
+
+.selstreet {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 2px 0 0 0;
+}
+
+.selactions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.selroute {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1.5px solid #cfcaba;
+  border-radius: 999px;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 44px;
+  color: var(--ink);
+}
+
+.selroute:hover {
+  color: var(--ink);
+}
+
+.seldetails {
+  flex: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--green);
+  color: var(--surface);
+  border-radius: 999px;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 44px;
+  box-shadow: 0 4px 12px rgba(47, 125, 84, 0.3);
 }
 
 .sk-head {

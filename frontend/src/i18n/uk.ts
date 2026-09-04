@@ -76,6 +76,11 @@ const uk: Messages = {
   'karte.geoUnsupported': 'Геолокація недоступна в цьому браузері.',
   'karte.geoDenied': 'Місцезнаходження недоступне – сортування без відстані.',
 
+  'karte.osmContributors': ' – учасники',
+  'karte.details': 'Докладніше',
+  'karte.deselect': 'Закрити вибір',
+  'karte.farAway': 'Схоже, ти далеко – мапа залишається біля Fairteiler.',
+
   'liste.title': 'Усі Fairteiler',
   'liste.subtitle': 'Точки в Аахені та околицях',
   'liste.summary': '{total} точок в Аахені та околицях · {reported} зі свіжим повідомленням',

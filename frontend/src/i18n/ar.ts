@@ -76,6 +76,11 @@ const ar: Messages = {
   'karte.geoUnsupported': 'تحديد الموقع غير متاح في هذا المتصفح.',
   'karte.geoDenied': 'الموقع غير متاح – الترتيب بدون مسافة.',
 
+  'karte.osmContributors': ' المساهمون',
+  'karte.details': 'التفاصيل',
+  'karte.deselect': 'إغلاق التحديد',
+  'karte.farAway': 'يبدو أنك بعيد – تبقى الخريطة عند الـ Fairteiler.',
+
   'liste.title': 'كل الـ Fairteiler',
   'liste.subtitle': 'مواقع في آخن وما حولها',
   'liste.summary': '{total} موقعًا في آخن وما حولها · {reported} منها ببلاغ حديث',

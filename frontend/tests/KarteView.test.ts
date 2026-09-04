@@ -7,43 +7,82 @@ import { jsonResponse, makeFairteiler } from './fixtures'
 const leaflet = vi.hoisted(() => {
   interface MarkerRecord {
     latlng: [number, number]
-    options: Record<string, unknown>
+    options: Record<string, unknown> & { icon?: { html?: string; className?: string } }
     handlers: Record<string, () => void>
     element: HTMLElement
+    removed: boolean
+  }
+  interface CircleRecord {
+    latlng: [number, number]
+    options: Record<string, unknown>
+    removed: boolean
   }
   const markers: MarkerRecord[] = []
-  const mapObj = { fitBounds: vi.fn(), remove: vi.fn() }
+  const circles: CircleRecord[] = []
+  const mapHandlers: Record<string, () => void> = {}
+  const mapObj = {
+    fitBounds: vi.fn(),
+    remove: vi.fn(),
+    flyTo: vi.fn(),
+    on: vi.fn((event: string, cb: () => void) => {
+      mapHandlers[event] = cb
+    }),
+  }
   const layerGroup = {
     addTo: vi.fn(),
-    clearLayers: vi.fn(),
+    clearLayers: vi.fn(() => {
+      markers.length = 0
+    }),
     addLayer: vi.fn(),
   }
   layerGroup.addTo.mockReturnValue(layerGroup)
   const tileLayerObj = { addTo: vi.fn() }
+  const zoomControl = { addTo: vi.fn() }
   const L = {
     map: vi.fn(() => mapObj),
     tileLayer: vi.fn(() => tileLayerObj),
     layerGroup: vi.fn(() => layerGroup),
     latLngBounds: vi.fn((points: [number, number][]) => points),
     point: vi.fn((x: number, y: number) => ({ x, y })),
-    circleMarker: vi.fn((latlng: [number, number], options: Record<string, unknown>) => {
-      const element = document.createElement('path')
-      const record: MarkerRecord = { latlng, options, handlers: {}, element }
-      markers.push(record)
-      const marker = {
-        on(event: string, cb: () => void) {
-          record.handlers[event] = cb
-          return marker
-        },
-        bindTooltip: () => marker,
-        addTo: () => marker,
-        remove: vi.fn(),
-        getElement: () => element,
+    divIcon: vi.fn((options: Record<string, unknown>) => options),
+    control: { zoom: vi.fn(() => zoomControl) },
+    marker: vi.fn(
+      (latlng: [number, number], options: Record<string, unknown>) => {
+        const element = document.createElement('div')
+        const record: (typeof markers)[number] = {
+          latlng,
+          options: options as (typeof markers)[number]['options'],
+          handlers: {},
+          element,
+          removed: false,
+        }
+        markers.push(record)
+        const marker = {
+          on(event: string, cb: () => void) {
+            record.handlers[event] = cb
+            return marker
+          },
+          addTo: () => marker,
+          remove: vi.fn(() => {
+            record.removed = true
+          }),
+          getElement: () => element,
+        }
+        return marker
+      },
+    ),
+    circle: vi.fn((latlng: [number, number], options: Record<string, unknown>) => {
+      const record: (typeof circles)[number] = { latlng, options, removed: false }
+      circles.push(record)
+      return {
+        addTo: () => record,
+        remove: vi.fn(() => {
+          record.removed = true
+        }),
       }
-      return marker
     }),
   }
-  return { L, markers, mapObj, layerGroup }
+  return { L, markers, circles, mapObj, mapHandlers, layerGroup, zoomControl }
 })
 
 vi.mock('leaflet', () => ({ default: leaflet.L }))
@@ -91,13 +130,11 @@ function mountKarte() {
   return mount(KarteView, { global: { stubs: { RouterLink: RouterLinkStub } } })
 }
 
-/** Hit markers are the invisible radius-22 circles carrying the click handler. */
-function hitMarkers() {
-  return leaflet.markers.filter((m) => m.options['radius'] === 22)
-}
-
-function visualMarkers() {
-  return leaflet.markers.filter((m) => m.options['radius'] === 10)
+/** Fairteiler pins = markers whose icon carries the pin class. */
+function pins() {
+  return leaflet.markers.filter((m) =>
+    String(m.options.icon?.className ?? '').includes('pin-wrap'),
+  )
 }
 
 beforeEach(() => {
@@ -106,6 +143,8 @@ beforeEach(() => {
   localStorage.clear()
   resetFilters()
   leaflet.markers.length = 0
+  leaflet.circles.length = 0
+  for (const key of Object.keys(leaflet.mapHandlers)) delete leaflet.mapHandlers[key]
   vi.clearAllMocks()
   fetchMock.mockImplementation(() => Promise.resolve(jsonResponse(LIST)))
 })
@@ -115,85 +154,126 @@ afterEach(() => {
   fetchMock.mockReset()
 })
 
-describe('KarteView (Leaflet)', () => {
-  it('creates the map with basemap.de tiles, attribution and fitted bounds', async () => {
+describe('KarteView (OSM tiles + navigation-like interaction)', () => {
+  it('creates the map with OSM Germany tiles, attribution and a zoom control', async () => {
     mountKarte()
     await flushPromises()
 
-    expect(leaflet.L.map).toHaveBeenCalledTimes(1)
     const [url, options] = leaflet.L.tileLayer.mock.calls[0]!
-    expect(url).toBe(
-      'https://sgx.geodatenzentrum.de/wmts_basemapde/tile/1.0.0/de_basemapde_web_raster_farbe/default/GLOBAL_WEBMERCATOR/{z}/{y}/{x}.png',
-    )
-    expect(options.maxZoom).toBe(18)
-    expect(options.attribution).toContain('basemap.de')
-    expect(options.attribution).toContain('BKG')
+    expect(url).toBe('https://tile.openstreetmap.de/{z}/{x}/{y}.png')
+    expect(options.maxZoom).toBe(19)
+    expect(options.attribution).toContain('openstreetmap.org/copyright')
+    expect(options.attribution).toContain('OpenStreetMap')
+    expect(options.attribution).toContain('Mitwirkende')
+    expect(leaflet.L.control.zoom).toHaveBeenCalledWith({ position: 'bottomright' })
+    expect(leaflet.zoomControl.addTo).toHaveBeenCalled()
     expect(leaflet.mapObj.fitBounds).toHaveBeenCalled()
   })
 
-  it('renders a status-colored marker plus a 44px hit circle per fairteiler', async () => {
+  it('renders one teardrop pin per fairteiler, status-colored and named', async () => {
     mountKarte()
     await flushPromises()
 
-    const visuals = visualMarkers()
-    expect(visuals).toHaveLength(3)
-    expect(hitMarkers()).toHaveLength(3)
-
-    expect(visuals[0]!.options['fillColor']).toBe('#2f7d54') // etwas_da
-    expect(visuals[1]!.options['fillColor']).toBe('#6b7570') // leer
-    expect(visuals[2]!.options['fillColor']).toBe('#c08a1e') // keine_meldung
-    for (const visual of visuals) {
-      expect(visual.options['color']).toBe('#fdfcf8')
+    const rendered = pins()
+    expect(rendered).toHaveLength(3)
+    // status colors live in the divIcon svg (graphics palette, not retinted)
+    expect(rendered[0]!.options.icon?.html).toContain('#2f7d54') // etwas_da
+    expect(rendered[1]!.options.icon?.html).toContain('#6b7570') // leer
+    expect(rendered[2]!.options.icon?.html).toContain('#c08a1e') // keine_meldung
+    for (const pin of rendered) {
+      expect(pin.options.icon?.html).toContain('<svg')
+      expect(pin.element.getAttribute('role')).toBe('button')
+      expect(pin.element.getAttribute('tabindex')).toBe('0')
     }
-    for (const hit of hitMarkers()) {
-      expect(hit.options['fillOpacity']).toBe(0)
-    }
-
-    // axe: interactive marker paths carry a name and role
-    expect(hitMarkers()[0]!.element.getAttribute('role')).toBe('button')
-    expect(hitMarkers()[0]!.element.getAttribute('aria-label')).toBe('Hirschgrün')
-    expect(hitMarkers()[0]!.element.getAttribute('tabindex')).toBe('0')
+    expect(rendered[0]!.element.getAttribute('aria-label')).toBe('Hirschgrün')
   })
 
-  it('opens the detail route when a marker is tapped', async () => {
-    mountKarte()
+  it('first tap selects (flyTo + card + bigger pin), second tap opens details', async () => {
+    const wrapper = mountKarte()
     await flushPromises()
 
-    hitMarkers()[1]!.handlers['click']!()
+    pins()[1]!.handlers['click']!()
+    await flushPromises()
+
+    // flew to the marker at selection zoom
+    expect(leaflet.mapObj.flyTo).toHaveBeenCalledWith([50.78, 6.09], 16, {
+      animate: true,
+    })
+    // no navigation yet
+    expect(routerPush).not.toHaveBeenCalled()
+
+    // sheet shows the selection card with Route + Details
+    const card = wrapper.find('[data-test="selection-card"]')
+    expect(card.exists()).toBe(true)
+    expect(card.text()).toContain('Kleinkölnstraße')
+    expect(card.text()).toContain('Leer gemeldet')
+    const route = card.find('a.selroute')
+    expect(route.attributes('rel')).toBe('noopener noreferrer')
+    expect(route.attributes('href')).toContain('50.78')
+
+    // selected pin is re-rendered larger with the selected class
+    const selectedPin = pins().find((p) =>
+      String(p.options.icon?.className).includes('pin-selected'),
+    )
+    expect(selectedPin).toBeTruthy()
+    expect(selectedPin!.latlng).toEqual([50.78, 6.09])
+
+    // selection is announced for AT
+    expect(wrapper.find('[role="status"]').text()).toContain('Kleinkölnstraße')
+
+    // second tap on the same pin → details
+    const samePin = pins().find((p) => p.latlng[0] === 50.78)!
+    samePin.handlers['click']!()
     expect(routerPush).toHaveBeenCalledWith('/fairteiler/2')
   })
 
-  it('filter chips reduce the rendered markers and rows', async () => {
+  it('Details button navigates, X and map tap deselect', async () => {
+    const wrapper = mountKarte()
+    await flushPromises()
+
+    pins()[0]!.handlers['click']!()
+    await flushPromises()
+    await wrapper.find('[data-test="selection-details"]').trigger('click')
+    expect(routerPush).toHaveBeenCalledWith('/fairteiler/1')
+
+    // X closes the card
+    await wrapper.find('[data-test="deselect"]').trigger('click')
+    expect(wrapper.find('[data-test="selection-card"]').exists()).toBe(false)
+    expect(wrapper.text()).toContain('Hirschgrün') // top-3 list is back
+
+    // select again, then tap empty map
+    pins()[0]!.handlers['click']!()
+    await flushPromises()
+    expect(wrapper.find('[data-test="selection-card"]').exists()).toBe(true)
+    leaflet.mapHandlers['click']!()
+    await flushPromises()
+    expect(wrapper.find('[data-test="selection-card"]').exists()).toBe(false)
+  })
+
+  it('filter chips reduce the rendered pins and rows', async () => {
     const wrapper = mountKarte()
     await flushPromises()
 
     expect(wrapper.findAll('.nearrow')).toHaveLength(3)
 
-    leaflet.markers.length = 0
     const etwasDaChip = wrapper
       .findAll('.filterchip')
       .find((c) => c.text() === 'Etwas da')!
     await etwasDaChip.trigger('click')
     await flushPromises()
 
-    expect(etwasDaChip.attributes('aria-pressed')).toBe('true')
-    expect(hitMarkers()).toHaveLength(1)
-    expect(visualMarkers()[0]!.options['fillColor']).toBe('#2f7d54')
+    expect(pins()).toHaveLength(1)
+    expect(pins()[0]!.options.icon?.html).toContain('#2f7d54')
     const rows = wrapper.findAll('.nearrow')
     expect(rows).toHaveLength(1)
     expect(rows[0]!.text()).toContain('Hirschgrün')
-
-    // AND with a second chip that matches nothing reported
-    const cooledChip = wrapper.findAll('.filterchip').find((c) => c.text() === 'Gekühlt')!
-    await cooledChip.trigger('click')
-    await flushPromises()
-    expect(wrapper.findAll('.nearrow')).toHaveLength(0)
-    expect(wrapper.text()).toContain('Keine Fairteiler entsprechen den gewählten Filtern.')
   })
 
-  it('shows the user dot and sorts rows by distance after geolocation', async () => {
+  it('locating flies to the fix and shows the pulsing dot with accuracy circle', async () => {
     const getCurrentPosition = vi.fn((success: PositionCallback) => {
-      success({ coords: { latitude: 50.761, longitude: 6.099 } } as GeolocationPosition)
+      success({
+        coords: { latitude: 50.761, longitude: 6.099, accuracy: 40 },
+      } as GeolocationPosition)
     })
     vi.stubGlobal('navigator', { geolocation: { getCurrentPosition }, onLine: true })
 
@@ -203,13 +283,65 @@ describe('KarteView (Leaflet)', () => {
     await wrapper.find('.locbtn').trigger('click')
     await flushPromises()
 
-    const userDot = leaflet.markers.find((m) => m.options['fillColor'] === '#3b6ea5')
+    expect(leaflet.mapObj.flyTo).toHaveBeenCalledWith([50.761, 6.099], 15, {
+      animate: true,
+    })
+    const userDot = leaflet.markers.find((m) =>
+      String(m.options.icon?.className).includes('userdot-wrap'),
+    )
     expect(userDot).toBeTruthy()
     expect(userDot!.latlng).toEqual([50.761, 6.099])
+    expect(userDot!.options.icon?.html).toContain('userdot-pulse')
 
+    expect(leaflet.circles).toHaveLength(1)
+    expect(leaflet.circles[0]!.options['radius']).toBe(40)
+
+    // distance sorting still applies
     const rows = wrapper.findAll('.nearrow')
     expect(rows[0]!.text()).toContain('Pfannenzauber')
     expect(rows[0]!.text()).toMatch(/\d+ m|\d+,\d km/)
+  })
+
+  it('caps the visual accuracy radius', async () => {
+    const getCurrentPosition = vi.fn((success: PositionCallback) => {
+      success({
+        coords: { latitude: 50.761, longitude: 6.099, accuracy: 5000 },
+      } as GeolocationPosition)
+    })
+    vi.stubGlobal('navigator', { geolocation: { getCurrentPosition }, onLine: true })
+
+    const wrapper = mountKarte()
+    await flushPromises()
+    await wrapper.find('.locbtn').trigger('click')
+    await flushPromises()
+
+    expect(leaflet.circles[0]!.options['radius']).toBe(200)
+  })
+
+  it('does not fly when the fix is far from the region, shows the far-away hint', async () => {
+    const getCurrentPosition = vi.fn((success: PositionCallback) => {
+      // Berlin – way beyond 100km from Aachen
+      success({
+        coords: { latitude: 52.52, longitude: 13.405, accuracy: 30 },
+      } as GeolocationPosition)
+    })
+    vi.stubGlobal('navigator', { geolocation: { getCurrentPosition }, onLine: true })
+
+    const wrapper = mountKarte()
+    await flushPromises()
+    await wrapper.find('.locbtn').trigger('click')
+    await flushPromises()
+
+    expect(leaflet.mapObj.flyTo).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain(
+      'Du scheinst weiter weg zu sein – Karte bleibt bei den Fairteilern.',
+    )
+    // dot still shown, distances still sorted
+    expect(
+      leaflet.markers.some((m) =>
+        String(m.options.icon?.className).includes('userdot-wrap'),
+      ),
+    ).toBe(true)
   })
 
   it('shows a German hint when geolocation is denied', async () => {
@@ -230,7 +362,9 @@ describe('KarteView (Leaflet)', () => {
 
   it('asks for location automatically only when the setting is on', async () => {
     const getCurrentPosition = vi.fn((success: PositionCallback) => {
-      success({ coords: { latitude: 50.76, longitude: 6.09 } } as GeolocationPosition)
+      success({
+        coords: { latitude: 50.76, longitude: 6.09, accuracy: 25 },
+      } as GeolocationPosition)
     })
     vi.stubGlobal('navigator', { geolocation: { getCurrentPosition }, onLine: true })
 
@@ -243,5 +377,8 @@ describe('KarteView (Leaflet)', () => {
     mountKarte()
     await flushPromises()
     expect(getCurrentPosition).toHaveBeenCalledTimes(1)
+    expect(leaflet.mapObj.flyTo).toHaveBeenCalledWith([50.76, 6.09], 15, {
+      animate: true,
+    })
   })
 })

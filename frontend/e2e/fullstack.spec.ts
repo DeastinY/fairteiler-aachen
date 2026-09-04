@@ -60,7 +60,7 @@ async function proxyApi(page: Page) {
       body: response.status === 204 ? '' : await response.text(),
     })
   })
-  await page.route('https://sgx.geodatenzentrum.de/**', (route) => route.abort())
+  await page.route('https://tile.openstreetmap.de/**', (route) => route.abort())
 }
 
 test('real journey: list → detail → report → status flips → undo → rate limit', async ({ page }) => {

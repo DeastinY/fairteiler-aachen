@@ -51,11 +51,11 @@ registerRoute(
   }),
 )
 
-// basemap.de tiles: CacheFirst so revisits and offline show the last tiles.
+// OSM (FOSSGIS) tiles: CacheFirst so revisits and offline show the last tiles.
 // A failing tile request never breaks the app – the map just stays gray.
 registerRoute(
   ({ url, request }) =>
-    request.method === 'GET' && url.hostname === 'sgx.geodatenzentrum.de',
+    request.method === 'GET' && url.hostname === 'tile.openstreetmap.de',
   new CacheFirst({
     cacheName: 'basemap-tiles',
     plugins: [

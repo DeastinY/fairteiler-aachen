@@ -90,6 +90,11 @@ const de = {
   'karte.geoDenied': 'Standort nicht verfügbar – Sortierung ohne Entfernung.',
 
   // Liste
+  'karte.osmContributors': '-Mitwirkende',
+  'karte.details': 'Details',
+  'karte.deselect': 'Auswahl schließen',
+  'karte.farAway': 'Du scheinst weiter weg zu sein – Karte bleibt bei den Fairteilern.',
+
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Standorte in Aachen und Umgebung',
   'liste.summary': '{total} Standorte in Aachen und Umgebung · {reported} mit aktueller Meldung',

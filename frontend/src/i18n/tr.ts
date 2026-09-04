@@ -76,6 +76,11 @@ const tr: Messages = {
   'karte.geoUnsupported': 'Bu tarayıcıda konum kullanılamıyor.',
   'karte.geoDenied': 'Konum alınamadı – mesafesiz sıralama yapılıyor.',
 
+  'karte.osmContributors': ' katkıda bulunanlar',
+  'karte.details': 'Detaylar',
+  'karte.deselect': 'Seçimi kapat',
+  'karte.farAway': 'Uzakta görünüyorsun – harita Fairteiler\'lerde kalıyor.',
+
   'liste.title': 'Tüm Fairteiler',
   'liste.subtitle': 'Aachen ve çevresindeki noktalar',
   'liste.summary': 'Aachen ve çevresinde {total} nokta · {reported} tanesinde güncel bildirim',

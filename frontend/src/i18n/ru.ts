@@ -76,6 +76,11 @@ const ru: Messages = {
   'karte.geoUnsupported': 'Геолокация недоступна в этом браузере.',
   'karte.geoDenied': 'Местоположение недоступно – сортировка без расстояния.',
 
+  'karte.osmContributors': ' – участники',
+  'karte.details': 'Подробнее',
+  'karte.deselect': 'Закрыть выбор',
+  'karte.farAway': 'Похоже, ты далеко – карта остаётся у Fairteiler.',
+
   'liste.title': 'Все Fairteiler',
   'liste.subtitle': 'Точки в Ахене и окрестностях',
   'liste.summary': '{total} точек в Ахене и окрестностях · {reported} со свежим сообщением',

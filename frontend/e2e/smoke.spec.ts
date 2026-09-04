@@ -35,7 +35,7 @@ const FAIRTEILER = [
 
 async function hermetic(page: Page) {
   // keep e2e offline-clean: no tile server, mocked API
-  await page.route('https://sgx.geodatenzentrum.de/**', (route) => route.abort())
+  await page.route('https://tile.openstreetmap.de/**', (route) => route.abort())
   await page.route('**/api/fairteiler', (route) =>
     route.fulfill({ json: FAIRTEILER }),
   )
@@ -77,15 +77,21 @@ test('welcome overlay sits above the map and dismisses cleanly', async ({ page }
     .toBe(2)
 })
 
-test('map markers navigate to the detail view', async ({ page }) => {
+test('map markers select first, then navigate via Details', async ({ page }) => {
   await hermetic(page)
   await page.goto('/')
   const start = page.locator('[data-test="welcome-start"]')
   if (await start.isVisible().catch(() => false)) await start.click()
 
-  const markers = page.locator('path.leaflet-interactive')
+  const markers = page.locator('.pin-wrap')
   await expect(markers.first()).toBeAttached()
   await markers.first().click({ force: true })
+
+  // first tap selects: sheet shows the selection card, no navigation yet
+  await expect(page.locator('[data-test="selection-card"]')).toBeVisible()
+  await expect(page).toHaveURL(/\/$/)
+
+  await page.locator('[data-test="selection-details"]').click()
   await expect(page).toHaveURL(/\/fairteiler\/\d+/)
 })
 

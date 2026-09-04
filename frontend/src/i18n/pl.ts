@@ -76,6 +76,11 @@ const pl: Messages = {
   'karte.geoUnsupported': 'Lokalizacja nie jest dostępna w tej przeglądarce.',
   'karte.geoDenied': 'Lokalizacja niedostępna – sortowanie bez odległości.',
 
+  'karte.osmContributors': ' – współtwórcy',
+  'karte.details': 'Szczegóły',
+  'karte.deselect': 'Zamknij wybór',
+  'karte.farAway': 'Wygląda na to, że jesteś dalej – mapa zostaje przy Fairteiler.',
+
   'liste.title': 'Wszystkie Fairteiler',
   'liste.subtitle': 'Punkty w Akwizgranie i okolicy',
   'liste.summary': '{total} punktów w Akwizgranie i okolicy · {reported} z aktualnym zgłoszeniem',

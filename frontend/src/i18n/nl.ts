@@ -76,6 +76,11 @@ const nl: Messages = {
   'karte.geoUnsupported': 'Locatie is niet beschikbaar in deze browser.',
   'karte.geoDenied': 'Locatie niet beschikbaar – sorteren zonder afstand.',
 
+  'karte.osmContributors': '-bijdragers',
+  'karte.details': 'Details',
+  'karte.deselect': 'Selectie sluiten',
+  'karte.farAway': 'Je lijkt verder weg te zijn – de kaart blijft bij de Fairteiler.',
+
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Locaties in en rond Aken',
   'liste.summary': '{total} locaties in en rond Aken · {reported} met een recente melding',

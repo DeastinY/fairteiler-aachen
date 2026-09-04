@@ -76,6 +76,11 @@ const fr: Messages = {
   'karte.geoUnsupported': "La géolocalisation n'est pas disponible dans ce navigateur.",
   'karte.geoDenied': 'Position indisponible – tri sans distance.',
 
+  'karte.osmContributors': ' contributeurs',
+  'karte.details': 'Détails',
+  'karte.deselect': 'Fermer la sélection',
+  'karte.farAway': 'Tu sembles être plus loin – la carte reste sur les Fairteiler.',
+
   'liste.title': 'Tous les Fairteiler',
   'liste.subtitle': 'Points à Aix-la-Chapelle et alentours',
   'liste.summary':
