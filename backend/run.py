@@ -24,6 +24,13 @@ def push_settings_from_env() -> PushSettings | None:
     )
 
 
+# keep fetched photos beside the database, outside the repo working tree
+from app import photos as _photos  # noqa: E402
+
+_photos.CACHE_DIR = pathlib.Path(
+    os.environ.get("FAIRTEILER_PHOTO_CACHE", str(BASE / "photo-cache"))
+)
+
 engine = make_engine(DB_URL)
 from app.db import migrate  # noqa: E402
 

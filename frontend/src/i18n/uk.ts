@@ -111,6 +111,8 @@ const uk: Messages = {
   'detail.about': 'Про цей Fairteiler',
   'detail.descriptionSource': 'Опис із foodsharing.de (німецькою)',
   'detail.fsLink': 'Відкрити на foodsharing.de',
+  'detail.photoAlt': 'Фото: {name}',
+  'detail.photoCredit': 'Фото: foodsharing.de',
   'detail.reports': 'Останні повідомлення',
   'detail.noReports': 'Повідомлень ще немає – твоє повідомлення може стати першим!',
   'detail.undo': 'Скасувати',

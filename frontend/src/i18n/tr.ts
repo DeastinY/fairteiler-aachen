@@ -111,6 +111,8 @@ const tr: Messages = {
   'detail.about': 'Bu Fairteiler hakkında',
   'detail.descriptionSource': "Açıklama foodsharing.de'den (Almanca)",
   'detail.fsLink': "foodsharing.de'de görüntüle",
+  'detail.photoAlt': '{name} fotoğrafı',
+  'detail.photoCredit': 'Fotoğraf: foodsharing.de',
   'detail.reports': 'Son bildirimler',
   'detail.noReports': 'Henüz bildirim yok – ilk sen ol!',
   'detail.undo': 'Geri al',

@@ -28,6 +28,7 @@ export function makeDetail(overrides: Partial<FairteilerDetail> = {}): Fairteile
     regionName: 'Aachen',
     picture: null,
     hours: null,
+    photoUrl: null,
     bestTime: null,
     reports: [],
     ...overrides,

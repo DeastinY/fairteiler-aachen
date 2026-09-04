@@ -44,7 +44,8 @@ import LegalPage from '../components/LegalPage.vue'
       <li>
         <a href="https://foodsharing.de" target="_blank" rel="noopener noreferrer">foodsharing.de</a>
         – die Plattform und Community, die die Fairteiler überhaupt erst
-        möglich macht; von dort stammen die Stammdaten der Standorte.
+        möglich macht; von dort stammen die Stammdaten und die Fotos der
+        Standorte.
       </li>
       <li>
         <a href="https://uberspace.de" target="_blank" rel="noopener noreferrer">Uberspace</a>

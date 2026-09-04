@@ -111,6 +111,8 @@ const nl: Messages = {
   'detail.about': 'Over deze Fairteiler',
   'detail.descriptionSource': 'Beschrijving van foodsharing.de (in het Duits)',
   'detail.fsLink': 'Bekijken op foodsharing.de',
+  'detail.photoAlt': 'Foto van {name}',
+  'detail.photoCredit': 'Foto: foodsharing.de',
   'detail.reports': 'Laatste meldingen',
   'detail.noReports': 'Nog geen meldingen – wees de eerste!',
   'detail.undo': 'Intrekken',

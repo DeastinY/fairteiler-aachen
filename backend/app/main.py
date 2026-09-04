@@ -1,13 +1,23 @@
 import datetime as dt
 from typing import Literal
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Path
+from fastapi import Depends, FastAPI, Header, HTTPException, Path, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import baskets as baskets_mod, crud, hours as hours_mod, maintenance, push, seed, status, usage
+from app import (
+    baskets as baskets_mod,
+    crud,
+    hours as hours_mod,
+    maintenance,
+    photos as photos_mod,
+    push,
+    seed,
+    status,
+    usage,
+)
 from app.models import FOOD_TAGS, Fairteiler, PushSubscription
 from app.push import PushSettings
 
@@ -93,6 +103,9 @@ def create_app(
             data["regionName"] = row.region_name
             data["picture"] = row.picture
             data["hours"] = row.hours
+            data["photoUrl"] = (
+                f"/api/fairteiler/{row.id}/photo" if row.picture else None
+            )
             data["reports"] = [
                 {
                     "id": r.id,
@@ -201,6 +214,22 @@ def create_app(
             crud.recent_reports(session, row.id, days=90)
         )
         return data
+
+    @app.get("/api/fairteiler/{fairteiler_id}/photo")
+    def fairteiler_photo(
+        fairteiler_id: int = Path(ge=1, le=2_000_000_000),
+        session: Session = Depends(get_session),
+    ):
+        row = get_fairteiler_or_404(session, fairteiler_id)
+        result = photos_mod.get_photo(row.id, row.picture)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Kein Foto vorhanden")
+        data, content_type = result
+        return Response(
+            content=data,
+            media_type=content_type,
+            headers={"Cache-Control": "public, max-age=604800"},
+        )
 
     @app.post("/api/fairteiler/{fairteiler_id}/reports", status_code=201)
     def create_report(

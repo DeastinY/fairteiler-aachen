@@ -111,6 +111,8 @@ const ru: Messages = {
   'detail.about': 'Об этом Fairteiler',
   'detail.descriptionSource': 'Описание с foodsharing.de (на немецком)',
   'detail.fsLink': 'Открыть на foodsharing.de',
+  'detail.photoAlt': 'Фото: {name}',
+  'detail.photoCredit': 'Фото: foodsharing.de',
   'detail.reports': 'Последние сообщения',
   'detail.noReports': 'Сообщений пока нет – твоё сообщение может стать первым!',
   'detail.undo': 'Отменить',

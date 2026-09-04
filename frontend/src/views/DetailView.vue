@@ -6,6 +6,7 @@ import SkeletonBlock from '../components/SkeletonBlock.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import { ApiError, deleteReport, fetchFairteilerDetail } from '../composables/api'
+import { apiUrl } from '../lib/apiBase'
 import { renderMarkdown } from '../lib/markdown'
 import { forgetOwnReport, isOwnReport } from '../composables/ownReports'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
@@ -101,6 +102,14 @@ function reportTitle(report: Report): string {
   const tags = tagLabels(report.tags)
   return tags ? `${label} · ${tags}` : label
 }
+
+const photoFailed = ref(false)
+const photoUrl = computed(() =>
+  detail.value?.photoUrl && !photoFailed.value ? apiUrl(detail.value.photoUrl) : null,
+)
+watch(() => detail.value?.id, () => {
+  photoFailed.value = false
+})
 
 const undoing = ref(false)
 
@@ -198,7 +207,15 @@ function goBack() {
   <div class="page">
     <!-- hero -->
     <div class="hero">
-      <svg viewBox="0 0 390 190" aria-hidden="true">
+      <img
+        v-if="photoUrl"
+        :src="photoUrl"
+        class="heroimg"
+        :alt="t('detail.photoAlt', { name: detail?.name ?? '' })"
+        data-test="hero-photo"
+        @error="photoFailed = true"
+      />
+      <svg v-else viewBox="0 0 390 190" aria-hidden="true">
         <rect width="390" height="190" fill="#2f7d54"></rect>
         <path d="M0 190 C80 120 160 150 230 110 C300 70 350 90 390 60 L390 190 Z" fill="#266645"></path>
         <path d="M0 190 C110 160 210 180 300 150 C350 134 380 140 390 132 L390 190 Z" fill="#1d5236"></path>
@@ -211,6 +228,7 @@ function goBack() {
         <circle cx="196" cy="66" r="30" fill="none" stroke="#8fc3a4" stroke-width="2.5"></circle>
         <path d="M182 66 C186 56 206 56 210 66 C206 76 186 76 182 66 Z" fill="#8fc3a4"></path>
       </svg>
+      <span v-if="photoUrl" class="herocredit">{{ t('detail.photoCredit') }}</span>
       <button type="button" class="roundbtn backbtn" :aria-label="t('common.back')" @click="goBack">
         <svg class="dir-flip" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
@@ -466,6 +484,26 @@ function goBack() {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.heroimg {
+  display: block;
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  background: var(--green);
+}
+
+.herocredit {
+  position: absolute;
+  inset-inline-end: 12px;
+  bottom: 10px;
+  background: rgba(29, 82, 54, 0.72);
+  color: #dceee2;
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .backbtn {

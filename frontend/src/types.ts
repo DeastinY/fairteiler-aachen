@@ -86,6 +86,7 @@ export interface FairteilerDetail extends FairteilerListItem {
   regionName: string
   picture: string | null
   hours: OpeningHours | null
+  photoUrl: string | null
   /** Time of day food usually arrives – null when the data is too thin. */
   bestTime: BestTime | null
   reports: Report[]

@@ -111,6 +111,8 @@ const ar: Messages = {
   'detail.about': 'عن هذا الـ Fairteiler',
   'detail.descriptionSource': 'الوصف من foodsharing.de (بالألمانية)',
   'detail.fsLink': 'عرض على foodsharing.de',
+  'detail.photoAlt': 'صورة {name}',
+  'detail.photoCredit': 'الصورة: foodsharing.de',
   'detail.reports': 'آخر البلاغات',
   'detail.noReports': 'لا بلاغات بعد – كن أول من يبلّغ!',
   'detail.undo': 'تراجع',

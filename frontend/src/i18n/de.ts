@@ -126,6 +126,8 @@ const de = {
   'detail.about': 'Über diesen Fairteiler',
   'detail.descriptionSource': 'Beschreibung von foodsharing.de (auf Deutsch)',
   'detail.fsLink': 'Auf foodsharing.de ansehen',
+  'detail.photoAlt': 'Foto von {name}',
+  'detail.photoCredit': 'Foto: foodsharing.de',
   'detail.reports': 'Letzte Meldungen',
   'detail.noReports': 'Noch keine Meldungen – sei die erste Person!',
   'detail.undo': 'Zurücknehmen',

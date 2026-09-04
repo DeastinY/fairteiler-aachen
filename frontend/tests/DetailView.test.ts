@@ -50,6 +50,28 @@ afterEach(() => {
 })
 
 describe('DetailView', () => {
+  it('shows the cached Fairteiler photo and falls back when it fails', async () => {
+    fetchMock.mockImplementation((url: string) =>
+      url === '/api/fairteiler/810'
+        ? Promise.resolve(
+            jsonResponse(makeDetail({ id: 810, photoUrl: '/api/fairteiler/810/photo' })),
+          )
+        : Promise.reject(new Error(`unexpected fetch: ${url}`)),
+    )
+    const wrapper = mountDetail()
+    await flushPromises()
+
+    const img = wrapper.find('[data-test="hero-photo"]')
+    expect(img.exists()).toBe(true)
+    expect(img.attributes('src')).toBe('/api/fairteiler/810/photo')
+    expect(wrapper.text()).toContain('Foto: foodsharing.de')
+
+    // a broken image falls back to the decorative hero, never a broken icon
+    await img.trigger('error')
+    expect(wrapper.find('[data-test="hero-photo"]').exists()).toBe(false)
+    expect(wrapper.find('.hero svg').exists()).toBe(true)
+  })
+
   it('renders name, escaped description paragraphs and German report labels', async () => {
     const wrapper = mountDetail()
     await flushPromises()

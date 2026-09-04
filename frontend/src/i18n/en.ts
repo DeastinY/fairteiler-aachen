@@ -111,6 +111,8 @@ const en: Messages = {
   'detail.about': 'About this Fairteiler',
   'detail.descriptionSource': 'Description from foodsharing.de (in German)',
   'detail.fsLink': 'View on foodsharing.de',
+  'detail.photoAlt': 'Photo of {name}',
+  'detail.photoCredit': 'Photo: foodsharing.de',
   'detail.reports': 'Recent reports',
   'detail.noReports': 'No reports yet – be the first!',
   'detail.undo': 'Undo',
