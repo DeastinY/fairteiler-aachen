@@ -70,6 +70,7 @@ const pl: Messages = {
   'filters.aria': 'Filtry',
 
   'karte.mapAria': 'Mapa Fairteiler w Akwizgranie',
+  'karte.sheetToggle': 'Zwiń lub rozwiń listę',
   'karte.locate': 'Użyj mojej lokalizacji',
   'karte.locating': 'Szukanie …',
   'karte.nearby': 'W pobliżu',

@@ -83,6 +83,7 @@ const de = {
 
   // Karte
   'karte.mapAria': 'Karte der Fairteiler in Aachen',
+  'karte.sheetToggle': 'Liste ein- oder ausklappen',
   'karte.locate': 'Standort verwenden',
   'karte.locating': 'Suche …',
   'karte.nearby': 'In deiner Nähe',

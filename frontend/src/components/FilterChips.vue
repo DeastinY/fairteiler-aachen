@@ -35,6 +35,11 @@ const chips = computed<Chip[]>(() =>
     : BASE_CHIPS,
 )
 
+const EMOJI: Record<NonNullable<Chip['icon']>, string> = {
+  snow: '🧊',
+  basket: '🧺',
+}
+
 function label(chip: Chip): string {
   return t(chip.shortKey ?? chip.labelKey)
 }
@@ -58,35 +63,7 @@ function toggle(key: keyof FairteilerFilter) {
       :title="chip.icon ? t(chip.labelKey) : undefined"
       @click="toggle(chip.key)"
     >
-      <svg
-        v-if="chip.icon === 'snow'"
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        aria-hidden="true"
-      >
-        <path d="M12 3v18 M4.2 7.5l15.6 9 M19.8 7.5l-15.6 9" />
-        <path d="M12 6.5 9.8 4.6M12 6.5l2.2-1.9M12 17.5l-2.2 1.9M12 17.5l2.2 1.9" />
-      </svg>
-      <svg
-        v-else-if="chip.icon === 'basket'"
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M4 9h16l-1.5 10.5H5.5z" />
-        <path d="M9 9 11 4M15 9 13 4" />
-      </svg>
+      <span v-if="chip.icon" class="emoji" aria-hidden="true">{{ EMOJI[chip.icon] }}</span>
       <span v-else>{{ label(chip) }}</span>
     </button>
   </div>
@@ -125,6 +102,11 @@ function toggle(key: keyof FairteilerFilter) {
 .filterchip.iconchip {
   width: 44px;
   padding: 0;
+}
+
+.emoji {
+  font-size: 19px;
+  line-height: 1;
 }
 
 .filterchip.active {

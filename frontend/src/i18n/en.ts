@@ -70,6 +70,7 @@ const en: Messages = {
   'filters.aria': 'Filters',
 
   'karte.mapAria': 'Map of the Fairteiler in Aachen',
+  'karte.sheetToggle': 'Collapse or expand the list',
   'karte.locate': 'Use my location',
   'karte.locating': 'Locating …',
   'karte.nearby': 'Near you',

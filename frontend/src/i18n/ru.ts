@@ -70,6 +70,7 @@ const ru: Messages = {
   'filters.aria': 'Фильтры',
 
   'karte.mapAria': 'Карта Fairteiler в Ахене',
+  'karte.sheetToggle': 'Свернуть или развернуть список',
   'karte.locate': 'Моё местоположение',
   'karte.locating': 'Ищем …',
   'karte.nearby': 'Рядом с тобой',

@@ -70,6 +70,7 @@ const nl: Messages = {
   'filters.aria': 'Filters',
 
   'karte.mapAria': 'Kaart van de Fairteiler in Aken',
+  'karte.sheetToggle': 'Lijst in- of uitklappen',
   'karte.locate': 'Mijn locatie gebruiken',
   'karte.locating': 'Zoeken …',
   'karte.nearby': 'In de buurt',

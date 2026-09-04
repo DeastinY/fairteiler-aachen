@@ -70,6 +70,7 @@ const tr: Messages = {
   'filters.aria': 'Filtreler',
 
   'karte.mapAria': "Aachen'daki Fairteiler haritası",
+  'karte.sheetToggle': 'Listeyi aç veya kapat',
   'karte.locate': 'Konumumu kullan',
   'karte.locating': 'Aranıyor …',
   'karte.nearby': 'Yakınında',

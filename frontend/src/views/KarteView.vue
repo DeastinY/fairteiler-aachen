@@ -367,6 +367,68 @@ function openDetail(id: number) {
   router.push(`/fairteiler/${id}`)
 }
 
+/* ---------------- bottom sheet: peek / default / full ---------------- */
+
+type SheetState = 'peek' | 'default' | 'full'
+const SHEET_KEY = 'fairteiler-sheet-state'
+const ORDER: SheetState[] = ['peek', 'default', 'full']
+
+function loadSheetState(): SheetState {
+  try {
+    const stored = localStorage.getItem(SHEET_KEY)
+    if (stored === 'peek' || stored === 'default' || stored === 'full') return stored
+  } catch {
+    // storage unavailable
+  }
+  return 'default'
+}
+
+const sheetState = ref<SheetState>(loadSheetState())
+const dragOffset = ref(0)
+let dragStartY: number | null = null
+
+function setSheetState(next: SheetState) {
+  sheetState.value = next
+  try {
+    localStorage.setItem(SHEET_KEY, next)
+  } catch {
+    // storage unavailable – state still applies this session
+  }
+  // Leaflet needs to know the viewport changed
+  window.setTimeout(() => map?.invalidateSize({ animate: false }), 260)
+}
+
+/** Tap on the handle cycles default → peek → default (and full → default). */
+function toggleSheet() {
+  setSheetState(sheetState.value === 'peek' ? 'default' : 'peek')
+}
+
+function onDragStart(event: PointerEvent) {
+  dragStartY = event.clientY
+  dragOffset.value = 0
+  ;(event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId)
+}
+
+function onDragMove(event: PointerEvent) {
+  if (dragStartY === null) return
+  dragOffset.value = event.clientY - dragStartY
+}
+
+function onDragEnd() {
+  if (dragStartY === null) return
+  const moved = dragOffset.value
+  dragStartY = null
+  dragOffset.value = 0
+  if (Math.abs(moved) < 24) {
+    toggleSheet() // treat as a tap
+    return
+  }
+  const index = ORDER.indexOf(sheetState.value)
+  // dragging down (positive) collapses, dragging up expands
+  const next = moved > 0 ? ORDER[Math.max(0, index - 1)] : ORDER[Math.min(2, index + 1)]
+  setSheetState(next ?? 'default')
+}
+
 function useLocation() {
   geoHint.value = null
   if (!('geolocation' in navigator)) {
@@ -403,7 +465,7 @@ function useLocation() {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page" :class="`sheet-${sheetState}`">
     <h1 class="sr-only">{{ t('nav.karte') }}</h1>
     <div class="map-area">
       <div ref="mapEl" class="map" role="region" :aria-label="t('karte.mapAria')"></div>
@@ -431,8 +493,20 @@ function useLocation() {
     </div>
 
     <!-- sheet -->
-    <div class="sheet">
-      <div class="grip" aria-hidden="true"></div>
+    <div class="sheet" :style="dragOffset ? { transform: `translateY(${Math.max(-40, Math.min(120, dragOffset))}px)` } : undefined">
+      <button
+        type="button"
+        class="griphit"
+        data-test="sheet-grip"
+        :aria-label="t('karte.sheetToggle')"
+        :aria-expanded="sheetState !== 'peek'"
+        @pointerdown="onDragStart"
+        @pointermove="onDragMove"
+        @pointerup="onDragEnd"
+        @pointercancel="onDragEnd"
+      >
+        <span class="grip" aria-hidden="true"></span>
+      </button>
 
       <!-- selections are announced, never silent -->
       <p class="sr-only" role="status">{{ selectionAnnouncement }}</p>
@@ -588,10 +662,25 @@ function useLocation() {
 .map {
   position: relative;
   width: 100%;
-  height: 48vh;
-  min-height: 300px;
+  height: 100%;
+  min-height: 220px;
   background: #e9e5d8;
   z-index: 1;
+}
+
+/* the page owns the viewport; map takes whatever the sheet leaves */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 100dvh;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.map-area {
+  flex: 1;
+  min-height: 0;
 }
 
 /* Leaflet pins (divIcon) */
@@ -734,7 +823,12 @@ function useLocation() {
 }
 
 .sheet {
-  min-height: 180px;
+  flex-shrink: 0;
+  height: 46dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transition: height 0.25s ease, transform 0.15s ease;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
   margin-top: -26px;
   background: var(--surface);
   border-radius: 24px 24px 0 0;
@@ -874,12 +968,43 @@ function useLocation() {
   gap: 5px;
 }
 
+/* the handle is a real control: tap toggles, drag snaps between states */
+.griphit {
+  display: block;
+  width: 100%;
+  padding: 6px 0 12px 0;
+  margin: -6px 0 0 0;
+  touch-action: none;
+  cursor: grab;
+}
+
+.griphit:active {
+  cursor: grabbing;
+}
+
 .grip {
-  width: 40px;
-  height: 4px;
-  border-radius: 2px;
-  background: #d9d5c7;
-  margin: 0 auto 14px auto;
+  display: block;
+  width: 44px;
+  height: 5px;
+  border-radius: 3px;
+  background: #cfcaba;
+  margin: 0 auto;
+}
+
+/* sheet states */
+.page.sheet-peek .sheet {
+  height: 84px;
+  overflow: hidden;
+}
+
+.page.sheet-full .sheet {
+  height: 76dvh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    transition: none;
+  }
 }
 
 .sheethead {

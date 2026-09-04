@@ -70,6 +70,7 @@ const fr: Messages = {
   'filters.aria': 'Filtres',
 
   'karte.mapAria': 'Carte des Fairteiler à Aix-la-Chapelle',
+  'karte.sheetToggle': 'Réduire ou agrandir la liste',
   'karte.locate': 'Utiliser ma position',
   'karte.locating': 'Recherche …',
   'karte.nearby': 'Près de toi',

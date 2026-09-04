@@ -532,6 +532,35 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
     expect(basketPins()).toHaveLength(0)
   })
 
+  it('the sheet handle collapses and expands the list', async () => {
+    const wrapper = mountKarte()
+    await flushPromises()
+
+    const grip = wrapper.find('[data-test="sheet-grip"]')
+    expect(grip.exists()).toBe(true)
+    expect(wrapper.find('.page').classes()).toContain('sheet-default')
+    expect(grip.attributes('aria-expanded')).toBe('true')
+
+    // a tap (pointerdown + immediate pointerup) collapses it out of the way
+    await grip.trigger('pointerdown', { clientY: 400 })
+    await grip.trigger('pointerup', { clientY: 400 })
+    expect(wrapper.find('.page').classes()).toContain('sheet-peek')
+    expect(grip.attributes('aria-expanded')).toBe('false')
+    expect(localStorage.getItem('fairteiler-sheet-state')).toBe('peek')
+
+    // dragging up expands again
+    await grip.trigger('pointerdown', { clientY: 400 })
+    await grip.trigger('pointermove', { clientY: 320 })
+    await grip.trigger('pointerup', { clientY: 320 })
+    expect(wrapper.find('.page').classes()).toContain('sheet-default')
+
+    // and further up reaches the full state
+    await grip.trigger('pointerdown', { clientY: 400 })
+    await grip.trigger('pointermove', { clientY: 300 })
+    await grip.trigger('pointerup', { clientY: 300 })
+    expect(wrapper.find('.page').classes()).toContain('sheet-full')
+  })
+
   it('shows a German hint when geolocation is denied', async () => {
     const getCurrentPosition = vi.fn(
       (_success: PositionCallback, geoError?: PositionErrorCallback) => {

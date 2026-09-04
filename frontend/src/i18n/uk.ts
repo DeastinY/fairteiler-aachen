@@ -70,6 +70,7 @@ const uk: Messages = {
   'filters.aria': 'Фільтри',
 
   'karte.mapAria': 'Мапа Fairteiler в Аахені',
+  'karte.sheetToggle': 'Згорнути або розгорнути список',
   'karte.locate': 'Моє місцезнаходження',
   'karte.locating': 'Шукаємо …',
   'karte.nearby': 'Поруч із тобою',

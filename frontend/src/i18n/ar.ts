@@ -70,6 +70,7 @@ const ar: Messages = {
   'filters.aria': 'الفلاتر',
 
   'karte.mapAria': 'خريطة الـ Fairteiler في آخن',
+  'karte.sheetToggle': 'طيّ القائمة أو توسيعها',
   'karte.locate': 'استخدام موقعي',
   'karte.locating': 'جارٍ التحديد …',
   'karte.nearby': 'بالقرب منك',
