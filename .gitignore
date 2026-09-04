@@ -16,3 +16,5 @@ docs/legal/
 design/
 prototype/
 .claude/
+frontend/test-results/
+frontend/playwright-report/
