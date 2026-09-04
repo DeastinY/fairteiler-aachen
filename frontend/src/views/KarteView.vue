@@ -765,7 +765,8 @@ function useLocation() {
   position: absolute;
   left: 16px;
   right: 16px;
-  top: 18px;
+  /* installed on iOS the app draws under the status bar / dynamic island */
+  top: calc(18px + env(safe-area-inset-top));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -817,7 +818,7 @@ function useLocation() {
   position: absolute;
   left: 0;
   right: 0;
-  top: 74px;
+  top: calc(74px + env(safe-area-inset-top));
   padding: 4px 16px;
   z-index: 500;
 }

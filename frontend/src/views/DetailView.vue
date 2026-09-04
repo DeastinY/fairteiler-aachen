@@ -471,14 +471,14 @@ function goBack() {
 .backbtn {
   position: absolute;
   inset-inline-start: 16px;
-  top: 16px;
+  top: calc(16px + env(safe-area-inset-top));
   background: rgba(253, 252, 248, 0.92);
 }
 
 .sharebtn {
   position: absolute;
   inset-inline-end: 16px;
-  top: 16px;
+  top: calc(16px + env(safe-area-inset-top));
   background: rgba(253, 252, 248, 0.92);
 }
 
