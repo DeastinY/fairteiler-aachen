@@ -480,9 +480,6 @@ function goBack() {
 <style scoped>
 .hero {
   position: relative;
-  /* the hero runs under the status bar; controls already clear it */
-  margin-top: calc(-1 * env(safe-area-inset-top));
-  padding-top: env(safe-area-inset-top);
   background: var(--green);
   overflow: hidden;
 }

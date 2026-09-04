@@ -668,14 +668,12 @@ function useLocation() {
   z-index: 1;
 }
 
-/* the page owns the viewport; map takes whatever the sheet leaves and runs
-   edge-to-edge under the status bar */
+/* the page owns the viewport; map takes whatever the sheet leaves */
 .page {
   display: flex;
   flex-direction: column;
   height: 100dvh;
   min-height: 100dvh;
-  padding-top: 0;
   padding-bottom: 0;
   overflow: hidden;
 }

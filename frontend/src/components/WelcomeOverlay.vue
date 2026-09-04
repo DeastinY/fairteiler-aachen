@@ -147,7 +147,7 @@ async function onInstall() {
   margin: 0 auto;
   max-width: 480px;
   min-height: 100%;
-  padding: calc(40px + env(safe-area-inset-top)) 28px calc(28px + env(safe-area-inset-bottom)) 28px;
+  padding: 48px 28px calc(28px + env(safe-area-inset-bottom)) 28px;
   display: flex;
   flex-direction: column;
 }

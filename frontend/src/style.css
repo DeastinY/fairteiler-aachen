@@ -121,27 +121,8 @@ button {
   padding-bottom: calc(96px + env(safe-area-inset-bottom));
 }
 
-/* Screens that draw their own top surface (map, detail hero, welcome)
-   opt out; everything else gets the green app bar below. */
-.page > .page-head:first-child,
-.page > .head:first-child {
-  background: var(--green);
-  color: var(--surface);
-  padding-top: calc(22px + env(safe-area-inset-top));
-  padding-bottom: 18px;
-  border-radius: 0 0 22px 22px;
-}
-
 .page-head {
   padding: 26px 20px 0 20px;
-}
-
-.page-head .page-title {
-  color: var(--surface);
-}
-
-.page-head .page-sub {
-  color: rgba(253, 252, 248, 0.82);
 }
 
 .page-title {

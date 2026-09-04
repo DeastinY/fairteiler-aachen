@@ -275,7 +275,7 @@ function close() {
 
 <style scoped>
 .head {
-  padding: calc(20px + env(safe-area-inset-top)) 20px 0 20px;
+  padding: 20px 20px 0 20px;
 }
 
 .headrow {
