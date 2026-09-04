@@ -101,6 +101,10 @@ const de = {
   'karte.basketCaption': 'Privates Lebensmittel-Angebot – Details und Anfrage auf foodsharing.de.',
   'karte.basketStale': 'Stand: {time}',
 
+  'karte.basketsEmpty': 'Gerade keine Essenskörbe in der Nähe.',
+  'aktivitaet.baskets': 'Neue Essenskörbe',
+  'aktivitaet.basketsNote': 'Wird höchstens alle 30 Minuten geprüft – Benachrichtigungen können sich entsprechend verzögern.',
+
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Standorte in Aachen und Umgebung',
   'liste.summary': '{total} Standorte in Aachen und Umgebung · {reported} mit aktueller Meldung',

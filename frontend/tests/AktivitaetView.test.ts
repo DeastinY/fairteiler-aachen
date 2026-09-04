@@ -150,6 +150,7 @@ describe('AktivitaetView', () => {
       },
       fairteilerIds: [810],
       quietHours: false,
+      baskets: false,
     })
     expect(firstToggle.attributes('aria-checked')).toBe('true')
   })
@@ -188,6 +189,7 @@ describe('AktivitaetView', () => {
     expect(JSON.parse(put[1].body)).toMatchObject({
       fairteilerIds: [1220],
       quietHours: true,
+      baskets: false,
     })
   })
 

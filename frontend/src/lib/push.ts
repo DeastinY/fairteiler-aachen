@@ -19,6 +19,7 @@ export interface PushSubscriptionPayload {
   }
   fairteilerIds: number[]
   quietHours: boolean
+  baskets: boolean
 }
 
 /** Decodes a URL-safe base64 VAPID key into the bytes PushManager expects. */
@@ -41,6 +42,7 @@ export function buildSubscriptionPayload(
   subscriptionJson: PushSubscriptionJSON | Record<string, unknown>,
   fairteilerIds: number[],
   quietHours: boolean,
+  baskets = false,
 ): PushSubscriptionPayload | null {
   const endpoint = (subscriptionJson as PushSubscriptionJSON).endpoint
   const keys = (subscriptionJson as PushSubscriptionJSON).keys
@@ -57,6 +59,7 @@ export function buildSubscriptionPayload(
     subscription: { endpoint, keys: { p256dh, auth } },
     fairteilerIds: ids,
     quietHours,
+    baskets,
   }
 }
 

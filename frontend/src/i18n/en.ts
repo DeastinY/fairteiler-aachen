@@ -87,6 +87,10 @@ const en: Messages = {
   'karte.basketCaption': 'Private food offer – details and requests on foodsharing.de.',
   'karte.basketStale': 'As of: {time}',
 
+  'karte.basketsEmpty': 'No food baskets nearby right now.',
+  'aktivitaet.baskets': 'New food baskets',
+  'aktivitaet.basketsNote': 'Checked at most every 30 minutes – notifications can be delayed accordingly.',
+
   'liste.title': 'All Fairteiler',
   'liste.subtitle': 'Locations in and around Aachen',
   'liste.summary': '{total} locations in and around Aachen · {reported} with a recent report',

@@ -87,6 +87,10 @@ const pl: Messages = {
   'karte.basketCaption': 'Prywatna oferta żywności – szczegóły i zapytanie na foodsharing.de.',
   'karte.basketStale': 'Stan: {time}',
 
+  'karte.basketsEmpty': 'Obecnie brak koszy z żywnością w pobliżu.',
+  'aktivitaet.baskets': 'Nowe kosze z żywnością',
+  'aktivitaet.basketsNote': 'Sprawdzane najwyżej co 30 minut – powiadomienia mogą się odpowiednio opóźniać.',
+
   'liste.title': 'Wszystkie Fairteiler',
   'liste.subtitle': 'Punkty w Akwizgranie i okolicy',
   'liste.summary': '{total} punktów w Akwizgranie i okolicy · {reported} z aktualnym zgłoszeniem',

@@ -503,7 +503,7 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
     expect(wrapper.find('[data-test="basket-stale"]').text()).toBe('Stand: vor 3 Std')
   })
 
-  it('is silently absent when the basket fetch fails or is empty', async () => {
+  it('is silently absent when the basket fetch fails', async () => {
     basketsResponse = () => Promise.reject(new TypeError('Failed to fetch'))
     mockFetch()
 
@@ -515,16 +515,23 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
       wrapper.findAll('.filterchip').some((c) => c.text() === 'Essenskörbe'),
     ).toBe(false)
     expect(pins()).toHaveLength(3) // map itself unaffected
+  })
 
-    // empty list behaves the same
+  it('shows the chip and an honest empty state when there are no baskets', async () => {
     basketsResponse = () =>
       Promise.resolve(jsonResponse({ baskets: [], fetchedAt: null, stale: false }))
     mockFetch()
-    const empty = mountKarte()
+
+    const wrapper = mountKarte()
     await flushPromises()
+
     expect(
-      empty.findAll('.filterchip').some((c) => c.text() === 'Essenskörbe'),
-    ).toBe(false)
+      wrapper.findAll('.filterchip').some((c) => c.text() === 'Essenskörbe'),
+    ).toBe(true)
+    expect(wrapper.find('[data-test="baskets-empty"]').text()).toBe(
+      'Gerade keine Essenskörbe in der Nähe.',
+    )
+    expect(basketPins()).toHaveLength(0)
   })
 
   it('shows a German hint when geolocation is denied', async () => {

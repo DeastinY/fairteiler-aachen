@@ -87,6 +87,10 @@ const tr: Messages = {
   'karte.basketCaption': 'Özel gıda paylaşımı – ayrıntılar ve talep foodsharing.de üzerinde.',
   'karte.basketStale': 'Güncelleme: {time}',
 
+  'karte.basketsEmpty': 'Şu anda yakında gıda sepeti yok.',
+  'aktivitaet.baskets': 'Yeni gıda sepetleri',
+  'aktivitaet.basketsNote': 'En fazla 30 dakikada bir kontrol edilir – anlık bildirimler buna göre gecikebilir.',
+
   'liste.title': 'Tüm Fairteiler',
   'liste.subtitle': 'Aachen ve çevresindeki noktalar',
   'liste.summary': 'Aachen ve çevresinde {total} nokta · {reported} tanesinde güncel bildirim',

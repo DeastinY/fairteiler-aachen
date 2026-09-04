@@ -37,7 +37,18 @@ describe('buildSubscriptionPayload', () => {
       subscription: { endpoint: 'https://push.example/abc', keys: { p256dh: 'KEY', auth: 'AUTH' } },
       fairteilerIds: [810, 1220],
       quietHours: true,
+      baskets: false,
     })
+  })
+
+  it('carries the baskets flag when given', () => {
+    expect(buildSubscriptionPayload(goodJson, [810], false, true)?.baskets).toBe(true)
+  })
+
+  it('supports a baskets-only subscription (no fairteiler followed)', () => {
+    const payload = buildSubscriptionPayload(goodJson, [], false, true)
+    expect(payload?.fairteilerIds).toEqual([])
+    expect(payload?.baskets).toBe(true)
   })
 
   it('allows an empty id list (server-side unsubscribe)', () => {
@@ -112,12 +123,12 @@ describe('push prefs local mirror', () => {
 
   it('round-trips ids and quiet hours', () => {
     savePushPrefs([810, 1220], true)
-    expect(loadPushPrefs()).toEqual({ ids: [810, 1220], quietHours: true })
+    expect(loadPushPrefs()).toEqual({ ids: [810, 1220], quietHours: true, baskets: false })
   })
 
   it('returns defaults for empty or corrupt storage', () => {
-    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false })
+    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false, baskets: false })
     localStorage.setItem('fairteiler-push-ids', '{broken')
-    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false })
+    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false, baskets: false })
   })
 })

@@ -87,6 +87,10 @@ const fr: Messages = {
   'karte.basketCaption': 'Offre alimentaire privée – détails et demande sur foodsharing.de.',
   'karte.basketStale': 'État : {time}',
 
+  'karte.basketsEmpty': 'Pas de panier alimentaire à proximité pour le moment.',
+  'aktivitaet.baskets': 'Nouveaux paniers alimentaires',
+  'aktivitaet.basketsNote': 'Vérifié au plus toutes les 30 minutes – les notifications peuvent être retardées d\'autant.',
+
   'liste.title': 'Tous les Fairteiler',
   'liste.subtitle': 'Points à Aix-la-Chapelle et alentours',
   'liste.summary':

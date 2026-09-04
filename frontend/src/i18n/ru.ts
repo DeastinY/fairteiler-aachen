@@ -87,6 +87,10 @@ const ru: Messages = {
   'karte.basketCaption': 'Частное предложение еды – подробности и запрос на foodsharing.de.',
   'karte.basketStale': 'Данные: {time}',
 
+  'karte.basketsEmpty': 'Сейчас поблизости нет корзин с едой.',
+  'aktivitaet.baskets': 'Новые корзины с едой',
+  'aktivitaet.basketsNote': 'Проверка не чаще раза в 30 минут – уведомления могут соответственно запаздывать.',
+
   'liste.title': 'Все Fairteiler',
   'liste.subtitle': 'Точки в Ахене и окрестностях',
   'liste.summary': '{total} точек в Ахене и окрестностях · {reported} со свежим сообщением',

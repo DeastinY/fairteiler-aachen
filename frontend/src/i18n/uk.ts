@@ -87,6 +87,10 @@ const uk: Messages = {
   'karte.basketCaption': 'Приватна пропозиція їжі – деталі та запит на foodsharing.de.',
   'karte.basketStale': 'Станом на: {time}',
 
+  'karte.basketsEmpty': 'Зараз поблизу немає кошиків з їжею.',
+  'aktivitaet.baskets': 'Нові кошики з їжею',
+  'aktivitaet.basketsNote': 'Перевіряється щонайбільше раз на 30 хвилин – сповіщення можуть відповідно запізнюватися.',
+
   'liste.title': 'Усі Fairteiler',
   'liste.subtitle': 'Точки в Аахені та околицях',
   'liste.summary': '{total} точок в Аахені та околицях · {reported} зі свіжим повідомленням',

@@ -87,6 +87,10 @@ const nl: Messages = {
   'karte.basketCaption': 'Particulier voedselaanbod – details en aanvraag op foodsharing.de.',
   'karte.basketStale': 'Stand: {time}',
 
+  'karte.basketsEmpty': 'Momenteel geen voedselmandjes in de buurt.',
+  'aktivitaet.baskets': 'Nieuwe voedselmandjes',
+  'aktivitaet.basketsNote': 'Wordt hoogstens elke 30 minuten gecontroleerd – notificaties kunnen daardoor vertraagd zijn.',
+
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Locaties in en rond Aken',
   'liste.summary': '{total} locaties in en rond Aken · {reported} met een recente melding',

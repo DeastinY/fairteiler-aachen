@@ -87,6 +87,10 @@ const ar: Messages = {
   'karte.basketCaption': 'عرض طعام خاص – التفاصيل والطلب على foodsharing.de.',
   'karte.basketStale': 'آخر تحديث: {time}',
 
+  'karte.basketsEmpty': 'لا توجد سلال طعام قريبة حاليًا.',
+  'aktivitaet.baskets': 'سلال طعام جديدة',
+  'aktivitaet.basketsNote': 'يُفحص كل 30 دقيقة على الأكثر – قد تتأخر الإشعارات تبعًا لذلك.',
+
   'liste.title': 'كل الـ Fairteiler',
   'liste.subtitle': 'مواقع في آخن وما حولها',
   'liste.summary': '{total} موقعًا في آخن وما حولها · {reported} منها ببلاغ حديث',

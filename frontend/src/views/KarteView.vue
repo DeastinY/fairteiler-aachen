@@ -98,7 +98,17 @@ const selectionAnnouncement = computed(() => {
   return selected.value ? `${selected.value.name} – ${rowLine(selected.value)}` : ''
 })
 
-const hasBaskets = computed(() => (basketsData.value?.baskets.length ?? 0) > 0)
+/** The chip appears whenever the basket lookup worked — an empty result is
+ * information ("gerade keine da"), only a failed fetch hides the feature. */
+const basketsAvailable = computed(() => basketsData.value !== null)
+
+const basketsEmptyLine = computed(() =>
+  basketsAvailable.value &&
+  filter.baskets &&
+  (basketsData.value?.baskets.length ?? 0) === 0
+    ? t('karte.basketsEmpty')
+    : null,
+)
 
 const basketStaleLine = computed(() => {
   if (!basketsData.value?.stale || !basketsData.value.fetchedAt) return null
@@ -417,7 +427,7 @@ function useLocation() {
       </div>
 
       <!-- filter chips -->
-      <FilterChips class="map-chips" :with-baskets="hasBaskets" />
+      <FilterChips class="map-chips" :with-baskets="basketsAvailable" />
     </div>
 
     <!-- sheet -->
@@ -532,6 +542,10 @@ function useLocation() {
           {{ t('karte.summary', { reported: reportedCount, total: items.length }) }}
         </p>
         <p v-if="geoHint" class="geohint">{{ geoHint }}</p>
+
+        <p v-if="basketsEmptyLine" class="geohint" data-test="baskets-empty">
+          {{ basketsEmptyLine }}
+        </p>
 
         <p v-if="filtered.length === 0" class="summary nofilter">
           {{ t('common.noFilterMatch') }}
