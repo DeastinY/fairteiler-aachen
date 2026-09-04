@@ -29,9 +29,11 @@ seconds, no account, no tracking — built to **complement
 
 ## Screenshots
 
-| Karte | Liste | Detail | Statistik |
+*English UI shown; the app ships in nine languages. Sample reports for illustration.*
+
+| Map | List | Detail | Transparency |
 |:---:|:---:|:---:|:---:|
-| <img src="docs/screenshots/karte.png" width="200" alt="Map with status pins"> | <img src="docs/screenshots/liste.png" width="200" alt="List with activity charts"> | <img src="docs/screenshots/detail.png" width="200" alt="Detail with live status"> | <img src="docs/screenshots/statistik.png" width="200" alt="Transparent usage stats"> |
+| <img src="docs/screenshots/karte.png" width="200" alt="Map of Aachen with status-colored Fairteiler pins"> | <img src="docs/screenshots/liste.png" width="200" alt="List of Fairteiler with status and activity charts"> | <img src="docs/screenshots/detail.png" width="200" alt="Fairteiler detail with live status, activity and opening hours"> | <img src="docs/screenshots/statistik.png" width="200" alt="Transparent anonymous usage statistics"> |
 
 ## Features
 
