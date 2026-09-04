@@ -46,8 +46,8 @@ function goBack() {
 }
 
 .backbtn {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: transparent;
+  margin-inline-start: -10px;
 }
 
 .title {

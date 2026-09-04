@@ -247,7 +247,7 @@ function goBack() {
       </svg>
       <span v-if="photoUrl" class="herocredit">{{ t('detail.photoCredit') }}</span>
       <button type="button" class="roundbtn backbtn" :aria-label="t('common.back')" @click="goBack">
-        <svg class="dir-flip" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="dir-flip" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fdfcf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
       </button>
@@ -259,7 +259,7 @@ function goBack() {
         data-test="share"
         @click="share"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fdfcf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="6" cy="12" r="2.5"></circle>
           <circle cx="17" cy="5.5" r="2.5"></circle>
           <circle cx="17" cy="18.5" r="2.5"></circle>
@@ -563,14 +563,18 @@ function goBack() {
   position: absolute;
   inset-inline-start: 16px;
   top: calc(16px + env(safe-area-inset-top));
-  background: rgba(253, 252, 248, 0.92);
+  background: rgba(18, 40, 28, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .sharebtn {
   position: absolute;
   inset-inline-end: 16px;
   top: calc(16px + env(safe-area-inset-top));
-  background: rgba(253, 252, 248, 0.92);
+  background: rgba(18, 40, 28, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .besttime {
