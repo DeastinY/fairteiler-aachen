@@ -63,6 +63,8 @@ const ar: Messages = {
 
   'filters.etwasDa': 'يوجد طعام',
   'filters.openNow': 'مفتوح الآن',
+  'filters.openNowShort': 'مفتوح',
+  'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'مفتوح دائمًا',
   'filters.cooled': 'ثلاجة',
   'filters.aria': 'الفلاتر',

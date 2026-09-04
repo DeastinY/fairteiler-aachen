@@ -63,6 +63,8 @@ const ru: Messages = {
 
   'filters.etwasDa': 'Еда есть',
   'filters.openNow': 'Сейчас открыто',
+  'filters.openNowShort': 'Открыто',
+  'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Круглосуточно',
   'filters.cooled': 'Холодильник',
   'filters.aria': 'Фильтры',

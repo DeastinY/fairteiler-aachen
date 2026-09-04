@@ -75,6 +75,8 @@ const de = {
   // filter chips
   'filters.etwasDa': 'Etwas da',
   'filters.openNow': 'Jetzt offen',
+  'filters.openNowShort': 'Offen',
+  'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Rund um die Uhr',
   'filters.cooled': 'Gekühlt',
   'filters.aria': 'Filter',

@@ -63,6 +63,8 @@ const en: Messages = {
 
   'filters.etwasDa': 'Food available',
   'filters.openNow': 'Open now',
+  'filters.openNowShort': 'Open',
+  'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Open 24/7',
   'filters.cooled': 'Fridge',
   'filters.aria': 'Filters',

@@ -235,7 +235,7 @@ describe('ListeView', () => {
     const wrapper = mountListe()
     await flushPromises()
 
-    const chip = wrapper.findAll('.filterchip').find((c) => c.text() === 'Jetzt offen')!
+    const chip = wrapper.find('[data-test="chip-openNow"]')
     await chip.trigger('click')
 
     const cards = wrapper.findAll('.listecard')
@@ -265,10 +265,10 @@ describe('ListeView', () => {
 
     // baskets are a map-only concept – no chip on the Liste
     expect(
-      wrapper.findAll('.filterchip').some((c) => c.text() === 'Essenskörbe'),
+      wrapper.find('[data-test="chip-baskets"]').exists(),
     ).toBe(false)
 
-    const etwasDa = wrapper.findAll('.filterchip').find((c) => c.text() === 'Etwas da')!
+    const etwasDa = wrapper.find('[data-test="chip-etwasDa"]')
     await etwasDa.trigger('click')
     expect(etwasDa.attributes('aria-pressed')).toBe('true')
     const cards = wrapper.findAll('.listecard')
@@ -276,7 +276,7 @@ describe('ListeView', () => {
     expect(cards[0]!.text()).toContain('Hirschgrün')
 
     // AND with cooled -> nothing matches, German empty state
-    const cooled = wrapper.findAll('.filterchip').find((c) => c.text() === 'Gekühlt')!
+    const cooled = wrapper.find('[data-test="chip-cooled"]')
     await cooled.trigger('click')
     expect(wrapper.findAll('.listecard')).toHaveLength(0)
     expect(wrapper.text()).toContain('Keine Fairteiler entsprechen den gewählten Filtern.')

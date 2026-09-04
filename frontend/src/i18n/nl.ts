@@ -63,6 +63,8 @@ const nl: Messages = {
 
   'filters.etwasDa': 'Eten aanwezig',
   'filters.openNow': 'Nu open',
+  'filters.openNowShort': 'Open',
+  'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': '24/7 open',
   'filters.cooled': 'Koelkast',
   'filters.aria': 'Filters',

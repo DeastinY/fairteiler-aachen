@@ -63,6 +63,8 @@ const tr: Messages = {
 
   'filters.etwasDa': 'Yiyecek var',
   'filters.openNow': 'Şu an açık',
+  'filters.openNowShort': 'Açık',
+  'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': '7/24 açık',
   'filters.cooled': 'Buzdolabı',
   'filters.aria': 'Filtreler',

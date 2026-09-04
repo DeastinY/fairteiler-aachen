@@ -325,9 +325,7 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
 
     expect(wrapper.findAll('.nearrow')).toHaveLength(3)
 
-    const etwasDaChip = wrapper
-      .findAll('.filterchip')
-      .find((c) => c.text() === 'Etwas da')!
+    const etwasDaChip = wrapper.find('[data-test="chip-etwasDa"]')
     await etwasDaChip.trigger('click')
     await flushPromises()
 
@@ -435,7 +433,7 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
     const wrapper = mountKarte()
     await flushPromises()
 
-    const chip = wrapper.findAll('.filterchip').find((c) => c.text() === 'Essenskörbe')!
+    const chip = wrapper.find('[data-test="chip-baskets"]')
     expect(chip.attributes('aria-pressed')).toBe('true') // default on
 
     await chip.trigger('click')
@@ -512,7 +510,7 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
 
     expect(basketPins()).toHaveLength(0)
     expect(
-      wrapper.findAll('.filterchip').some((c) => c.text() === 'Essenskörbe'),
+      wrapper.find('[data-test="chip-baskets"]').exists(),
     ).toBe(false)
     expect(pins()).toHaveLength(3) // map itself unaffected
   })
@@ -526,7 +524,7 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
     await flushPromises()
 
     expect(
-      wrapper.findAll('.filterchip').some((c) => c.text() === 'Essenskörbe'),
+      wrapper.find('[data-test="chip-baskets"]').exists(),
     ).toBe(true)
     expect(wrapper.find('[data-test="baskets-empty"]').text()).toBe(
       'Gerade keine Essenskörbe in der Nähe.',

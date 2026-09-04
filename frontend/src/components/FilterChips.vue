@@ -8,18 +8,36 @@ const props = defineProps<{ withBaskets?: boolean }>()
 
 const filter = useFilters()
 
-const BASE_CHIPS: { key: keyof FairteilerFilter; labelKey: MessageKey }[] = [
+/** Chips are deliberately compact: the row has to survive 320px screens and
+ * long translations. `short` keeps the wording tight, `icon` drops the label
+ * entirely (the full label stays as the accessible name). */
+type Chip = {
+  key: keyof FairteilerFilter
+  labelKey: MessageKey
+  shortKey?: MessageKey
+  icon?: 'snow' | 'basket'
+}
+
+const BASE_CHIPS: Chip[] = [
   { key: 'etwasDa', labelKey: 'filters.etwasDa' },
-  { key: 'openNow', labelKey: 'filters.openNow' },
-  { key: 'aroundTheClock', labelKey: 'filters.aroundTheClock' },
-  { key: 'cooled', labelKey: 'filters.cooled' },
+  { key: 'openNow', labelKey: 'filters.openNow', shortKey: 'filters.openNowShort' },
+  {
+    key: 'aroundTheClock',
+    labelKey: 'filters.aroundTheClock',
+    shortKey: 'filters.aroundTheClockShort',
+  },
+  { key: 'cooled', labelKey: 'filters.cooled', icon: 'snow' },
 ]
 
-const chips = computed(() =>
+const chips = computed<Chip[]>(() =>
   props.withBaskets
-    ? [...BASE_CHIPS, { key: 'baskets' as const, labelKey: 'filters.baskets' as MessageKey }]
+    ? [...BASE_CHIPS, { key: 'baskets', labelKey: 'filters.baskets', icon: 'basket' }]
     : BASE_CHIPS,
 )
+
+function label(chip: Chip): string {
+  return t(chip.shortKey ?? chip.labelKey)
+}
 
 function toggle(key: keyof FairteilerFilter) {
   filter[key] = !filter[key]
@@ -33,11 +51,43 @@ function toggle(key: keyof FairteilerFilter) {
       :key="chip.key"
       type="button"
       class="filterchip"
-      :class="{ active: filter[chip.key] }"
+      :data-test="`chip-${chip.key}`"
+      :class="{ active: filter[chip.key], iconchip: !!chip.icon }"
       :aria-pressed="filter[chip.key]"
+      :aria-label="chip.icon ? t(chip.labelKey) : undefined"
+      :title="chip.icon ? t(chip.labelKey) : undefined"
       @click="toggle(chip.key)"
     >
-      {{ t(chip.labelKey) }}
+      <svg
+        v-if="chip.icon === 'snow'"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M12 3v18 M4.2 7.5l15.6 9 M19.8 7.5l-15.6 9" />
+        <path d="M12 6.5 9.8 4.6M12 6.5l2.2-1.9M12 17.5l-2.2 1.9M12 17.5l2.2 1.9" />
+      </svg>
+      <svg
+        v-else-if="chip.icon === 'basket'"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M4 9h16l-1.5 10.5H5.5z" />
+        <path d="M9 9 11 4M15 9 13 4" />
+      </svg>
+      <span v-else>{{ label(chip) }}</span>
     </button>
   </div>
 </template>
@@ -56,6 +106,9 @@ function toggle(key: keyof FairteilerFilter) {
 }
 
 .filterchip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--surface);
   color: var(--ink);
   border-radius: 999px;
@@ -66,6 +119,12 @@ function toggle(key: keyof FairteilerFilter) {
   box-shadow: 0 3px 10px rgba(34, 48, 31, 0.1);
   min-height: 44px;
   flex-shrink: 0;
+}
+
+/* icon-only chips stay square-ish so the row keeps its rhythm */
+.filterchip.iconchip {
+  width: 44px;
+  padding: 0;
 }
 
 .filterchip.active {

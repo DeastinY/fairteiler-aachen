@@ -63,6 +63,8 @@ const uk: Messages = {
 
   'filters.etwasDa': 'Є їжа',
   'filters.openNow': 'Зараз відчинено',
+  'filters.openNowShort': 'Відчинено',
+  'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Цілодобово',
   'filters.cooled': 'Холодильник',
   'filters.aria': 'Фільтри',
