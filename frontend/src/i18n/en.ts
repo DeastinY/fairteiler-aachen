@@ -102,6 +102,8 @@ const en: Messages = {
   'karte.basketsEmpty': 'No food baskets nearby right now.',
   'aktivitaet.baskets': 'New food baskets',
   'aktivitaet.basketsNote': 'Checked at most every 30 minutes – notifications can be delayed accordingly.',
+  'aktivitaet.emptyAlerts': 'Also when reported empty',
+  'aktivitaet.emptyAlertsNote': 'Handy if you like bringing something by.',
 
   'liste.title': 'All Fairteiler',
   'liste.subtitle': 'Locations in and around Aachen',

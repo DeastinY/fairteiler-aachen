@@ -102,6 +102,8 @@ const uk: Messages = {
   'karte.basketsEmpty': 'Зараз поблизу немає кошиків з їжею.',
   'aktivitaet.baskets': 'Нові кошики з їжею',
   'aktivitaet.basketsNote': 'Перевіряється щонайбільше раз на 30 хвилин – сповіщення можуть відповідно запізнюватися.',
+  'aktivitaet.emptyAlerts': 'Також коли позначено «порожньо»',
+  'aktivitaet.emptyAlertsNote': 'Зручно, якщо ти любиш щось приносити.',
 
   'liste.title': 'Усі Fairteiler',
   'liste.subtitle': 'Точки в Аахені та околицях',

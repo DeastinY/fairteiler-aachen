@@ -65,6 +65,21 @@ afterEach(() => {
 })
 
 describe('AktivitaetView', () => {
+  it('offers empty alerts and sends the flag', async () => {
+    stubPushEnvironment()
+    mockBackend({ enabled: true, vapidPublicKey: 'BKey' })
+
+    const wrapper = mount(AktivitaetView)
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('Auch wenn leer gemeldet wird')
+    await wrapper.find('[data-test="empty-toggle"]').trigger('click')
+    await flushPromises()
+
+    const put = fetchMock.mock.calls.find(([url]) => url === '/api/push/subscription')!
+    expect(JSON.parse(put[1].body)).toMatchObject({ emptyAlerts: true })
+  })
+
   it('shows the weekly stats line from /api/stats', async () => {
     stubPushEnvironment()
     mockBackend(
@@ -151,6 +166,8 @@ describe('AktivitaetView', () => {
       fairteilerIds: [810],
       quietHours: false,
       baskets: false,
+      emptyAlerts: false,
+      emptyAlerts: false,
     })
     expect(firstToggle.attributes('aria-checked')).toBe('true')
   })
@@ -190,6 +207,8 @@ describe('AktivitaetView', () => {
       fairteilerIds: [1220],
       quietHours: true,
       baskets: false,
+      emptyAlerts: false,
+      emptyAlerts: false,
     })
   })
 

@@ -102,6 +102,8 @@ const ar: Messages = {
   'karte.basketsEmpty': 'لا توجد سلال طعام قريبة حاليًا.',
   'aktivitaet.baskets': 'سلال طعام جديدة',
   'aktivitaet.basketsNote': 'يُفحص كل 30 دقيقة على الأكثر – قد تتأخر الإشعارات تبعًا لذلك.',
+  'aktivitaet.emptyAlerts': 'أيضًا عند الإبلاغ عن الفراغ',
+  'aktivitaet.emptyAlertsNote': 'مثالي إن كنت تحب إحضار شيء.',
 
   'liste.title': 'كل الـ Fairteiler',
   'liste.subtitle': 'مواقع في آخن وما حولها',

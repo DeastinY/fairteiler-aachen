@@ -132,3 +132,61 @@ def test_quiet_hours(push_client, sent, monkeypatch, hour_berlin, expected_sent)
         headers={"X-Device-Id": "reporter-1"},
     )
     assert len(sent) == expected_sent
+
+
+# --- empty alerts (for people who like to bring something) ----------------
+
+EMPTY_SUB = {
+    "subscription": {
+        "endpoint": "https://push.example/empty-fan",
+        "keys": {"p256dh": "k", "auth": "a"},
+    },
+    "fairteilerIds": [810],
+    "quietHours": False,
+    "emptyAlerts": True,
+}
+
+
+def test_empty_report_notifies_only_empty_alert_subscribers(push_client, sent):
+    push_client.put("/api/push/subscription", json=SUB_A, headers=DEVICE)  # brought-only
+    push_client.put(
+        "/api/push/subscription", json=EMPTY_SUB, headers={"X-Device-Id": "empty-dev"}
+    )
+    push_client.post(
+        "/api/fairteiler/810/reports",
+        json={"type": "empty", "tags": []},
+        headers={"X-Device-Id": "reporter-empty"},
+    )
+    assert len(sent) == 1
+    endpoint, payload = sent[0]
+    assert endpoint == "https://push.example/empty-fan"
+    assert payload["url"] == "/fairteiler/810"
+    assert payload["tag"] == "fairteiler-810-empty"
+    assert "leer" in payload["body"].lower()
+
+
+def test_empty_alerts_respect_followed_fairteiler(push_client, sent):
+    push_client.put(
+        "/api/push/subscription", json=EMPTY_SUB, headers={"X-Device-Id": "empty-dev"}
+    )
+    push_client.post(
+        "/api/fairteiler/1220/reports",  # not followed
+        json={"type": "empty", "tags": []},
+        headers={"X-Device-Id": "reporter-empty"},
+    )
+    assert sent == []
+
+
+def test_empty_alerts_respect_quiet_hours(push_client, sent, monkeypatch):
+    push_client.put(
+        "/api/push/subscription",
+        json={**EMPTY_SUB, "quietHours": True},
+        headers={"X-Device-Id": "empty-dev"},
+    )
+    monkeypatch.setattr(push, "_berlin_now", lambda: dt.datetime(2026, 9, 4, 23, 0))
+    push_client.post(
+        "/api/fairteiler/810/reports",
+        json={"type": "empty", "tags": []},
+        headers={"X-Device-Id": "reporter-empty"},
+    )
+    assert sent == []

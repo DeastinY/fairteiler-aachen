@@ -68,6 +68,7 @@ class PushSubscription(Base):
     fairteiler_ids: Mapped[list] = mapped_column(JSON, default=list)
     quiet_hours: Mapped[bool] = mapped_column(default=False)
     baskets: Mapped[bool] = mapped_column(default=False)
+    empty_alerts: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[dt.datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: dt.datetime.now(dt.timezone.utc).replace(tzinfo=None),

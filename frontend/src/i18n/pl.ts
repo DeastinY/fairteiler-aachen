@@ -102,6 +102,8 @@ const pl: Messages = {
   'karte.basketsEmpty': 'Obecnie brak koszy z żywnością w pobliżu.',
   'aktivitaet.baskets': 'Nowe kosze z żywnością',
   'aktivitaet.basketsNote': 'Sprawdzane najwyżej co 30 minut – powiadomienia mogą się odpowiednio opóźniać.',
+  'aktivitaet.emptyAlerts': 'Także gdy zgłoszono pusty',
+  'aktivitaet.emptyAlertsNote': 'Przydatne, jeśli lubisz coś przynosić.',
 
   'liste.title': 'Wszystkie Fairteiler',
   'liste.subtitle': 'Punkty w Akwizgranie i okolicy',

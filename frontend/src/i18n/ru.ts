@@ -102,6 +102,8 @@ const ru: Messages = {
   'karte.basketsEmpty': 'Сейчас поблизости нет корзин с едой.',
   'aktivitaet.baskets': 'Новые корзины с едой',
   'aktivitaet.basketsNote': 'Проверка не чаще раза в 30 минут – уведомления могут соответственно запаздывать.',
+  'aktivitaet.emptyAlerts': 'Также когда сообщают «пусто»',
+  'aktivitaet.emptyAlertsNote': 'Удобно, если ты любишь приносить продукты.',
 
   'liste.title': 'Все Fairteiler',
   'liste.subtitle': 'Точки в Ахене и окрестностях',

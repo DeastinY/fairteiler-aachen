@@ -933,11 +933,18 @@ function goBack() {
 .askrow {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .askbtn {
   flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
   min-height: 44px;
+  text-align: center;
   border: 1.5px solid var(--border);
   border-radius: 999px;
   font-size: 14px;

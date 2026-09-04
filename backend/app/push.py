@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Fairteiler, PushSubscription, Report
+from app.models import EMPTY, Fairteiler, PushSubscription, Report
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +69,13 @@ def _send_webpush(subscription_info: dict, payload: str, settings: PushSettings)
 
 
 def build_payload(fairteiler: Fairteiler, report: Report) -> dict:
+    if report.type == EMPTY:
+        return {
+            "title": fairteiler.name,
+            "body": "Wurde leer gemeldet – magst du etwas vorbeibringen?",
+            "url": f"/fairteiler/{fairteiler.id}",
+            "tag": f"fairteiler-{fairteiler.id}-empty",
+        }
     labels = [TAG_LABELS.get(t, t) for t in (report.tags or [])]
     body = "Etwas wurde gebracht"
     if labels:
@@ -81,17 +88,22 @@ def build_payload(fairteiler: Fairteiler, report: Report) -> dict:
     }
 
 
-def notify_brought(
+def notify_report(
     session: Session,
     fairteiler: Fairteiler,
     report: Report,
     settings: PushSettings,
 ) -> None:
-    """Best-effort fan-out; never raises into the report request."""
+    """Best-effort fan-out; never raises into the report request.
+
+    'brought' reaches everyone following the Fairteiler; 'empty' only those
+    who opted into empty alerts (people who like to bring something)."""
     payload = json.dumps(build_payload(fairteiler, report), ensure_ascii=False)
     quiet_now = None
     for sub in session.scalars(select(PushSubscription)):
         if fairteiler.id not in (sub.fairteiler_ids or []):
+            continue
+        if report.type == EMPTY and not sub.empty_alerts:
             continue
         if sub.quiet_hours:
             if quiet_now is None:

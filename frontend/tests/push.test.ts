@@ -38,6 +38,8 @@ describe('buildSubscriptionPayload', () => {
       fairteilerIds: [810, 1220],
       quietHours: true,
       baskets: false,
+      emptyAlerts: false,
+      emptyAlerts: false,
     })
   })
 
@@ -123,12 +125,12 @@ describe('push prefs local mirror', () => {
 
   it('round-trips ids and quiet hours', () => {
     savePushPrefs([810, 1220], true)
-    expect(loadPushPrefs()).toEqual({ ids: [810, 1220], quietHours: true, baskets: false })
+    expect(loadPushPrefs()).toEqual({ ids: [810, 1220], quietHours: true, baskets: false, emptyAlerts: false })
   })
 
   it('returns defaults for empty or corrupt storage', () => {
-    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false, baskets: false })
+    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false, baskets: false, emptyAlerts: false })
     localStorage.setItem('fairteiler-push-ids', '{broken')
-    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false, baskets: false })
+    expect(loadPushPrefs()).toEqual({ ids: [], quietHours: false, baskets: false, emptyAlerts: false })
   })
 })

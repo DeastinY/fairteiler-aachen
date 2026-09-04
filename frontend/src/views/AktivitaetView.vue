@@ -27,6 +27,7 @@ const loadError = ref<string | null>(null)
 const selectedIds = ref<number[]>([])
 const quietHours = ref(false)
 const basketAlerts = ref(false)
+const emptyAlerts = ref(false)
 const hint = ref<string | null>(null)
 const saving = ref(false)
 
@@ -45,6 +46,7 @@ async function load() {
   selectedIds.value = prefs.ids
   quietHours.value = prefs.quietHours
   basketAlerts.value = prefs.baskets
+  emptyAlerts.value = prefs.emptyAlerts
   try {
     const [list, pushConfig, statsData] = await Promise.all([
       fetchFairteilerList(),
@@ -96,6 +98,7 @@ async function syncServer(): Promise<boolean> {
     selectedIds.value,
     quietHours.value,
     basketAlerts.value,
+    emptyAlerts.value,
   )
   if (!payload) {
     hint.value = t('aktivitaet.subscribeFailed')
@@ -116,7 +119,7 @@ async function applyChange(mutate: () => void, revert: () => void) {
       revert()
       return
     }
-    savePushPrefs(selectedIds.value, quietHours.value, basketAlerts.value)
+    savePushPrefs(selectedIds.value, quietHours.value, basketAlerts.value, emptyAlerts.value)
   } catch {
     revert()
     hint.value = t('aktivitaet.saveFailed')
@@ -135,6 +138,18 @@ function toggleFairteiler(id: number) {
     },
     () => {
       selectedIds.value = before
+    },
+  )
+}
+
+function toggleEmptyAlerts() {
+  const before = emptyAlerts.value
+  void applyChange(
+    () => {
+      emptyAlerts.value = !emptyAlerts.value
+    },
+    () => {
+      emptyAlerts.value = before
     },
   )
 }
@@ -225,6 +240,28 @@ function toggleQuietHours() {
     </div>
 
     <div v-if="items" class="card list quiet">
+      <div class="row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 8h14l-1.2 12H6.2z"></path>
+          <path d="M9 12h6"></path>
+        </svg>
+        <div class="rowbody">
+          <span class="rowname">{{ t('aktivitaet.emptyAlerts') }}</span>
+          <span class="rownote">{{ t('aktivitaet.emptyAlertsNote') }}</span>
+        </div>
+        <button
+          type="button"
+          class="switch"
+          role="switch"
+          :aria-checked="emptyAlerts"
+          :disabled="!ready || saving"
+          :aria-label="t('aktivitaet.emptyAlerts')"
+          data-test="empty-toggle"
+          @click="toggleEmptyAlerts"
+        >
+          <span class="knob"></span>
+        </button>
+      </div>
       <div class="row">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a6a3b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 9h16l-1.5 10.5H5.5z"></path>

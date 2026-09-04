@@ -61,6 +61,7 @@ class PushSubscriptionIn(BaseModel):
     fairteilerIds: list[int] = []
     quietHours: bool = False
     baskets: bool = False
+    emptyAlerts: bool = False
 
 
 def create_app(
@@ -175,6 +176,7 @@ def create_app(
         sub.fairteiler_ids = body.fairteilerIds
         sub.quiet_hours = body.quietHours
         sub.baskets = body.baskets
+        sub.empty_alerts = body.emptyAlerts
         session.add(sub)
 
     @app.get("/api/baskets")
@@ -288,9 +290,9 @@ def create_app(
             tags=body.tags,
             device_hash=device_hash,
         )
-        if push_settings is not None and report.type == "brought":
+        if push_settings is not None and report.type in ("brought", "empty"):
             fairteiler = session.get(Fairteiler, fairteiler_id)
-            push.notify_brought(session, fairteiler, report, push_settings)
+            push.notify_report(session, fairteiler, report, push_settings)
         return {
             "id": report.id,
             "type": report.type,

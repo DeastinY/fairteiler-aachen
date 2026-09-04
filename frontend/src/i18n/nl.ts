@@ -102,6 +102,8 @@ const nl: Messages = {
   'karte.basketsEmpty': 'Momenteel geen voedselmandjes in de buurt.',
   'aktivitaet.baskets': 'Nieuwe voedselmandjes',
   'aktivitaet.basketsNote': 'Wordt hoogstens elke 30 minuten gecontroleerd – notificaties kunnen daardoor vertraagd zijn.',
+  'aktivitaet.emptyAlerts': 'Ook bij een lege melding',
+  'aktivitaet.emptyAlertsNote': 'Handig als je graag iets langsbrengt.',
 
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Locaties in en rond Aken',

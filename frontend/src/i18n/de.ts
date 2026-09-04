@@ -116,6 +116,8 @@ const de = {
   'karte.basketsEmpty': 'Gerade keine Essenskörbe in der Nähe.',
   'aktivitaet.baskets': 'Neue Essenskörbe',
   'aktivitaet.basketsNote': 'Wird höchstens alle 30 Minuten geprüft – Benachrichtigungen können sich entsprechend verzögern.',
+  'aktivitaet.emptyAlerts': 'Auch wenn leer gemeldet wird',
+  'aktivitaet.emptyAlertsNote': 'Ideal, wenn du gern etwas vorbeibringst.',
 
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Standorte in Aachen und Umgebung',

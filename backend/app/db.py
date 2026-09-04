@@ -32,6 +32,7 @@ def migrate(engine) -> list[str]:
     wanted = {
         "push_subscriptions": {
             "baskets": "BOOLEAN NOT NULL DEFAULT 0",
+            "empty_alerts": "BOOLEAN NOT NULL DEFAULT 0",
         },
         "fairteiler": {
             "cooled": "BOOLEAN NOT NULL DEFAULT 0",

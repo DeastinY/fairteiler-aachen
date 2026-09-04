@@ -102,6 +102,8 @@ const fr: Messages = {
   'karte.basketsEmpty': 'Pas de panier alimentaire à proximité pour le moment.',
   'aktivitaet.baskets': 'Nouveaux paniers alimentaires',
   'aktivitaet.basketsNote': 'Vérifié au plus toutes les 30 minutes – les notifications peuvent être retardées d\'autant.',
+  'aktivitaet.emptyAlerts': 'Aussi quand signalé vide',
+  'aktivitaet.emptyAlertsNote': 'Pratique si tu aimes déposer quelque chose.',
 
   'liste.title': 'Tous les Fairteiler',
   'liste.subtitle': 'Points à Aix-la-Chapelle et alentours',
