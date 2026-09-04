@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/DeastinY/fairteiler-aachen/actions/workflows/ci.yml/badge.svg)](https://github.com/DeastinY/fairteiler-aachen/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-345%20passing-2f7d54.svg)](#development)
+[![Tests](https://img.shields.io/badge/tests-375%20passing-2f7d54.svg)](#development)
 [![PWA](https://img.shields.io/badge/PWA-installable%20%C2%B7%20offline-2f7d54.svg)](https://fairteiler-aachen.de)
 [![Languages](https://img.shields.io/badge/i18n-9%20languages%20incl.%20RTL-2f7d54.svg)](#features)
 [![No tracking](https://img.shields.io/badge/tracking-none%20%C2%B7%20no%20cookies-2f7d54.svg)](#privacy)
@@ -20,7 +20,7 @@ seconds, no account, no tracking — built to **complement
 > This codebase was written almost entirely by an AI (**Claude Code**),
 > working under the direction and review of a human maintainer — what the
 > kids call *vibe-coded*, taken seriously: every feature is test-driven
-> (**345 automated tests** incl. a real-backend E2E journey, ~95 %
+> (**375 automated tests** incl. a real-backend E2E journey, ~95 %
 > statement coverage), audited for accessibility (WCAG 2.1 AA, zero axe
 > violations) and reviewed for translation quality. Treat it like any
 > young codebase regardless: read before you trust, and
@@ -34,6 +34,15 @@ seconds, no account, no tracking — built to **complement
 | Map | List | Detail | Transparency |
 |:---:|:---:|:---:|:---:|
 | <img src="docs/screenshots/karte.png" width="190" alt="Map of Aachen with status-colored Fairteiler pins"> | <img src="docs/screenshots/liste.png" width="190" alt="List of Fairteiler with status and activity charts"> | <img src="docs/screenshots/detail.png" width="190" alt="Fairteiler detail with live status, activity and opening hours"> | <img src="docs/screenshots/statistik.png" width="190" alt="Transparent anonymous usage statistics"> |
+
+<details>
+<summary><b>🌙 Dark mode</b> — follows your system, or pick light/dark in settings</summary>
+
+| Map | List | Detail | Transparency |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/screenshots/dark-karte.png" width="190" alt="Map in dark mode"> | <img src="docs/screenshots/dark-liste.png" width="190" alt="List in dark mode"> | <img src="docs/screenshots/dark-detail.png" width="190" alt="Detail in dark mode"> | <img src="docs/screenshots/dark-statistik.png" width="190" alt="Statistics in dark mode"> |
+
+</details>
 
 ## Features
 
@@ -49,7 +58,8 @@ seconds, no account, no tracking — built to **complement
 - 🧺 **Essenskörbe**: public food baskets nearby, deep-linked to foodsharing.de
 - 📊 **Radical transparency**: anonymous daily counters, shown to everyone
   in-app under *Statistik*
-- 📱 Installable PWA, offline-capable (last known statuses, cached map tiles)
+- 🌙 **Dark mode**, nine languages, installable PWA, offline-capable (last known
+  statuses, cached map tiles)
 - ♿ WCAG 2.1 AA — zero axe violations across all routes
 
 ## Concept
@@ -113,12 +123,12 @@ server-side). Full details: [Datenschutzerklärung](https://fairteiler-aachen.de
 ## Development
 
 ```bash
-# backend (Python ≥ 3.12) — 83 tests
+# backend (Python ≥ 3.12) — 100 tests
 cd backend && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m pytest
 .venv/bin/python run.py                 # API on :8000, SQLite + seed
 
-# frontend (Node ≥ 20) — 256 unit + 6 e2e tests
+# frontend (Node ≥ 20) — 269 unit + 6 e2e tests
 cd frontend && npm install
 npm run test && npm run e2e             # e2e includes a real-backend journey
 npm run dev                             # proxies /api to :8000
