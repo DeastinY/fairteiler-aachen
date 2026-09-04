@@ -24,6 +24,7 @@ const leaflet = vi.hoisted(() => {
     fitBounds: vi.fn(),
     remove: vi.fn(),
     flyTo: vi.fn(),
+    flyToBounds: vi.fn(),
     on: vi.fn((event: string, cb: () => void) => {
       mapHandlers[event] = cb
     }),
@@ -195,10 +196,16 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
     pins()[1]!.handlers['click']!()
     await flushPromises()
 
-    // flew to the marker at selection zoom
-    expect(leaflet.mapObj.flyTo).toHaveBeenCalledWith([50.78, 6.09], 16, {
-      animate: true,
-    })
+    // flew to the neighborhood bounds (selected + in-range neighbors), capped zoom
+    expect(leaflet.mapObj.flyToBounds).toHaveBeenCalledTimes(1)
+    const [bounds, options] = leaflet.mapObj.flyToBounds.mock.calls[0]!
+    // selected first, then both neighbors (all within 3 km of each other)
+    expect(bounds[0]).toEqual([50.78, 6.09])
+    expect(bounds).toHaveLength(3)
+    expect(options.maxZoom).toBe(16)
+    expect(options.animate).toBe(true)
+    expect(options.paddingTopLeft[1]).toBeGreaterThanOrEqual(120) // clears topbar+chips
+    expect(leaflet.mapObj.flyTo).not.toHaveBeenCalled()
     // no navigation yet
     expect(routerPush).not.toHaveBeenCalled()
 
@@ -225,6 +232,29 @@ describe('KarteView (OSM tiles + navigation-like interaction)', () => {
     const samePin = pins().find((p) => p.latlng[0] === 50.78)!
     samePin.handlers['click']!()
     expect(routerPush).toHaveBeenCalledWith('/fairteiler/2')
+  })
+
+  it('flies straight to a remote pin at zoom 14 (no neighbors within 3 km)', async () => {
+    fetchMock.mockImplementation(() =>
+      Promise.resolve(
+        jsonResponse([
+          ...LIST,
+          makeFairteiler({ id: 9, name: 'Hauset', lat: 50.71, lon: 6.24 }),
+        ]),
+      ),
+    )
+
+    mountKarte()
+    await flushPromises()
+
+    const remote = pins().find((p) => p.latlng[0] === 50.71)!
+    remote.handlers['click']!()
+    await flushPromises()
+
+    expect(leaflet.mapObj.flyToBounds).not.toHaveBeenCalled()
+    expect(leaflet.mapObj.flyTo).toHaveBeenCalledWith([50.71, 6.24], 14, {
+      animate: true,
+    })
   })
 
   it('Details button navigates, X and map tap deselect', async () => {

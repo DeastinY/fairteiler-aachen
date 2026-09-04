@@ -80,6 +80,33 @@ export function haversineKm(a: LatLon, b: LatLon): number {
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h))
 }
 
+export interface SelectionView {
+  /** Selected first, then its nearest in-range neighbors. */
+  points: LatLon[]
+  /** True when no neighbor is in range – zoom to the point instead. */
+  single: boolean
+}
+
+/**
+ * Context view for a selected point: the point plus its up to `maxNeighbors`
+ * nearest neighbors within `radiusKm`. Remote points come back alone.
+ */
+export function selectionView(
+  selected: LatLon,
+  all: LatLon[],
+  maxNeighbors = 3,
+  radiusKm = 3,
+): SelectionView {
+  const neighbors = all
+    .filter((p) => p !== selected && haversineKm(selected, p) > 0)
+    .map((p) => ({ p, km: haversineKm(selected, p) }))
+    .filter((entry) => entry.km <= radiusKm)
+    .sort((a, b) => a.km - b.km)
+    .slice(0, maxNeighbors)
+    .map((entry) => entry.p)
+  return { points: [selected, ...neighbors], single: neighbors.length === 0 }
+}
+
 /** "400 m" below one kilometer, "1,2 km" above (German decimal comma). */
 export function formatDistance(km: number): string {
   if (km < 1) {

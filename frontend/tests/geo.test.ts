@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatDistance, haversineKm, projectPoints } from '../src/lib/geo'
+import { formatDistance, haversineKm, projectPoints, selectionView } from '../src/lib/geo'
 
 describe('projectPoints', () => {
   it('maps the bounding box into the padded viewport, north up', () => {
@@ -82,6 +82,35 @@ describe('haversineKm', () => {
     const b = { lat: 50.7593, lon: 6.1296 }
     expect(haversineKm(a, a)).toBe(0)
     expect(haversineKm(a, b)).toBeCloseTo(haversineKm(b, a), 12)
+  })
+})
+
+describe('selectionView', () => {
+  const center = { lat: 50.776, lon: 6.084 }
+  const near1 = { lat: 50.78, lon: 6.09 } // ~0.6 km
+  const near2 = { lat: 50.77, lon: 6.1 } // ~1.3 km
+  const near3 = { lat: 50.79, lon: 6.06 } // ~2.3 km
+  const near4 = { lat: 50.795, lon: 6.1 } // ~2.4 km
+  const far = { lat: 50.71, lon: 6.24 } // ~13 km (Hauset-like)
+
+  it('returns the selected point plus its up to 3 nearest neighbors within 3 km', () => {
+    const view = selectionView(center, [far, near3, center, near1, near4, near2])
+    expect(view.single).toBe(false)
+    expect(view.points[0]).toBe(center)
+    // nearest first, capped at 3, far one excluded
+    expect(view.points.slice(1)).toEqual([near1, near2, near3])
+  })
+
+  it('returns just the selected point when nothing is within range', () => {
+    const view = selectionView(far, [center, near1, near2, far])
+    expect(view.single).toBe(true)
+    expect(view.points).toEqual([far])
+  })
+
+  it('handles a single-item list', () => {
+    const view = selectionView(center, [center])
+    expect(view.single).toBe(true)
+    expect(view.points).toEqual([center])
   })
 })
 

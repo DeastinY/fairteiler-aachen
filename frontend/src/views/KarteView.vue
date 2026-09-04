@@ -11,7 +11,7 @@ import { fetchFairteilerList } from '../composables/api'
 import { loadAutoLocate } from '../composables/settings'
 import { useFilters } from '../composables/useFilters'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
-import { formatDistance, haversineKm, type LatLon } from '../lib/geo'
+import { formatDistance, haversineKm, selectionView, type LatLon } from '../lib/geo'
 import { applyFilter } from '../lib/filters'
 import { openHint } from '../lib/hours'
 import { tagLabels } from '../lib/labels'
@@ -25,7 +25,10 @@ const TILE_URL = 'https://tile.openstreetmap.de/{z}/{x}/{y}.png'
 
 /** Flying to a fix further than this from the region would leave the map lost. */
 const MAX_FLY_DISTANCE_KM = 100
-const SELECT_ZOOM = 16
+/** Selection never zooms past this – neighbors stay visible. */
+const SELECT_MAX_ZOOM = 16
+/** Remote pins without neighbors: close, but not empty-street level. */
+const SELECT_REMOTE_ZOOM = 14
 const LOCATE_ZOOM = 15
 /** Accuracy circles beyond this radius just swallow the map – cap the visual. */
 const MAX_ACCURACY_RADIUS_M = 200
@@ -188,7 +191,22 @@ function onMarkerTap(item: FairteilerListItem) {
     return
   }
   selected.value = item
-  map?.flyTo([item.lat, item.lon], SELECT_ZOOM, { animate: true })
+  // keep context: fly to the selected pin plus its nearby neighbors
+  const view = selectionView(item, filtered.value)
+  if (view.single) {
+    map?.flyTo([item.lat, item.lon], SELECT_REMOTE_ZOOM, { animate: true })
+  } else {
+    const bounds = L.latLngBounds(
+      view.points.map((p) => [p.lat, p.lon] as [number, number]),
+    )
+    map?.flyToBounds(bounds, {
+      // clear of the topbar/filter chips above and the sheet card below
+      paddingTopLeft: [40, 130],
+      paddingBottomRight: [40, 70],
+      maxZoom: SELECT_MAX_ZOOM,
+      animate: true,
+    })
+  }
   renderMarkers()
 }
 
