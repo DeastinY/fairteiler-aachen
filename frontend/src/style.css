@@ -48,6 +48,67 @@
   --bar-hi: #2f7d54;
 }
 
+/* --- dark theme -----------------------------------------------------------
+   Same roles, dark ground. Greens are lifted so they keep AA contrast on the
+   dark surface; chart fills stay graphic but gain luminance. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #14170f;
+    --surface: #1c211a;
+    --border: #2c332a;
+    --border-soft: #262c24;
+    --ink: #eceee7;
+    --muted: #a9b2a6;
+    --faint: #8d968b;
+    --green: #7cc99a;
+    --green-dark: #9ad9b2;
+    --green-soft: #223a2b;
+    --green-mist: #1e2b22;
+    --gray-soft: #2a2f28;
+    --gray-ink: #c3cabf;
+    --amber-soft: #3a2f16;
+    --amber-ink: #e8c274;
+    --amber: #d9a83c;
+    --bar: #3c5a45;
+    --bar-hi: #7cc99a;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #14170f;
+  --surface: #1c211a;
+  --border: #2c332a;
+  --border-soft: #262c24;
+  --ink: #eceee7;
+  --muted: #a9b2a6;
+  --faint: #8d968b;
+  --green: #7cc99a;
+  --green-dark: #9ad9b2;
+  --green-soft: #223a2b;
+  --green-mist: #1e2b22;
+  --gray-soft: #2a2f28;
+  --gray-ink: #c3cabf;
+  --amber-soft: #3a2f16;
+  --amber-ink: #e8c274;
+  --amber: #d9a83c;
+  --bar: #3c5a45;
+  --bar-hi: #7cc99a;
+}
+
+/* map tiles are light by nature: take the edge off in dark mode */
+:root[data-theme='dark'] .leaflet-tile {
+  filter: brightness(0.82) saturate(0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .leaflet-tile {
+    filter: brightness(0.82) saturate(0.9);
+  }
+}
+
+
 * {
   box-sizing: border-box;
 }

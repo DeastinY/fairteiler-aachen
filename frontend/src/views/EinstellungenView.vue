@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { setTheme, theme, type ThemeChoice } from '../composables/theme'
 import { ref } from 'vue'
 import { t, useI18n, type LocaleCode } from '../i18n'
 import {
@@ -51,6 +52,27 @@ function cancelClear() {
     </header>
 
     <div class="card list">
+      <div class="row">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.5"></circle>
+          <path d="M12 2v2 M12 20v2 M4.9 4.9l1.4 1.4 M17.7 17.7l1.4 1.4 M2 12h2 M20 12h2 M4.9 19.1l1.4-1.4 M17.7 6.3l1.4-1.4"></path>
+        </svg>
+        <div class="rowbody">
+          <span class="rowname">{{ t('einstellungen.theme') }}</span>
+          <span class="rownote">{{ t('einstellungen.themeNote') }}</span>
+        </div>
+        <select
+          class="themeselect"
+          :value="theme"
+          :aria-label="t('einstellungen.theme')"
+          data-test="theme-select"
+          @change="setTheme(($event.target as HTMLSelectElement).value as ThemeChoice)"
+        >
+          <option value="system">{{ t('einstellungen.themeSystem') }}</option>
+          <option value="light">{{ t('einstellungen.themeLight') }}</option>
+          <option value="dark">{{ t('einstellungen.themeDark') }}</option>
+        </select>
+      </div>
       <div class="row">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="9"></circle>
@@ -288,5 +310,17 @@ function cancelClear() {
   text-align: center;
   padding: 18px 16px 8px 16px;
   margin: 0;
+}
+
+.themeselect {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-height: 44px;
 }
 </style>
