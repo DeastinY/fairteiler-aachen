@@ -67,6 +67,9 @@ const nl: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': '24/7 open',
   'filters.cooled': 'Koelkast',
+  'filters.accessible': 'Drempelvrij',
+  'detail.accessibleYes': 'Drempelvrije toegang',
+  'detail.accessibleNo': 'Niet drempelvrij',
   'filters.aria': 'Filters',
 
   'karte.mapAria': 'Kaart van de Fairteiler in Aken',

@@ -67,6 +67,9 @@ const tr: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': '7/24 açık',
   'filters.cooled': 'Buzdolabı',
+  'filters.accessible': 'Engelsiz',
+  'detail.accessibleYes': 'Engelsiz erişim',
+  'detail.accessibleNo': 'Engelsiz değil',
   'filters.aria': 'Filtreler',
 
   'karte.mapAria': "Aachen'daki Fairteiler haritası",

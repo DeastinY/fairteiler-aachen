@@ -15,7 +15,7 @@ type Chip = {
   key: keyof FairteilerFilter
   labelKey: MessageKey
   shortKey?: MessageKey
-  icon?: 'snow' | 'basket'
+  icon?: 'snow' | 'basket' | 'wheelchair'
 }
 
 const BASE_CHIPS: Chip[] = [
@@ -27,6 +27,7 @@ const BASE_CHIPS: Chip[] = [
     shortKey: 'filters.aroundTheClockShort',
   },
   { key: 'cooled', labelKey: 'filters.cooled', icon: 'snow' },
+  { key: 'accessible', labelKey: 'filters.accessible', icon: 'wheelchair' },
 ]
 
 const chips = computed<Chip[]>(() =>
@@ -37,6 +38,7 @@ const chips = computed<Chip[]>(() =>
 
 const EMOJI: Record<NonNullable<Chip['icon']>, string> = {
   snow: '🧊',
+  wheelchair: '♿',
   basket: '🧺',
 }
 

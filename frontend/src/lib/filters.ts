@@ -7,6 +7,7 @@ export interface FairteilerFilter {
   aroundTheClock: boolean
   /** Only Fairteiler with a fridge. */
   cooled: boolean
+  accessible: boolean
   /** Only Fairteiler that are open right now (unknown hours are excluded). */
   openNow: boolean
   /** Visibility toggle for basket markers on the Karte (default on). */
@@ -18,6 +19,7 @@ export function emptyFilter(): FairteilerFilter {
     etwasDa: false,
     aroundTheClock: false,
     cooled: false,
+    accessible: false,
     openNow: false,
     baskets: true,
   }
@@ -32,6 +34,7 @@ export function applyFilter(
     if (filter.etwasDa && item.status.state !== 'etwas_da') return false
     if (filter.aroundTheClock && !item.aroundTheClock) return false
     if (filter.cooled && !item.cooled) return false
+  if (filter.accessible && item.accessible !== true) return false
     // honest semantics: with the filter active, unknown hours (null) are
     // excluded – we only show places we KNOW to be open
     if (filter.openNow && !(item.openNow === true || item.aroundTheClock)) return false

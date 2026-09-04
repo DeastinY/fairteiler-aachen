@@ -67,6 +67,9 @@ const pl: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Całodobowo',
   'filters.cooled': 'Lodówka',
+  'filters.accessible': 'Bez barier',
+  'detail.accessibleYes': 'Dostęp bez schodów',
+  'detail.accessibleNo': 'Są schody',
   'filters.aria': 'Filtry',
 
   'karte.mapAria': 'Mapa Fairteiler w Akwizgranie',

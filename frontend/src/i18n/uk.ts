@@ -67,6 +67,9 @@ const uk: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Цілодобово',
   'filters.cooled': 'Холодильник',
+  'filters.accessible': 'Без бар’єрів',
+  'detail.accessibleYes': 'Доступ без сходів',
+  'detail.accessibleNo': 'Є сходи',
   'filters.aria': 'Фільтри',
 
   'karte.mapAria': 'Мапа Fairteiler в Аахені',

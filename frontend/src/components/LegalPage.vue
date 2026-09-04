@@ -18,7 +18,7 @@ function goBack() {
   <div class="page">
     <div class="head">
       <button type="button" class="roundbtn backbtn" :aria-label="t('common.back')" @click="goBack">
-        <svg class="dir-flip" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22301f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="dir-flip" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fdfcf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
       </button>
@@ -50,7 +50,12 @@ function goBack() {
   border: 1px solid var(--border);
 }
 
+.head .roundbtn {
+  background: rgba(253, 252, 248, 0.16);
+}
+
 .title {
+  color: var(--surface);
   font-weight: 750;
   font-size: 22px;
   letter-spacing: -0.02em;

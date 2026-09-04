@@ -79,6 +79,9 @@ const de = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Rund um die Uhr',
   'filters.cooled': 'Gekühlt',
+  'filters.accessible': 'Barrierefrei',
+  'detail.accessibleYes': 'Barrierefrei zugänglich',
+  'detail.accessibleNo': 'Nicht barrierefrei',
   'filters.aria': 'Filter',
 
   // Karte

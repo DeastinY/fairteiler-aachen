@@ -50,6 +50,31 @@ afterEach(() => {
 })
 
 describe('DetailView', () => {
+  it('states accessibility only when it is known', async () => {
+    for (const [value, expected] of [
+      [true, 'Barrierefrei zugänglich'],
+      [false, 'Nicht barrierefrei'],
+    ] as const) {
+      fetchMock.mockImplementation((url: string) =>
+        url === '/api/fairteiler/810'
+          ? Promise.resolve(jsonResponse(makeDetail({ id: 810, accessible: value })))
+          : Promise.reject(new Error('unexpected')),
+      )
+      const wrapper = mountDetail()
+      await flushPromises()
+      expect(wrapper.find('[data-test="accessible-chip"]').text()).toContain(expected)
+    }
+
+    fetchMock.mockImplementation((url: string) =>
+      url === '/api/fairteiler/810'
+        ? Promise.resolve(jsonResponse(makeDetail({ id: 810, accessible: null })))
+        : Promise.reject(new Error('unexpected')),
+    )
+    const unknown = mountDetail()
+    await flushPromises()
+    expect(unknown.find('[data-test="accessible-chip"]').exists()).toBe(false)
+  })
+
   it('shows the cached Fairteiler photo and falls back when it fails', async () => {
     fetchMock.mockImplementation((url: string) =>
       url === '/api/fairteiler/810'

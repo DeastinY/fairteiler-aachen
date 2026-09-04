@@ -73,8 +73,21 @@ def test_migrate_adds_missing_columns():
     with engine.begin() as conn:
         conn.execute(text("CREATE TABLE fairteiler (id INTEGER PRIMARY KEY, name TEXT)"))
     assert sorted(migrate(engine)) == [
+        "fairteiler.accessible",
         "fairteiler.around_the_clock",
         "fairteiler.cooled",
         "fairteiler.hours",
     ]
     assert migrate(engine) == []  # idempotent
+
+
+def test_accessibility_comes_from_curated_overrides(client):
+    by_id = {p["id"]: p for p in client.get("/api/fairteiler").json()}
+    # stated in the upstream descriptions
+    assert by_id[810]["accessible"] is True      # ebenerdiger Eingang
+    assert by_id[3465]["accessible"] is True     # "Der Zugang ist barrierefrei!"
+    assert by_id[795]["accessible"] is False     # mehrere Stufen am Eingang
+    assert by_id[1220]["accessible"] is False    # Einfahrt uneben, Fächer hoch
+    # never guessed: unknown stays unknown
+    assert by_id[1982]["accessible"] is None
+    assert client.get("/api/fairteiler/810").json()["accessible"] is True

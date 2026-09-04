@@ -94,6 +94,7 @@ def create_app(
             "cooled": row.cooled,
             "aroundTheClock": row.around_the_clock,
             "openNow": hours_mod.is_open_now(row),
+            "accessible": row.accessible,
             "status": status.derive_status(reports, now),
             "care": status.derive_care(reports, now),
             "activity7d": status.activity_by_day(reports, now),

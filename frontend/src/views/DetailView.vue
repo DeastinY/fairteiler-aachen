@@ -286,13 +286,17 @@ function goBack() {
         </div>
         <p class="page-sub">{{ address }}</p>
         <p v-if="detail.regionName && detail.regionName !== detail.city" class="region">{{ detail.regionName }}</p>
-        <div v-if="detail.aroundTheClock || detail.cooled" class="inforow">
+        <div v-if="detail.aroundTheClock || detail.cooled || detail.accessible !== null" class="inforow">
           <span v-if="detail.aroundTheClock" class="infochip">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
               <circle cx="12" cy="12" r="9"></circle>
               <path d="M12 7v5l3 3"></path>
             </svg>
             {{ t('detail.aroundTheClock') }}
+          </span>
+          <span v-if="detail.accessible !== null" class="infochip" data-test="accessible-chip">
+            <span aria-hidden="true">{{ detail.accessible ? '♿' : '⚠️' }}</span>
+            {{ detail.accessible ? t('detail.accessibleYes') : t('detail.accessibleNo') }}
           </span>
           <span v-if="detail.cooled" class="infochip">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -476,6 +480,9 @@ function goBack() {
 <style scoped>
 .hero {
   position: relative;
+  /* the hero runs under the status bar; controls already clear it */
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
   background: var(--green);
   overflow: hidden;
 }

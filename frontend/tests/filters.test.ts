@@ -67,4 +67,15 @@ describe('applyFilter', () => {
     const result = applyFilter(items, { ...emptyFilter(), openNow: true })
     expect(result.map((f) => f.id)).toEqual([1, 2])
   })
+
+  it('the accessibility filter keeps only known step-free places', () => {
+    const items = [
+      makeFairteiler({ id: 1, accessible: true }),
+      makeFairteiler({ id: 2, accessible: false }),
+      makeFairteiler({ id: 3, accessible: null }), // unknown stays out
+    ]
+    const filter = { ...emptyFilter(), accessible: true }
+    expect(applyFilter(items, filter).map((f) => f.id)).toEqual([1])
+    expect(applyFilter(items, emptyFilter())).toHaveLength(3)
+  })
 })

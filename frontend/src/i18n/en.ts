@@ -67,6 +67,9 @@ const en: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Open 24/7',
   'filters.cooled': 'Fridge',
+  'filters.accessible': 'Step-free',
+  'detail.accessibleYes': 'Step-free access',
+  'detail.accessibleNo': 'Not step-free',
   'filters.aria': 'Filters',
 
   'karte.mapAria': 'Map of the Fairteiler in Aachen',

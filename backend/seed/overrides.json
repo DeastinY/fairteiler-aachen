@@ -1,14 +1,58 @@
 {
-  "_comment": "Curated per-Fairteiler facts that the upstream free text cannot provide reliably. hours: day keys mo..su, [start, end) in local hours; only add VERIFIED times (source: upstream description or on-site).",
+  "_comment": "Curated per-Fairteiler facts the upstream free text cannot provide reliably. hours: day keys mo..su, [start, end) in local hours. accessible: true/false only when the upstream description states it; omit when unknown. Only add VERIFIED facts (source: upstream description or on-site).",
   "810": {
     "_source": "Beschreibung: Öffnungszeiten Mo-Fr 10-18 Uhr, Sa 10-16 Uhr (Second-Hand-Laden BreitSeite)",
     "hours": {
-      "mo": [[10, 18]],
-      "tu": [[10, 18]],
-      "we": [[10, 18]],
-      "th": [[10, 18]],
-      "fr": [[10, 18]],
-      "sa": [[10, 16]]
-    }
+      "mo": [
+        [
+          10,
+          18
+        ]
+      ],
+      "tu": [
+        [
+          10,
+          18
+        ]
+      ],
+      "we": [
+        [
+          10,
+          18
+        ]
+      ],
+      "th": [
+        [
+          10,
+          18
+        ]
+      ],
+      "fr": [
+        [
+          10,
+          18
+        ]
+      ],
+      "sa": [
+        [
+          10,
+          16
+        ]
+      ]
+    },
+    "_source_accessible": "Beschreibung: 'Barrierefreiheit? - ebenerdiger Eingang zum Laden'",
+    "accessible": true
+  },
+  "795": {
+    "_source_accessible": "Beschreibung: 'Barrierefreiheit? - mehrere Stufen am Eingang'",
+    "accessible": false
+  },
+  "1220": {
+    "_source_accessible": "Beschreibung: 'Barrierefreiheit? - Einfahrt etwas uneben - einige Regal- bzw. Schrankfächer recht hoch'",
+    "accessible": false
+  },
+  "3465": {
+    "_source_accessible": "Beschreibung: 'Der Zugang ist barrierefrei!'",
+    "accessible": true
   }
 }

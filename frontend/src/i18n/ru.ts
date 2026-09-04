@@ -67,6 +67,9 @@ const ru: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Круглосуточно',
   'filters.cooled': 'Холодильник',
+  'filters.accessible': 'Без барьеров',
+  'detail.accessibleYes': 'Доступно без ступеней',
+  'detail.accessibleNo': 'Есть ступени',
   'filters.aria': 'Фильтры',
 
   'karte.mapAria': 'Карта Fairteiler в Ахене',

@@ -68,7 +68,9 @@ def load_seed(session: Session, seed_path: Path) -> int:
         flags = derive_flags(entry.get("description"))
         row.cooled = flags["cooled"]
         row.around_the_clock = flags["around_the_clock"]
-        row.hours = overrides.get(str(entry["id"]), {}).get("hours")
+        override = overrides.get(str(entry["id"]), {})
+        row.hours = override.get("hours")
+        row.accessible = override.get("accessible")
         session.add(row)
         count += 1
     return count

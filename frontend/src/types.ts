@@ -64,6 +64,7 @@ export interface FairteilerListItem {
   cooled: boolean
   /** Open right now? null = unknown (no curated hours). */
   openNow: boolean | null
+  accessible: boolean | null
   status: FairteilerStatus
   care: FairteilerCare
   activity7d: number[]

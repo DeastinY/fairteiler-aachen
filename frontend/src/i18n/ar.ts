@@ -67,6 +67,9 @@ const ar: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'مفتوح دائمًا',
   'filters.cooled': 'ثلاجة',
+  'filters.accessible': 'خالٍ من العوائق',
+  'detail.accessibleYes': 'وصول خالٍ من العوائق',
+  'detail.accessibleNo': 'غير خالٍ من العوائق',
   'filters.aria': 'الفلاتر',
 
   'karte.mapAria': 'خريطة الـ Fairteiler في آخن',

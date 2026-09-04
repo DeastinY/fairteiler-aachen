@@ -67,6 +67,9 @@ const fr: Messages = {
   'filters.aroundTheClockShort': '24/7',
   'filters.aroundTheClock': 'Ouvert 24 h/24',
   'filters.cooled': 'Frigo',
+  'filters.accessible': 'Sans marches',
+  'detail.accessibleYes': 'Accès sans marches',
+  'detail.accessibleNo': 'Accès avec marches',
   'filters.aria': 'Filtres',
 
   'karte.mapAria': 'Carte des Fairteiler à Aix-la-Chapelle',

@@ -44,6 +44,7 @@ class Fairteiler(Base):
     cooled: Mapped[bool] = mapped_column(default=False)
     around_the_clock: Mapped[bool] = mapped_column(default=False)
     hours: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    accessible: Mapped[bool | None] = mapped_column(nullable=True)
 
 
 class PushSubscription(Base):
