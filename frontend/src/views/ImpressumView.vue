@@ -52,9 +52,11 @@ import LegalPage from '../components/LegalPage.vue'
         Deutschland, auf dem diese App läuft.
       </li>
       <li>
-        <a href="https://basemap.de" target="_blank" rel="noopener noreferrer">basemap.de</a>
-        / BKG – die amtliche Webkarte der deutschen Vermessungsverwaltungen
-        liefert die Kartendaten (Open Data, dl-de/by-2-0).
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>
+        – die Kartendaten stammen von den OpenStreetMap-Mitwirkenden (ODbL);
+        die Kacheln liefert der
+        <a href="https://www.fossgis.de" target="_blank" rel="noopener noreferrer">FOSSGIS e.V.</a>
+        (tile.openstreetmap.de).
       </li>
       <li>
         Freie Software: <a href="https://vuejs.org" target="_blank" rel="noopener noreferrer">Vue.js</a>,

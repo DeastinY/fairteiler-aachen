@@ -61,14 +61,15 @@ import LegalPage from '../components/LegalPage.vue'
       niemals an unseren Server übertragen.
     </p>
 
-    <h2>6a. Kartendarstellung (basemap.de)</h2>
+    <h2>6a. Kartendarstellung (OpenStreetMap)</h2>
     <p>
-      Die Karte lädt Kartenkacheln vom offenen Kartendienst basemap.de des
-      Bundesamts für Kartographie und Geodäsie (BKG). Dabei erhält das BKG
-      technisch bedingt deine IP-Adresse und den abgerufenen Kartenausschnitt;
-      wir übermitteln keine weiteren Daten. Rechtsgrundlage: Art. 6 Abs. 1
-      lit. f DSGVO (verständliche Darstellung der Standorte). Bereits geladene
-      Kacheln werden lokal zwischengespeichert.
+      Die Karte lädt Kartenkacheln von tile.openstreetmap.de, betrieben vom
+      FOSSGIS e.V. (Deutschland) auf Basis von OpenStreetMap. Dabei erhält
+      der Betreiber technisch bedingt deine IP-Adresse und den abgerufenen
+      Kartenausschnitt; wir übermitteln keine weiteren Daten. Rechtsgrundlage:
+      Art. 6 Abs. 1 lit. f DSGVO (verständliche Darstellung der Standorte,
+      auch der Fairteiler jenseits der Grenze). Bereits geladene Kacheln
+      werden lokal zwischengespeichert.
     </p>
 
     <h2>7. Push-Benachrichtigungen (optional)</h2>
