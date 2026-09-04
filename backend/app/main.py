@@ -7,7 +7,7 @@ from pydantic import BaseModel, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import crud, hours as hours_mod, maintenance, push, seed, status, usage
+from app import baskets as baskets_mod, crud, hours as hours_mod, maintenance, push, seed, status, usage
 from app.models import FOOD_TAGS, Fairteiler, PushSubscription
 from app.push import PushSettings
 
@@ -144,6 +144,10 @@ def create_app(
         sub.fairteiler_ids = body.fairteilerIds
         sub.quiet_hours = body.quietHours
         session.add(sub)
+
+    @app.get("/api/baskets")
+    def baskets():
+        return baskets_mod.get_baskets()
 
     @app.get("/api/stats")
     def stats(session: Session = Depends(get_session)):
