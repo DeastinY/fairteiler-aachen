@@ -88,6 +88,13 @@ const de = {
   'detail.accessAsk': 'Ist der Zugang barrierefrei?',
   'detail.accessYes': 'Ja, stufenlos',
   'detail.accessNo': 'Nein, Stufen',
+  'detail.nudgeAsk': 'Sollen wir dir Bescheid geben, wenn hier etwas gebracht wird?',
+  'detail.nudgeYes': 'Ja, benachrichtigen',
+  'detail.nudgeNo': 'Nein, danke',
+  'detail.nudgeDone': 'Benachrichtigungen sind an.',
+  'detail.correctData': 'Angaben zu diesem Fairteiler korrigieren',
+  'detail.correctSubject': 'Korrektur: {name}',
+  'detail.correctBody': 'Hallo,\n\nbei {name} (ID {id}) stimmt etwas nicht:\n\n\n\n{url}',
   'filters.aria': 'Filter',
 
   // Karte
@@ -196,6 +203,7 @@ const de = {
   'mehr.settings': 'Einstellungen',
   'mehr.rules': 'Gut zu wissen – Regeln & Hygiene',
   'mehr.statistik': 'Nutzung & Transparenz',
+  'mehr.feedback': 'Feedback & Fehler melden',
   'mehr.impressum': 'Impressum',
   'mehr.datenschutz': 'Datenschutz',
   'mehr.aboutTitle': 'Über diese App',

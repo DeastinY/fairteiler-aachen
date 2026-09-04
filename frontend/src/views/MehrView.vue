@@ -1,6 +1,13 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { t } from '../i18n'
 import InstallCard from '../components/InstallCard.vue'
+
+const feedbackHref = computed(
+  () =>
+    'mailto:richard.polzin@posteo.de?subject=' +
+    encodeURIComponent('Feedback: Fairteiler Aachen'),
+)
 </script>
 
 <template>
@@ -70,6 +77,19 @@ import InstallCard from '../components/InstallCard.vue'
           <path d="M9 6l6 6-6 6"></path>
         </svg>
       </RouterLink>
+      <a
+        class="linkrow"
+        data-test="feedback-link"
+        :href="feedbackHref"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span class="linkname">{{ t('mehr.feedback') }}</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a8a494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="dir-flip">
+          <path d="M9 6l6 6-6 6"></path>
+        </svg>
+      </a>
       <RouterLink to="/statistik" class="linkrow" data-test="statistik-link">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 20V10 M10 20V4 M16 20v-7 M22 20H2"></path>

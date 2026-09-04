@@ -50,6 +50,38 @@ afterEach(() => {
 })
 
 describe('DetailView', () => {
+  it('offers notifications once after an own report and remembers the answer', async () => {
+    const own = { id: 42, type: 'brought' as const, tags: ['obst'], createdAt: OWN_CREATED_AT }
+    rememberOwnReport({ id: 42, fairteilerId: 810, createdAt: OWN_CREATED_AT })
+    fetchMock.mockImplementation((url: string) => {
+      if (url === '/api/push/config') {
+        return Promise.resolve(jsonResponse({ enabled: true, vapidPublicKey: 'BKey' }))
+      }
+      return Promise.resolve(jsonResponse(makeDetail({ id: 810, reports: [own] })))
+    })
+    vi.stubGlobal('PushManager', class {})
+    vi.stubGlobal('Notification', { requestPermission: vi.fn() })
+    vi.stubGlobal('navigator', {
+      onLine: true,
+      serviceWorker: { ready: Promise.resolve({ pushManager: {} }) },
+    })
+
+    const wrapper = mountDetail()
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.find('[data-test="push-nudge"]').exists()).toBe(true)
+
+    await wrapper.find('[data-test="nudge-no"]').trigger('click')
+    expect(wrapper.find('[data-test="push-nudge"]').exists()).toBe(false)
+    expect(localStorage.getItem('fairteiler-nudge-shown')).toBe('true')
+
+    // never asked twice
+    const again = mountDetail()
+    await flushPromises()
+    await flushPromises()
+    expect(again.find('[data-test="push-nudge"]').exists()).toBe(false)
+  })
+
   it('asks the community when accessibility is unknown and reports the answer', async () => {
     const posted: unknown[] = []
     fetchMock.mockImplementation((url: string, init?: RequestInit) => {

@@ -7,8 +7,15 @@ import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import { ApiError, deleteReport, fetchFairteilerDetail, submitReport } from '../composables/api'
 import { apiUrl } from '../lib/apiBase'
+import {
+  markNudgeShown,
+  nudgeAlreadyShown,
+  pushIsOffered,
+  subscribeToFairteiler,
+} from '../composables/usePushSubscribe'
 import { renderMarkdown } from '../lib/markdown'
 import { forgetOwnReport, isOwnReport, rememberOwnReport } from '../composables/ownReports'
+import { loadPushPrefs } from '../composables/pushPrefs'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { showToast } from '../composables/useToast'
 import { t, useI18n } from '../i18n'
@@ -52,7 +59,10 @@ async function load() {
   }
 }
 
-onMounted(load)
+onMounted(async () => {
+  await load()
+  void maybeOfferNudge()
+})
 watch(fairteilerId, load)
 
 const address = computed(() => {
@@ -109,6 +119,51 @@ const photoUrl = computed(() =>
 )
 watch(() => detail.value?.id, () => {
   photoFailed.value = false
+})
+
+/* After someone's first report we offer notifications once — that is the
+   moment their motivation is highest, and the Aktivität tab is easy to miss. */
+const nudgeVisible = ref(false)
+const nudgeBusy = ref(false)
+
+async function maybeOfferNudge() {
+  if (nudgeAlreadyShown() || !detail.value) return
+  const ownReportHere = detail.value.reports.some((r) => isOwnReport(r.id))
+  if (!ownReportHere) return
+  const prefs = loadPushPrefs()
+  if (prefs.ids.includes(detail.value.id)) return
+  if (!(await pushIsOffered())) return
+  nudgeVisible.value = true
+}
+
+function dismissNudge() {
+  markNudgeShown()
+  nudgeVisible.value = false
+}
+
+async function acceptNudge() {
+  if (!detail.value || nudgeBusy.value) return
+  nudgeBusy.value = true
+  const result = await subscribeToFairteiler(detail.value.id)
+  nudgeBusy.value = false
+  markNudgeShown()
+  nudgeVisible.value = false
+  showToast(
+    result === 'ok' ? t('detail.nudgeDone') : t('aktivitaet.permissionBlocked'),
+    { green: result === 'ok' },
+  )
+}
+
+/** Prefilled mail so a correction costs the reporter two taps. */
+const correctionHref = computed(() => {
+  const name = detail.value?.name ?? ''
+  const subject = t('detail.correctSubject', { name })
+  const body = t('detail.correctBody', {
+    name,
+    id: String(detail.value?.id ?? ''),
+    url: typeof location !== 'undefined' ? location.href : '',
+  })
+  return `mailto:richard.polzin@posteo.de?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 })
 
 const votingAccess = ref(false)
@@ -327,6 +382,24 @@ function goBack() {
         </div>
       </div>
 
+      <section v-if="nudgeVisible" class="card block nudge" data-test="push-nudge">
+        <span class="asktext">🔔 {{ t('detail.nudgeAsk') }}</span>
+        <div class="askrow">
+          <button
+            type="button"
+            class="askbtn primary"
+            :disabled="nudgeBusy"
+            data-test="nudge-yes"
+            @click="acceptNudge"
+          >
+            {{ t('detail.nudgeYes') }}
+          </button>
+          <button type="button" class="askbtn" data-test="nudge-no" @click="dismissNudge">
+            {{ t('detail.nudgeNo') }}
+          </button>
+        </div>
+      </section>
+
       <!-- accessibility is unknown here: let the community answer it -->
       <section
         v-if="detail.accessible === null"
@@ -453,6 +526,10 @@ function goBack() {
           </svg>
         </a>
       </div>
+
+      <p class="correct">
+        <a :href="correctionHref" data-test="correct-link">{{ t('detail.correctData') }}</a>
+      </p>
 
       <!-- recent reports -->
       <section class="reports" :aria-label="t('detail.reports')">
@@ -955,6 +1032,31 @@ function goBack() {
 
 .askbtn:disabled {
   opacity: 0.6;
+}
+
+.correct {
+  margin: 14px 16px 0 16px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.correct a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.nudge {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.askbtn.primary {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--surface);
 }
 
 .chiphint {
