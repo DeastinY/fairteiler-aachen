@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/DeastinY/fairteiler-aachen/actions/workflows/ci.yml/badge.svg)](https://github.com/DeastinY/fairteiler-aachen/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-338%20passing-2f7d54.svg)](#development)
+[![Tests](https://img.shields.io/badge/tests-345%20passing-2f7d54.svg)](#development)
 [![PWA](https://img.shields.io/badge/PWA-installable%20%C2%B7%20offline-2f7d54.svg)](https://fairteiler-aachen.de)
 [![Languages](https://img.shields.io/badge/i18n-9%20languages%20incl.%20RTL-2f7d54.svg)](#features)
 [![No tracking](https://img.shields.io/badge/tracking-none%20%C2%B7%20no%20cookies-2f7d54.svg)](#privacy)
@@ -20,7 +20,7 @@ seconds, no account, no tracking — built to **complement
 > This codebase was written almost entirely by an AI (**Claude Code**),
 > working under the direction and review of a human maintainer — what the
 > kids call *vibe-coded*, taken seriously: every feature is test-driven
-> (**338 automated tests** incl. a real-backend E2E journey, ~95 %
+> (**345 automated tests** incl. a real-backend E2E journey, ~95 %
 > statement coverage), audited for accessibility (WCAG 2.1 AA, zero axe
 > violations) and reviewed for translation quality. Treat it like any
 > young codebase regardless: read before you trust, and
@@ -52,10 +52,11 @@ seconds, no account, no tracking — built to **complement
 
 ## Concept
 
-The gap this fills (from [foodsharing's own issue tracker](IMPLEMENTATION_PLAN.md)):
-the platform can't tell you *whether food is there right now*, posting an
-update is buried behind a login and four clicks, and push has been broken
-for years. This app is the thinnest possible layer over exactly that gap.
+The gap this fills — derived from years of open requests in foodsharing's
+own issue tracker: the platform can't tell you *whether food is there right
+now*, posting an update is buried behind a login and four clicks, and push
+notifications have been unreliable for years. This app is the thinnest
+possible layer over exactly that gap.
 
 ```mermaid
 flowchart LR
@@ -94,8 +95,7 @@ sequenceDiagram
     Note over Anna,API: Anna can undo for 15 minutes
 ```
 
-**Principles** (non-negotiable, see [docs/NAMING.md](docs/NAMING.md) and
-[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)):
+**Principles** (non-negotiable):
 independent & non-commercial · gentle to foodsharing's volunteer-run servers
 (one-time seed, ≤1 sync/day, proxied basket lookups) · no photos of food
 (protects store cooperations) · German hosting · privacy by architecture.
@@ -111,12 +111,12 @@ server-side). Full details: [Datenschutzerklärung](https://fairteiler-aachen.de
 ## Development
 
 ```bash
-# backend (Python ≥ 3.12) — 79 tests
+# backend (Python ≥ 3.12) — 83 tests
 cd backend && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m pytest
 .venv/bin/python run.py                 # API on :8000, SQLite + seed
 
-# frontend (Node ≥ 20) — 253 unit + 6 e2e tests
+# frontend (Node ≥ 20) — 256 unit + 6 e2e tests
 cd frontend && npm install
 npm run test && npm run e2e             # e2e includes a real-backend journey
 npm run dev                             # proxies /api to :8000
@@ -126,10 +126,8 @@ npm run dev                             # proxies /api to :8000
 |---|---|
 | `frontend/` | Vue 3 + TypeScript PWA (Leaflet, hand-rolled i18n, Workbox SW) |
 | `backend/` | FastAPI + SQLAlchemy (status derivation, push, moderation CLI) |
-| `deploy/` | Uberspace runbook, service, crons; VPS + GitHub Pages variants |
+| `deploy/` | Deployment configs: Uberspace (production), VPS and static-hosting variants |
 | `scripts/` | One-time/daily upstream seed, VAPID keygen, QR sticker generator |
-| `docs/` | Hosting & naming research, legal templates, community drafts |
-| `design/`, `prototype/` | Original design canvas and clickable mockup |
 
 ## Contributing
 

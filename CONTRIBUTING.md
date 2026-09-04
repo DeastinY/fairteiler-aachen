@@ -22,13 +22,14 @@ npm run dev                       # http://localhost:5173, proxies /api
 
 - **Test-driven**: new behavior comes with tests; both suites green before
   every PR (CI enforces this).
-- **Be gentle to foodsharing.de**: the app never calls their servers at
-  runtime. `scripts/fetch_upstream.py` is the only exception — at most once
-  per day, and don't run it without reason (see IMPLEMENTATION_PLAN.md,
-  "Data sourcing").
-- **Privacy is a feature**: no external hosts at runtime, no trackers, no
-  personal data beyond what docs/legal/datenschutz.md describes. Changes
-  that touch data handling must update that document too.
+- **Be gentle to foodsharing.de**: users' browsers never call their servers;
+  only our backend does. Master data is synced at most once per day via
+  `scripts/fetch_upstream.py` (don't run it without reason), and basket
+  lookups go through a server-side cache (≤30 requests/day).
+- **Privacy is a feature**: no trackers, no cookies, no third-party scripts;
+  the only runtime external host is the map tile server. Changes that touch
+  data handling must also update the in-app Datenschutzerklärung
+  (`frontend/src/views/DatenschutzView.vue`).
 - **German UI, English code.**
 - License: AGPL-3.0-only. By contributing you agree to license your work
   under it.

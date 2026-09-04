@@ -4,3 +4,15 @@ dist/
 *.log
 data/upstream/
 qr/
+
+# internal working documents (kept locally, not published)
+IMPLEMENTATION_PLAN.md
+docs/NAMING.md
+docs/NIGHT-REPORT-*.md
+docs/HOSTING.md
+docs/funding/
+docs/community/
+docs/legal/
+design/
+prototype/
+.claude/
