@@ -15,6 +15,7 @@ export function makeFairteiler(
     cooled: false,
     openNow: null,
     accessible: null,
+    accessibleSource: null,
     status: { state: 'keine_meldung', lastReportAt: null, tags: [] },
     care: { needsCleaning: false, needsMaintenance: false },
     activity7d: [0, 0, 0, 0, 0, 0, 0],

@@ -5,10 +5,10 @@ import CareBadges from '../components/CareBadges.vue'
 import SkeletonBlock from '../components/SkeletonBlock.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
 import StatusBadge from '../components/StatusBadge.vue'
-import { ApiError, deleteReport, fetchFairteilerDetail } from '../composables/api'
+import { ApiError, deleteReport, fetchFairteilerDetail, submitReport } from '../composables/api'
 import { apiUrl } from '../lib/apiBase'
 import { renderMarkdown } from '../lib/markdown'
-import { forgetOwnReport, isOwnReport } from '../composables/ownReports'
+import { forgetOwnReport, isOwnReport, rememberOwnReport } from '../composables/ownReports'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
 import { showToast } from '../composables/useToast'
 import { t, useI18n } from '../i18n'
@@ -110,6 +110,23 @@ const photoUrl = computed(() =>
 watch(() => detail.value?.id, () => {
   photoFailed.value = false
 })
+
+const votingAccess = ref(false)
+
+async function reportAccess(type: 'access_ok' | 'access_hard') {
+  if (!detail.value || votingAccess.value) return
+  votingAccess.value = true
+  try {
+    const created = await submitReport(detail.value.id, { type, tags: [] })
+    rememberOwnReport({ id: created.id, fairteilerId: detail.value.id, createdAt: created.createdAt })
+    showToast(t('melden.success'), { green: true })
+    await load()
+  } catch (e) {
+    showToast(e instanceof ApiError ? e.message : t('common.loadError'))
+  } finally {
+    votingAccess.value = false
+  }
+}
 
 const undoing = ref(false)
 
@@ -297,6 +314,9 @@ function goBack() {
           <span v-if="detail.accessible !== null" class="infochip" data-test="accessible-chip">
             <span aria-hidden="true">{{ detail.accessible ? '♿' : '⚠️' }}</span>
             {{ detail.accessible ? t('detail.accessibleYes') : t('detail.accessibleNo') }}
+            <span v-if="detail.accessibleSource === 'community'" class="chiphint">
+              · {{ t('detail.accessibleCommunity') }}
+            </span>
           </span>
           <span v-if="detail.cooled" class="infochip">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7570" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -306,6 +326,35 @@ function goBack() {
           </span>
         </div>
       </div>
+
+      <!-- accessibility is unknown here: let the community answer it -->
+      <section
+        v-if="detail.accessible === null"
+        class="card block accessask"
+        data-test="access-ask"
+      >
+        <span class="asktext">♿ {{ t('detail.accessAsk') }}</span>
+        <div class="askrow">
+          <button
+            type="button"
+            class="askbtn"
+            :disabled="votingAccess"
+            data-test="access-yes"
+            @click="reportAccess('access_ok')"
+          >
+            {{ t('detail.accessYes') }}
+          </button>
+          <button
+            type="button"
+            class="askbtn"
+            :disabled="votingAccess"
+            data-test="access-no"
+            @click="reportAccess('access_hard')"
+          >
+            {{ t('detail.accessNo') }}
+          </button>
+        </div>
+      </section>
 
       <!-- status card -->
       <section class="card block" aria-label="Aktueller Status">
@@ -864,6 +913,42 @@ function goBack() {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
+}
+
+.accessask {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.asktext {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.askrow {
+  display: flex;
+  gap: 10px;
+}
+
+.askbtn {
+  flex: 1;
+  min-height: 44px;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+  background: var(--surface);
+}
+
+.askbtn:disabled {
+  opacity: 0.6;
+}
+
+.chiphint {
+  color: var(--muted);
+  font-weight: 400;
 }
 
 .infochip {

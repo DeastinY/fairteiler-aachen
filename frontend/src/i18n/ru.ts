@@ -36,6 +36,8 @@ const ru: Messages = {
   'report.cleaned': 'Убрано / приведено в порядок',
   'report.needs_cleaning': 'Нужна уборка',
   'report.needs_maintenance': 'Сообщили о поломке',
+  'report.access_ok': 'Отмечено: без ступеней',
+  'report.access_hard': 'Отмечены препятствия',
 
   'care.needsCleaning': 'Нужна уборка',
   'care.needsMaintenance': 'Есть поломка',
@@ -70,6 +72,10 @@ const ru: Messages = {
   'filters.accessible': 'Без барьеров',
   'detail.accessibleYes': 'Доступно без ступеней',
   'detail.accessibleNo': 'Есть ступени',
+  'detail.accessibleCommunity': 'по данным сообщества',
+  'detail.accessAsk': 'Вход без ступеней?',
+  'detail.accessYes': 'Да, без ступеней',
+  'detail.accessNo': 'Нет, есть ступени',
   'filters.aria': 'Фильтры',
 
   'karte.mapAria': 'Карта Fairteiler в Ахене',
@@ -136,6 +142,8 @@ const ru: Messages = {
   'melden.cleaned': 'Убрано / приведено в порядок',
   'melden.needsCleaning': 'Нужна уборка',
   'melden.defect': 'Что-то сломано',
+  'melden.accessOk': 'Доступ без ступеней',
+  'melden.accessHard': 'На входе ступени или препятствия',
   'melden.tagsTitle': 'Что там сейчас есть?',
   'melden.tagsNote': 'Несколько вариантов · необязательно',
   'melden.rulesLink': 'Что можно класть в Fairteiler?',

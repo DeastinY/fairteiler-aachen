@@ -37,6 +37,8 @@ const CONDITIONS: { type: ReportType; titleKey: MessageKey }[] = [
   { type: 'cleaned', titleKey: 'melden.cleaned' },
   { type: 'needs_cleaning', titleKey: 'melden.needsCleaning' },
   { type: 'needs_maintenance', titleKey: 'melden.defect' },
+  { type: 'access_ok', titleKey: 'melden.accessOk' },
+  { type: 'access_hard', titleKey: 'melden.accessHard' },
 ]
 
 const selected = computed(() =>

@@ -24,7 +24,14 @@ from app.push import PushSettings
 
 class ReportIn(BaseModel):
     type: Literal[
-        "brought", "taken", "empty", "cleaned", "needs_cleaning", "needs_maintenance"
+        "brought",
+        "taken",
+        "empty",
+        "cleaned",
+        "needs_cleaning",
+        "needs_maintenance",
+        "access_ok",
+        "access_hard",
     ]
     tags: list[str] = []
 
@@ -82,7 +89,15 @@ def create_app(
             raise HTTPException(status_code=404, detail="Fairteiler nicht gefunden")
         return row
 
-    def serialize(row: Fairteiler, reports, now, *, with_description=False) -> dict:
+    def access_reports(session: Session, fairteiler_id: int):
+        return crud.recent_reports(session, fairteiler_id, days=status.ACCESS_DAYS)
+
+    def serialize(
+        row: Fairteiler, reports, now, *, with_description=False, access=None
+    ) -> dict:
+        accessible, accessible_source = status.derive_accessibility(
+            access if access is not None else [], row.accessible, now
+        )
         data = {
             "id": row.id,
             "name": row.name,
@@ -94,7 +109,8 @@ def create_app(
             "cooled": row.cooled,
             "aroundTheClock": row.around_the_clock,
             "openNow": hours_mod.is_open_now(row),
-            "accessible": row.accessible,
+            "accessible": accessible,
+            "accessibleSource": accessible_source,
             "status": status.derive_status(reports, now),
             "care": status.derive_care(reports, now),
             "activity7d": status.activity_by_day(reports, now),
@@ -197,7 +213,12 @@ def create_app(
         usage.count(session, "list_views")
         now = dt.datetime.now(dt.timezone.utc)
         return [
-            serialize(row, crud.recent_reports(session, row.id), now)
+            serialize(
+                row,
+                crud.recent_reports(session, row.id),
+                now,
+                access=access_reports(session, row.id),
+            )
             for row in seed.all_fairteiler(session)
         ]
 
@@ -210,7 +231,9 @@ def create_app(
         usage.count(session, "detail_views")
         now = dt.datetime.now(dt.timezone.utc)
         reports = crud.recent_reports(session, row.id)
-        data = serialize(row, reports, now, with_description=True)
+        data = serialize(
+            row, reports, now, with_description=True, access=access_reports(session, row.id)
+        )
         data["bestTime"] = status.best_time_of_day(
             crud.recent_reports(session, row.id, days=90)
         )

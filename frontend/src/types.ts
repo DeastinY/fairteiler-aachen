@@ -7,6 +7,8 @@ export type ReportType =
   | 'cleaned'
   | 'needs_cleaning'
   | 'needs_maintenance'
+  | 'access_ok'
+  | 'access_hard'
 
 export interface FairteilerCare {
   needsCleaning: boolean
@@ -65,6 +67,7 @@ export interface FairteilerListItem {
   /** Open right now? null = unknown (no curated hours). */
   openNow: boolean | null
   accessible: boolean | null
+  accessibleSource: 'curated' | 'community' | null
   status: FairteilerStatus
   care: FairteilerCare
   activity7d: number[]

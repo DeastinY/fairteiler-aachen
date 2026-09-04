@@ -36,6 +36,8 @@ const nl: Messages = {
   'report.cleaned': 'Schoongemaakt / opgeruimd',
   'report.needs_cleaning': 'Schoonmaak nodig',
   'report.needs_maintenance': 'Defect gemeld',
+  'report.access_ok': 'Drempelvrij gemeld',
+  'report.access_hard': 'Obstakels gemeld',
 
   'care.needsCleaning': 'Schoonmaak nodig',
   'care.needsMaintenance': 'Defect gemeld',
@@ -70,6 +72,10 @@ const nl: Messages = {
   'filters.accessible': 'Drempelvrij',
   'detail.accessibleYes': 'Drempelvrije toegang',
   'detail.accessibleNo': 'Niet drempelvrij',
+  'detail.accessibleCommunity': 'volgens de community',
+  'detail.accessAsk': 'Is de toegang drempelvrij?',
+  'detail.accessYes': 'Ja, drempelvrij',
+  'detail.accessNo': 'Nee, drempels',
   'filters.aria': 'Filters',
 
   'karte.mapAria': 'Kaart van de Fairteiler in Aken',
@@ -136,6 +142,8 @@ const nl: Messages = {
   'melden.cleaned': 'Schoongemaakt / opgeruimd',
   'melden.needsCleaning': 'Schoonmaak nodig',
   'melden.defect': 'Er is iets kapot',
+  'melden.accessOk': 'Toegang is drempelvrij',
+  'melden.accessHard': 'Toegang heeft drempels / obstakels',
   'melden.tagsTitle': 'Wat ligt er nu?',
   'melden.tagsNote': 'Meerdere keuzes · optioneel',
   'melden.rulesLink': 'Wat mag er in de Fairteiler?',

@@ -50,6 +50,39 @@ afterEach(() => {
 })
 
 describe('DetailView', () => {
+  it('asks the community when accessibility is unknown and reports the answer', async () => {
+    const posted: unknown[] = []
+    fetchMock.mockImplementation((url: string, init?: RequestInit) => {
+      if (init?.method === 'POST') {
+        posted.push({ url, body: JSON.parse(String(init.body)) })
+        return Promise.resolve(
+          jsonResponse({ id: 7, type: 'access_hard', tags: [], createdAt: new Date().toISOString() }, 201),
+        )
+      }
+      return Promise.resolve(jsonResponse(makeDetail({ id: 810, accessible: null })))
+    })
+
+    const wrapper = mountDetail()
+    await flushPromises()
+    expect(wrapper.find('[data-test="access-ask"]').exists()).toBe(true)
+
+    await wrapper.find('[data-test="access-no"]').trigger('click')
+    await flushPromises()
+    expect(posted).toEqual([
+      { url: '/api/fairteiler/810/reports', body: { type: 'access_hard', tags: [] } },
+    ])
+  })
+
+  it('hides the accessibility question once the answer is known', async () => {
+    fetchMock.mockImplementation(() =>
+      Promise.resolve(jsonResponse(makeDetail({ id: 810, accessible: true, accessibleSource: 'community' }))),
+    )
+    const wrapper = mountDetail()
+    await flushPromises()
+    expect(wrapper.find('[data-test="access-ask"]').exists()).toBe(false)
+    expect(wrapper.find('[data-test="accessible-chip"]').text()).toContain('laut Community')
+  })
+
   it('states accessibility only when it is known', async () => {
     for (const [value, expected] of [
       [true, 'Barrierefrei zugänglich'],

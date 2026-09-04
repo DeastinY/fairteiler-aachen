@@ -36,6 +36,8 @@ const pl: Messages = {
   'report.cleaned': 'Posprzątano / doprowadzono do porządku',
   'report.needs_cleaning': 'Potrzebne sprzątanie',
   'report.needs_maintenance': 'Zgłoszono usterkę',
+  'report.access_ok': 'Zgłoszono: bez schodów',
+  'report.access_hard': 'Zgłoszono przeszkody',
 
   'care.needsCleaning': 'Potrzebne sprzątanie',
   'care.needsMaintenance': 'Zgłoszono usterkę',
@@ -70,6 +72,10 @@ const pl: Messages = {
   'filters.accessible': 'Bez barier',
   'detail.accessibleYes': 'Dostęp bez schodów',
   'detail.accessibleNo': 'Są schody',
+  'detail.accessibleCommunity': 'według społeczności',
+  'detail.accessAsk': 'Czy wejście jest bez schodów?',
+  'detail.accessYes': 'Tak, bez schodów',
+  'detail.accessNo': 'Nie, są schody',
   'filters.aria': 'Filtry',
 
   'karte.mapAria': 'Mapa Fairteiler w Akwizgranie',
@@ -136,6 +142,8 @@ const pl: Messages = {
   'melden.cleaned': 'Posprzątane / doprowadzone do porządku',
   'melden.needsCleaning': 'Potrzebne sprzątanie',
   'melden.defect': 'Coś jest zepsute',
+  'melden.accessOk': 'Wejście bez schodów',
+  'melden.accessHard': 'Wejście ma schody / przeszkody',
   'melden.tagsTitle': 'Co teraz tam jest?',
   'melden.tagsNote': 'Wielokrotny wybór · opcjonalnie',
   'melden.rulesLink': 'Co można włożyć do Fairteiler?',

@@ -36,6 +36,8 @@ const fr: Messages = {
   'report.cleaned': 'Nettoyé / remis en ordre',
   'report.needs_cleaning': 'Nettoyage nécessaire',
   'report.needs_maintenance': 'Panne signalée',
+  'report.access_ok': 'Signalé sans marches',
+  'report.access_hard': 'Obstacles signalés',
 
   'care.needsCleaning': 'Nettoyage nécessaire',
   'care.needsMaintenance': 'Panne signalée',
@@ -70,6 +72,10 @@ const fr: Messages = {
   'filters.accessible': 'Sans marches',
   'detail.accessibleYes': 'Accès sans marches',
   'detail.accessibleNo': 'Accès avec marches',
+  'detail.accessibleCommunity': 'selon la communauté',
+  'detail.accessAsk': 'L’accès est-il sans marches ?',
+  'detail.accessYes': 'Oui, sans marches',
+  'detail.accessNo': 'Non, des marches',
   'filters.aria': 'Filtres',
 
   'karte.mapAria': 'Carte des Fairteiler à Aix-la-Chapelle',
@@ -137,6 +143,8 @@ const fr: Messages = {
   'melden.cleaned': 'Nettoyé / remis en ordre',
   'melden.needsCleaning': 'Nettoyage nécessaire',
   'melden.defect': 'Quelque chose est cassé',
+  'melden.accessOk': 'L’accès est sans marches',
+  'melden.accessHard': 'L’accès a des marches / obstacles',
   'melden.tagsTitle': "Qu'y a-t-il en ce moment ?",
   'melden.tagsNote': 'Choix multiple · facultatif',
   'melden.rulesLink': 'Que peut-on mettre dans le Fairteiler ?',

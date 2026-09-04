@@ -36,6 +36,8 @@ const en: Messages = {
   'report.cleaned': 'Cleaned / tidied up',
   'report.needs_cleaning': 'Cleaning needed',
   'report.needs_maintenance': 'Defect reported',
+  'report.access_ok': 'Reported step-free',
+  'report.access_hard': 'Obstacles reported',
 
   'care.needsCleaning': 'Cleaning needed',
   'care.needsMaintenance': 'Defect reported',
@@ -70,6 +72,10 @@ const en: Messages = {
   'filters.accessible': 'Step-free',
   'detail.accessibleYes': 'Step-free access',
   'detail.accessibleNo': 'Not step-free',
+  'detail.accessibleCommunity': 'per community',
+  'detail.accessAsk': 'Is the access step-free?',
+  'detail.accessYes': 'Yes, step-free',
+  'detail.accessNo': 'No, steps',
   'filters.aria': 'Filters',
 
   'karte.mapAria': 'Map of the Fairteiler in Aachen',
@@ -136,6 +142,8 @@ const en: Messages = {
   'melden.cleaned': 'Cleaned / tidied up',
   'melden.needsCleaning': 'Needs cleaning',
   'melden.defect': 'Something is broken',
+  'melden.accessOk': 'Access is step-free',
+  'melden.accessHard': 'Access has steps / obstacles',
   'melden.tagsTitle': "What's there right now?",
   'melden.tagsNote': 'Select several · optional',
   'melden.rulesLink': 'What can go into the Fairteiler?',

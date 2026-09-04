@@ -2,11 +2,42 @@
 
 import datetime as dt
 
-from app.models import BROUGHT, CLEANED, EMPTY, NEEDS_CLEANING, NEEDS_MAINTENANCE, Report
+from app.models import (
+    ACCESS_HARD,
+    ACCESS_OK,
+    BROUGHT,
+    CLEANED,
+    EMPTY,
+    NEEDS_CLEANING,
+    NEEDS_MAINTENANCE,
+    Report,
+)
 
 FRESH_HOURS = 12
 ACTIVITY_DAYS = 7
 CARE_DAYS = 14
+ACCESS_DAYS = 365
+
+
+def derive_accessibility(
+    reports: list, curated: bool | None, now: dt.datetime
+) -> tuple[bool | None, str | None]:
+    """Curated facts (the operators' own description) always win. Otherwise the
+    community's majority decides; a tie or silence stays honestly unknown."""
+    if curated is not None:
+        return curated, "curated"
+    cutoff = now - dt.timedelta(days=ACCESS_DAYS)
+    yes = no = 0
+    for report in reports:
+        if _aware(report.created_at) < cutoff:
+            continue
+        if report.type == ACCESS_OK:
+            yes += 1
+        elif report.type == ACCESS_HARD:
+            no += 1
+    if yes == no:
+        return None, None
+    return (yes > no), "community"
 
 
 def derive_care(reports: list[Report], now: dt.datetime) -> dict:

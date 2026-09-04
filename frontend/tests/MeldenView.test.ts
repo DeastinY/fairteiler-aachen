@@ -196,14 +196,14 @@ describe('MeldenView', () => {
     expect(JSON.parse(post[1].body)).toEqual({ type: 'empty', tags: [] })
   })
 
-  it('keeps all six options in one exclusive radio group and hides tags for conditions', async () => {
+  it('keeps all report options in one exclusive radio group and hides tags for conditions', async () => {
     const { wrapper } = await mountMelden('?fairteiler=810')
 
     // brought is preselected -> tags visible
     expect(wrapper.text()).toContain('Was ist jetzt da?')
 
     const radios = wrapper.findAll('[role="radio"]')
-    expect(radios).toHaveLength(6)
+    expect(radios).toHaveLength(8)
 
     const needsCleaning = radios.find((r) => r.text().includes('Reinigung nötig'))!
     await needsCleaning.trigger('click')

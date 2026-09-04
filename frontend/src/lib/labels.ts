@@ -30,6 +30,8 @@ const REPORT_TYPES: readonly ReportType[] = [
   'cleaned',
   'needs_cleaning',
   'needs_maintenance',
+  'access_ok',
+  'access_hard',
 ]
 
 export function reportTypeLabel(type: ReportType | string): string {

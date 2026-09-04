@@ -44,6 +44,8 @@ const de = {
   'report.cleaned': 'Gereinigt / in Ordnung gebracht',
   'report.needs_cleaning': 'Reinigung nötig gemeldet',
   'report.needs_maintenance': 'Defekt gemeldet',
+  'report.access_ok': 'Barrierefrei gemeldet',
+  'report.access_hard': 'Hindernisse gemeldet',
 
   // care badges
   'care.needsCleaning': 'Reinigung nötig',
@@ -82,6 +84,10 @@ const de = {
   'filters.accessible': 'Barrierefrei',
   'detail.accessibleYes': 'Barrierefrei zugänglich',
   'detail.accessibleNo': 'Nicht barrierefrei',
+  'detail.accessibleCommunity': 'laut Community',
+  'detail.accessAsk': 'Ist der Zugang barrierefrei?',
+  'detail.accessYes': 'Ja, stufenlos',
+  'detail.accessNo': 'Nein, Stufen',
   'filters.aria': 'Filter',
 
   // Karte
@@ -152,6 +158,8 @@ const de = {
   'melden.cleaned': 'Gereinigt / in Ordnung gebracht',
   'melden.needsCleaning': 'Reinigung nötig',
   'melden.defect': 'Etwas ist defekt',
+  'melden.accessOk': 'Zugang ist barrierefrei',
+  'melden.accessHard': 'Zugang hat Stufen / Hindernisse',
   'melden.tagsTitle': 'Was ist jetzt da?',
   'melden.tagsNote': 'Mehrfachauswahl · optional',
   'melden.rulesLink': 'Was darf in den Fairteiler?',

@@ -36,6 +36,8 @@ const uk: Messages = {
   'report.cleaned': 'Прибрано / упорядковано',
   'report.needs_cleaning': 'Потрібне прибирання',
   'report.needs_maintenance': 'Повідомлено про несправність',
+  'report.access_ok': 'Позначено: без сходів',
+  'report.access_hard': 'Позначено перешкоди',
 
   'care.needsCleaning': 'Потрібне прибирання',
   'care.needsMaintenance': 'Є несправність',
@@ -70,6 +72,10 @@ const uk: Messages = {
   'filters.accessible': 'Без бар’єрів',
   'detail.accessibleYes': 'Доступ без сходів',
   'detail.accessibleNo': 'Є сходи',
+  'detail.accessibleCommunity': 'за даними спільноти',
+  'detail.accessAsk': 'Вхід без сходів?',
+  'detail.accessYes': 'Так, без сходів',
+  'detail.accessNo': 'Ні, є сходи',
   'filters.aria': 'Фільтри',
 
   'karte.mapAria': 'Мапа Fairteiler в Аахені',
@@ -136,6 +142,8 @@ const uk: Messages = {
   'melden.cleaned': 'Прибрано / упорядковано',
   'melden.needsCleaning': 'Потрібне прибирання',
   'melden.defect': 'Щось зламане',
+  'melden.accessOk': 'Вхід без сходів',
+  'melden.accessHard': 'На вході сходи або перешкоди',
   'melden.tagsTitle': 'Що там зараз є?',
   'melden.tagsNote': 'Кілька варіантів · необов’язково',
   'melden.rulesLink': 'Що можна класти у Fairteiler?',

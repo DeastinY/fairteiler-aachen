@@ -36,6 +36,8 @@ const tr: Messages = {
   'report.cleaned': 'Temizlendi / düzenlendi',
   'report.needs_cleaning': 'Temizlik gerekli',
   'report.needs_maintenance': 'Arıza bildirildi',
+  'report.access_ok': 'Engelsiz bildirildi',
+  'report.access_hard': 'Engel bildirildi',
 
   'care.needsCleaning': 'Temizlik gerekli',
   'care.needsMaintenance': 'Arıza bildirildi',
@@ -70,6 +72,10 @@ const tr: Messages = {
   'filters.accessible': 'Engelsiz',
   'detail.accessibleYes': 'Engelsiz erişim',
   'detail.accessibleNo': 'Engelsiz değil',
+  'detail.accessibleCommunity': 'topluluğa göre',
+  'detail.accessAsk': 'Giriş engelsiz mi?',
+  'detail.accessYes': 'Evet, basamaksız',
+  'detail.accessNo': 'Hayır, basamak var',
   'filters.aria': 'Filtreler',
 
   'karte.mapAria': "Aachen'daki Fairteiler haritası",
@@ -136,6 +142,8 @@ const tr: Messages = {
   'melden.cleaned': 'Temizledim / düzenledim',
   'melden.needsCleaning': 'Temizlik gerekli',
   'melden.defect': 'Bir şey bozuk',
+  'melden.accessOk': 'Giriş engelsiz',
+  'melden.accessHard': 'Girişte basamak / engel var',
   'melden.tagsTitle': 'Şu an ne var?',
   'melden.tagsNote': 'Çoklu seçim · isteğe bağlı',
   'melden.rulesLink': "Fairteiler'e neler konabilir?",

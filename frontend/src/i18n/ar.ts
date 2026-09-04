@@ -36,6 +36,8 @@ const ar: Messages = {
   'report.cleaned': 'تم التنظيف / الترتيب',
   'report.needs_cleaning': 'يحتاج إلى تنظيف',
   'report.needs_maintenance': 'أُبلغ عن عطل',
+  'report.access_ok': 'أُبلغ: خالٍ من العوائق',
+  'report.access_hard': 'أُبلغ عن عوائق',
 
   'care.needsCleaning': 'يحتاج إلى تنظيف',
   'care.needsMaintenance': 'أُبلغ عن عطل',
@@ -70,6 +72,10 @@ const ar: Messages = {
   'filters.accessible': 'خالٍ من العوائق',
   'detail.accessibleYes': 'وصول خالٍ من العوائق',
   'detail.accessibleNo': 'غير خالٍ من العوائق',
+  'detail.accessibleCommunity': 'حسب المجتمع',
+  'detail.accessAsk': 'هل المدخل خالٍ من العوائق؟',
+  'detail.accessYes': 'نعم، بدون درجات',
+  'detail.accessNo': 'لا، توجد درجات',
   'filters.aria': 'الفلاتر',
 
   'karte.mapAria': 'خريطة الـ Fairteiler في آخن',
@@ -136,6 +142,8 @@ const ar: Messages = {
   'melden.cleaned': 'نظّفت / رتّبت',
   'melden.needsCleaning': 'يحتاج إلى تنظيف',
   'melden.defect': 'شيء ما معطّل',
+  'melden.accessOk': 'المدخل خالٍ من العوائق',
+  'melden.accessHard': 'المدخل به درجات أو عوائق',
   'melden.tagsTitle': 'ما الموجود الآن؟',
   'melden.tagsNote': 'اختيار متعدد · اختياري',
   'melden.rulesLink': 'ما الذي يمكن وضعه في الـ Fairteiler؟',

@@ -12,7 +12,18 @@ EMPTY = "empty"
 CLEANED = "cleaned"
 NEEDS_CLEANING = "needs_cleaning"
 NEEDS_MAINTENANCE = "needs_maintenance"
-REPORT_TYPES = (BROUGHT, TAKEN, EMPTY, CLEANED, NEEDS_CLEANING, NEEDS_MAINTENANCE)
+ACCESS_OK = "access_ok"
+ACCESS_HARD = "access_hard"
+REPORT_TYPES = (
+    BROUGHT,
+    TAKEN,
+    EMPTY,
+    CLEANED,
+    NEEDS_CLEANING,
+    NEEDS_MAINTENANCE,
+    ACCESS_OK,
+    ACCESS_HARD,
+)
 
 FOOD_TAGS = (
     "brot_backwaren",
