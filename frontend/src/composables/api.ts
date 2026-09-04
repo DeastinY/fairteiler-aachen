@@ -1,4 +1,3 @@
-import { t } from '../i18n'
 import { apiUrl } from '../lib/apiBase'
 import type { PushConfig, PushSubscriptionPayload } from '../lib/push'
 import type {
@@ -25,10 +24,12 @@ export class ApiError extends Error {
   }
 }
 
+const GENERIC_ERROR = 'Da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.'
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(apiUrl(path), init)
   if (!response.ok) {
-    let detail = t('api.genericError')
+    let detail = GENERIC_ERROR
     try {
       const body = await response.json()
       if (body && typeof body.detail === 'string') detail = body.detail

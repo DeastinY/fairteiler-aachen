@@ -1,4 +1,3 @@
-import { t, type MessageKey } from '../i18n'
 import type { ReportType } from '../types'
 
 /** Food tags accepted by the backend, in display order. */
@@ -14,25 +13,33 @@ export const FOOD_TAGS = [
 
 export type FoodTag = (typeof FOOD_TAGS)[number]
 
+const TAG_LABELS: Record<FoodTag, string> = {
+  brot_backwaren: 'Brot & Backwaren',
+  obst: 'Obst',
+  gemuese: 'Gemüse',
+  gekuehltes: 'Gekühltes',
+  konserven: 'Konserven',
+  zubereitetes: 'Zubereitetes',
+  sonstiges: 'Sonstiges',
+}
+
 export function tagLabel(tag: string): string {
-  if (!(FOOD_TAGS as readonly string[]).includes(tag)) return tag
-  return t(`tags.${tag}` as MessageKey)
+  return TAG_LABELS[tag as FoodTag] ?? tag
 }
 
 export function tagLabels(tags: string[]): string {
   return tags.map(tagLabel).join(', ')
 }
 
-const REPORT_TYPES: readonly ReportType[] = [
-  'brought',
-  'taken',
-  'empty',
-  'cleaned',
-  'needs_cleaning',
-  'needs_maintenance',
-]
+export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
+  brought: 'Etwas gebracht',
+  taken: 'Etwas mitgenommen',
+  empty: 'Leer gemeldet',
+  cleaned: 'Gereinigt / in Ordnung gebracht',
+  needs_cleaning: 'Reinigung nötig gemeldet',
+  needs_maintenance: 'Defekt gemeldet',
+}
 
 export function reportTypeLabel(type: ReportType | string): string {
-  if (!REPORT_TYPES.includes(type as ReportType)) return type
-  return t(`report.${type}` as MessageKey)
+  return REPORT_TYPE_LABELS[type as ReportType] ?? type
 }
