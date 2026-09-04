@@ -7,7 +7,7 @@ import { t } from '../i18n'
 import FilterChips from '../components/FilterChips.vue'
 import SkeletonBlock from '../components/SkeletonBlock.vue'
 import OfflineBanner from '../components/OfflineBanner.vue'
-import { fetchFairteilerList } from '../composables/api'
+import { fetchBaskets, fetchFairteilerList } from '../composables/api'
 import { loadAutoLocate } from '../composables/settings'
 import { useFilters } from '../composables/useFilters'
 import { offlineBannerVisible, useOnline } from '../composables/useOnline'
@@ -19,7 +19,7 @@ import { navigationUrl } from '../lib/navigation'
 import { formatRelativeTime } from '../lib/relativeTime'
 import { sortFairteiler } from '../lib/sort'
 import { statusMeta } from '../lib/status'
-import type { FairteilerListItem } from '../types'
+import type { Basket, BasketsResponse, FairteilerListItem } from '../types'
 
 const TILE_URL = 'https://tile.openstreetmap.de/{z}/{x}/{y}.png'
 
@@ -46,10 +46,14 @@ const geoHint = ref<string | null>(null)
 const locating = ref(false)
 
 const selected = ref<FairteilerListItem | null>(null)
+const selectedBasket = ref<Basket | null>(null)
+
+const basketsData = ref<BasketsResponse | null>(null)
 
 const mapEl = ref<HTMLDivElement | null>(null)
 let map: L.Map | null = null
 let markerLayer: L.LayerGroup | null = null
+let basketLayer: L.LayerGroup | null = null
 let userMarker: L.Marker | null = null
 let accuracyCircle: L.Circle | null = null
 
@@ -89,15 +93,30 @@ const selectedRouteHref = computed(() =>
 )
 
 /** Announced via the aria-live region so a selection is never silent. */
-const selectionAnnouncement = computed(() =>
-  selected.value ? `${selected.value.name} – ${rowLine(selected.value)}` : '',
-)
+const selectionAnnouncement = computed(() => {
+  if (selectedBasket.value) return t('karte.basketTitle')
+  return selected.value ? `${selected.value.name} – ${rowLine(selected.value)}` : ''
+})
+
+const hasBaskets = computed(() => (basketsData.value?.baskets.length ?? 0) > 0)
+
+const basketStaleLine = computed(() => {
+  if (!basketsData.value?.stale || !basketsData.value.fetchedAt) return null
+  return t('karte.basketStale', {
+    time: formatRelativeTime(basketsData.value.fetchedAt),
+  })
+})
 
 async function load() {
   error.value = null
   items.value = null
   try {
-    items.value = await fetchFairteilerList()
+    const [list, baskets] = await Promise.all([
+      fetchFairteilerList(),
+      fetchBaskets().catch(() => null), // baskets are a bonus – silently absent
+    ])
+    items.value = list
+    basketsData.value = baskets
     await nextTick()
     initMap()
   } catch {
@@ -114,6 +133,7 @@ onBeforeUnmount(() => {
   map?.remove()
   map = null
   markerLayer = null
+  basketLayer = null
   userMarker = null
   accuracyCircle = null
 })
@@ -127,6 +147,8 @@ function initMap() {
   }).addTo(map)
   L.control.zoom({ position: 'bottomright' }).addTo(map)
   markerLayer = L.layerGroup().addTo(map)
+  basketLayer = L.layerGroup().addTo(map)
+  // bounds stay fairteiler-only: baskets must not drag the initial view
   const bounds = L.latLngBounds(
     items.value.map((item) => [item.lat, item.lon] as [number, number]),
   )
@@ -134,6 +156,7 @@ function initMap() {
   // tapping empty map clears the selection
   map.on('click', deselect)
   renderMarkers()
+  renderBasketMarkers()
 }
 
 /** Teardrop pin: status-colored fill, white inner dot, shadow, tip-anchored. */
@@ -190,6 +213,7 @@ function onMarkerTap(item: FairteilerListItem) {
     openDetail(item.id)
     return
   }
+  selectedBasket.value = null
   selected.value = item
   // keep context: fly to the selected pin plus its nearby neighbors
   const view = selectionView(item, filtered.value)
@@ -211,10 +235,60 @@ function onMarkerTap(item: FairteilerListItem) {
 }
 
 function deselect() {
-  if (!selected.value) return
+  if (!selected.value && !selectedBasket.value) return
   selected.value = null
+  selectedBasket.value = null
   renderMarkers()
 }
+
+/** Small basket-glyph pin – warm neutral, outside the status color language. */
+function basketIcon(): L.DivIcon {
+  const html =
+    '<div class="pin-inner">' +
+    '<svg width="26" height="34" viewBox="0 0 26 34" aria-hidden="true" style="display:block;filter:drop-shadow(0 2px 3px rgba(34,48,31,0.35))">' +
+    '<path d="M13 33 C9 25.5 2 19 2 12 A11 11 0 0 1 24 12 C24 19 17 25.5 13 33 Z" fill="#8a6a3b" stroke="#fdfcf8" stroke-width="2"></path>' +
+    '<g stroke="#fdfcf8" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M7.5 10.5h11l-1.4 6h-8.2z"></path>' +
+    '<path d="M10 10.5 L13 6.5 L16 10.5"></path>' +
+    '</g>' +
+    '</svg></div>'
+  return L.divIcon({
+    className: 'basket-wrap',
+    html,
+    iconSize: [44, 44],
+    iconAnchor: [22, 42],
+  })
+}
+
+function renderBasketMarkers() {
+  if (!map || !basketLayer) return
+  basketLayer.clearLayers()
+  const list = basketsData.value?.baskets
+  if (!filter.baskets || !Array.isArray(list)) return
+  for (const basket of list) {
+    const marker = L.marker([basket.lat, basket.lon], { icon: basketIcon() })
+    marker.on('click', () => onBasketTap(basket))
+    basketLayer.addLayer(marker)
+    const el = marker.getElement?.()
+    if (el) {
+      el.setAttribute('role', 'button')
+      el.setAttribute('aria-label', t('karte.basket'))
+      el.setAttribute('tabindex', '0')
+    }
+  }
+}
+
+function onBasketTap(basket: Basket) {
+  selected.value = null
+  selectedBasket.value = basket
+  map?.flyTo([basket.lat, basket.lon], 15, { animate: true })
+  renderMarkers()
+}
+
+watch(() => filter.baskets, () => {
+  if (!filter.baskets) selectedBasket.value = null
+  renderBasketMarkers()
+})
 
 watch(filtered, () => {
   if (selected.value && !filtered.value.some((f) => f.id === selected.value?.id)) {
@@ -343,7 +417,7 @@ function useLocation() {
       </div>
 
       <!-- filter chips -->
-      <FilterChips class="map-chips" />
+      <FilterChips class="map-chips" :with-baskets="hasBaskets" />
     </div>
 
     <!-- sheet -->
@@ -372,6 +446,40 @@ function useLocation() {
       <div v-else-if="error" class="hint error">
         <p>{{ error }}</p>
         <button type="button" class="retrybtn" @click="load">{{ t('common.retry') }}</button>
+      </div>
+
+      <!-- selected basket card -->
+      <div v-else-if="selectedBasket" class="selcard" data-test="basket-card">
+        <div class="selhead">
+          <span class="dot" style="background: #8a6a3b"></span>
+          <span class="disp selname">{{ t('karte.basketTitle') }}</span>
+          <button
+            type="button"
+            class="roundbtn selclose"
+            :aria-label="t('karte.deselect')"
+            data-test="deselect-basket"
+            @click="deselect"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12 M18 6L6 18"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="selline">{{ t('karte.basketCaption') }}</p>
+        <p v-if="basketStaleLine" class="geohint" data-test="basket-stale">{{ basketStaleLine }}</p>
+        <div class="selactions">
+          <a
+            :href="`https://foodsharing.de/essenskoerbe/${selectedBasket.id}`"
+            class="seldetails basketlink"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ t('detail.fsLink') }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17L17 7 M9 7h8v8"></path>
+            </svg>
+          </a>
+        </div>
       </div>
 
       <!-- selected fairteiler card -->
@@ -690,6 +798,23 @@ function useLocation() {
 
 .selroute:hover {
   color: var(--ink);
+}
+
+.basketlink {
+  color: var(--surface);
+}
+
+.basketlink:hover {
+  color: var(--surface);
+}
+
+.map :deep(.basket-wrap) {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .seldetails {

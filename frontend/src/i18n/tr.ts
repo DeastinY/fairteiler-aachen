@@ -81,6 +81,12 @@ const tr: Messages = {
   'karte.deselect': 'Seçimi kapat',
   'karte.farAway': 'Uzakta görünüyorsun – harita Fairteiler\'lerde kalıyor.',
 
+  'filters.baskets': 'Gıda sepetleri',
+  'karte.basket': 'Gıda sepeti',
+  'karte.basketTitle': 'Yakında gıda sepeti',
+  'karte.basketCaption': 'Özel gıda paylaşımı – ayrıntılar ve talep foodsharing.de üzerinde.',
+  'karte.basketStale': 'Güncelleme: {time}',
+
   'liste.title': 'Tüm Fairteiler',
   'liste.subtitle': 'Aachen ve çevresindeki noktalar',
   'liste.summary': 'Aachen ve çevresinde {total} nokta · {reported} tanesinde güncel bildirim',

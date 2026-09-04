@@ -47,6 +47,15 @@ async function hermetic(page: Page) {
   await page.route('**/api/push/config', (route) =>
     route.fulfill({ json: { enabled: false, vapidPublicKey: null } }),
   )
+  await page.route('**/api/baskets', (route) =>
+    route.fulfill({
+      json: {
+        baskets: [{ id: 7001, lat: 50.779, lon: 6.088 }],
+        fetchedAt: new Date().toISOString(),
+        stale: false,
+      },
+    }),
+  )
 }
 
 test('welcome overlay sits above the map and dismisses cleanly', async ({ page }) => {
@@ -85,6 +94,7 @@ test('map markers select first, then navigate via Details', async ({ page }) => 
 
   const markers = page.locator('.pin-wrap')
   await expect(markers.first()).toBeAttached()
+  await expect(page.locator('.basket-wrap').first()).toBeAttached()
   await markers.first().click({ force: true })
 
   // first tap selects: sheet shows the selection card, no navigation yet

@@ -81,6 +81,12 @@ const nl: Messages = {
   'karte.deselect': 'Selectie sluiten',
   'karte.farAway': 'Je lijkt verder weg te zijn – de kaart blijft bij de Fairteiler.',
 
+  'filters.baskets': 'Voedselmandjes',
+  'karte.basket': 'Voedselmandje',
+  'karte.basketTitle': 'Voedselmandje in de buurt',
+  'karte.basketCaption': 'Particulier voedselaanbod – details en aanvraag op foodsharing.de.',
+  'karte.basketStale': 'Stand: {time}',
+
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Locaties in en rond Aken',
   'liste.summary': '{total} locaties in en rond Aken · {reported} met een recente melding',

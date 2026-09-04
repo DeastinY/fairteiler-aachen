@@ -2,6 +2,7 @@ import { t } from '../i18n'
 import { apiUrl } from '../lib/apiBase'
 import type { PushConfig, PushSubscriptionPayload } from '../lib/push'
 import type {
+  BasketsResponse,
   CreatedReport,
   FairteilerDetail,
   FairteilerListItem,
@@ -47,6 +48,11 @@ export function fetchFairteilerList(): Promise<FairteilerListItem[]> {
 
 export function fetchFairteilerDetail(id: number): Promise<FairteilerDetail> {
   return request<FairteilerDetail>(`/api/fairteiler/${id}`)
+}
+
+/** Essenskörbe (private food offers) – server-side cached upstream proxy. */
+export function fetchBaskets(): Promise<BasketsResponse> {
+  return request<BasketsResponse>('/api/baskets')
 }
 
 export function fetchStats(): Promise<Stats> {

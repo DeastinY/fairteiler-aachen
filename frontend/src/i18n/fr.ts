@@ -81,6 +81,12 @@ const fr: Messages = {
   'karte.deselect': 'Fermer la sélection',
   'karte.farAway': 'Tu sembles être plus loin – la carte reste sur les Fairteiler.',
 
+  'filters.baskets': 'Paniers alimentaires',
+  'karte.basket': 'Panier alimentaire',
+  'karte.basketTitle': 'Panier alimentaire à proximité',
+  'karte.basketCaption': 'Offre alimentaire privée – détails et demande sur foodsharing.de.',
+  'karte.basketStale': 'État : {time}',
+
   'liste.title': 'Tous les Fairteiler',
   'liste.subtitle': 'Points à Aix-la-Chapelle et alentours',
   'liste.summary':

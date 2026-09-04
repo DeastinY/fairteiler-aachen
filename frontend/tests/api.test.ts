@@ -93,6 +93,17 @@ describe('api composable', () => {
     expect(init.headers['X-Device-Id']).toBe(getDeviceId())
   })
 
+  it('fetches baskets from /api/baskets', async () => {
+    const { fetchBaskets } = await import('../src/composables/api')
+    const payload = { baskets: [{ id: 1, lat: 50.7, lon: 6.1 }], fetchedAt: null, stale: false }
+    fetchMock.mockResolvedValue(jsonResponse(payload))
+
+    const result = await fetchBaskets()
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/baskets', undefined)
+    expect(result).toEqual(payload)
+  })
+
   it('fetches the push config from /api/push/config', async () => {
     fetchMock.mockResolvedValue(jsonResponse({ enabled: true, vapidPublicKey: 'KEY' }))
 

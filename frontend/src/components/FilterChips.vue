@@ -1,16 +1,25 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { t, type MessageKey } from '../i18n'
 import type { FairteilerFilter } from '../lib/filters'
 import { useFilters } from '../composables/useFilters'
 
+const props = defineProps<{ withBaskets?: boolean }>()
+
 const filter = useFilters()
 
-const CHIPS: { key: keyof FairteilerFilter; labelKey: MessageKey }[] = [
+const BASE_CHIPS: { key: keyof FairteilerFilter; labelKey: MessageKey }[] = [
   { key: 'etwasDa', labelKey: 'filters.etwasDa' },
   { key: 'openNow', labelKey: 'filters.openNow' },
   { key: 'aroundTheClock', labelKey: 'filters.aroundTheClock' },
   { key: 'cooled', labelKey: 'filters.cooled' },
 ]
+
+const chips = computed(() =>
+  props.withBaskets
+    ? [...BASE_CHIPS, { key: 'baskets' as const, labelKey: 'filters.baskets' as MessageKey }]
+    : BASE_CHIPS,
+)
 
 function toggle(key: keyof FairteilerFilter) {
   filter[key] = !filter[key]
@@ -20,7 +29,7 @@ function toggle(key: keyof FairteilerFilter) {
 <template>
   <div class="chips" role="group" :aria-label="t('filters.aria')">
     <button
-      v-for="chip in CHIPS"
+      v-for="chip in chips"
       :key="chip.key"
       type="button"
       class="filterchip"

@@ -81,6 +81,12 @@ const ru: Messages = {
   'karte.deselect': 'Закрыть выбор',
   'karte.farAway': 'Похоже, ты далеко – карта остаётся у Fairteiler.',
 
+  'filters.baskets': 'Корзины с едой',
+  'karte.basket': 'Корзина с едой',
+  'karte.basketTitle': 'Корзина с едой поблизости',
+  'karte.basketCaption': 'Частное предложение еды – подробности и запрос на foodsharing.de.',
+  'karte.basketStale': 'Данные: {time}',
+
   'liste.title': 'Все Fairteiler',
   'liste.subtitle': 'Точки в Ахене и окрестностях',
   'liste.summary': '{total} точек в Ахене и окрестностях · {reported} со свежим сообщением',

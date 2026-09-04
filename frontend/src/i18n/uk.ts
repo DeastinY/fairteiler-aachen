@@ -81,6 +81,12 @@ const uk: Messages = {
   'karte.deselect': 'Закрити вибір',
   'karte.farAway': 'Схоже, ти далеко – мапа залишається біля Fairteiler.',
 
+  'filters.baskets': 'Кошики з їжею',
+  'karte.basket': 'Кошик з їжею',
+  'karte.basketTitle': 'Кошик з їжею поблизу',
+  'karte.basketCaption': 'Приватна пропозиція їжі – деталі та запит на foodsharing.de.',
+  'karte.basketStale': 'Станом на: {time}',
+
   'liste.title': 'Усі Fairteiler',
   'liste.subtitle': 'Точки в Аахені та околицях',
   'liste.summary': '{total} точок в Аахені та околицях · {reported} зі свіжим повідомленням',

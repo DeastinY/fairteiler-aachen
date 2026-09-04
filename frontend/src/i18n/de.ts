@@ -95,6 +95,12 @@ const de = {
   'karte.deselect': 'Auswahl schließen',
   'karte.farAway': 'Du scheinst weiter weg zu sein – Karte bleibt bei den Fairteilern.',
 
+  'filters.baskets': 'Essenskörbe',
+  'karte.basket': 'Essenskorb',
+  'karte.basketTitle': 'Essenskorb in der Nähe',
+  'karte.basketCaption': 'Privates Lebensmittel-Angebot – Details und Anfrage auf foodsharing.de.',
+  'karte.basketStale': 'Stand: {time}',
+
   'liste.title': 'Alle Fairteiler',
   'liste.subtitle': 'Standorte in Aachen und Umgebung',
   'liste.summary': '{total} Standorte in Aachen und Umgebung · {reported} mit aktueller Meldung',

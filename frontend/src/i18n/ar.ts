@@ -81,6 +81,12 @@ const ar: Messages = {
   'karte.deselect': 'إغلاق التحديد',
   'karte.farAway': 'يبدو أنك بعيد – تبقى الخريطة عند الـ Fairteiler.',
 
+  'filters.baskets': 'سلال الطعام',
+  'karte.basket': 'سلة طعام',
+  'karte.basketTitle': 'سلة طعام قريبة',
+  'karte.basketCaption': 'عرض طعام خاص – التفاصيل والطلب على foodsharing.de.',
+  'karte.basketStale': 'آخر تحديث: {time}',
+
   'liste.title': 'كل الـ Fairteiler',
   'liste.subtitle': 'مواقع في آخن وما حولها',
   'liste.summary': '{total} موقعًا في آخن وما حولها · {reported} منها ببلاغ حديث',

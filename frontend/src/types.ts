@@ -25,6 +25,18 @@ export interface UsageDay {
   reports: number
 }
 
+export interface Basket {
+  id: number
+  lat: number
+  lon: number
+}
+
+export interface BasketsResponse {
+  baskets: Basket[]
+  fetchedAt: string | null
+  stale: boolean
+}
+
 export interface Stats {
   fairteilerTotal: number
   withFood: number

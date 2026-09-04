@@ -81,6 +81,12 @@ const en: Messages = {
   'karte.deselect': 'Close selection',
   'karte.farAway': 'You seem to be further away – the map stays with the Fairteiler.',
 
+  'filters.baskets': 'Food baskets',
+  'karte.basket': 'Food basket',
+  'karte.basketTitle': 'Food basket nearby',
+  'karte.basketCaption': 'Private food offer – details and requests on foodsharing.de.',
+  'karte.basketStale': 'As of: {time}',
+
   'liste.title': 'All Fairteiler',
   'liste.subtitle': 'Locations in and around Aachen',
   'liste.summary': '{total} locations in and around Aachen · {reported} with a recent report',

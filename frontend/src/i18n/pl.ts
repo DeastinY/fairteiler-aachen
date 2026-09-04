@@ -81,6 +81,12 @@ const pl: Messages = {
   'karte.deselect': 'Zamknij wybór',
   'karte.farAway': 'Wygląda na to, że jesteś dalej – mapa zostaje przy Fairteiler.',
 
+  'filters.baskets': 'Kosze z żywnością',
+  'karte.basket': 'Kosz z żywnością',
+  'karte.basketTitle': 'Kosz z żywnością w pobliżu',
+  'karte.basketCaption': 'Prywatna oferta żywności – szczegóły i zapytanie na foodsharing.de.',
+  'karte.basketStale': 'Stan: {time}',
+
   'liste.title': 'Wszystkie Fairteiler',
   'liste.subtitle': 'Punkty w Akwizgranie i okolicy',
   'liste.summary': '{total} punktów w Akwizgranie i okolicy · {reported} z aktualnym zgłoszeniem',

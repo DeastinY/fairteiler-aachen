@@ -263,6 +263,11 @@ describe('ListeView', () => {
     await flushPromises()
     expect(wrapper.findAll('.listecard')).toHaveLength(2)
 
+    // baskets are a map-only concept – no chip on the Liste
+    expect(
+      wrapper.findAll('.filterchip').some((c) => c.text() === 'Essenskörbe'),
+    ).toBe(false)
+
     const etwasDa = wrapper.findAll('.filterchip').find((c) => c.text() === 'Etwas da')!
     await etwasDa.trigger('click')
     expect(etwasDa.attributes('aria-pressed')).toBe('true')

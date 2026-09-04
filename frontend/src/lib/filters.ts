@@ -9,10 +9,18 @@ export interface FairteilerFilter {
   cooled: boolean
   /** Only Fairteiler that are open right now (unknown hours are excluded). */
   openNow: boolean
+  /** Visibility toggle for basket markers on the Karte (default on). */
+  baskets: boolean
 }
 
 export function emptyFilter(): FairteilerFilter {
-  return { etwasDa: false, aroundTheClock: false, cooled: false, openNow: false }
+  return {
+    etwasDa: false,
+    aroundTheClock: false,
+    cooled: false,
+    openNow: false,
+    baskets: true,
+  }
 }
 
 /** Active chips combine with AND; inactive chips do not restrict. */
